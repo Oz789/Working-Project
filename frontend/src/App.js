@@ -1,21 +1,23 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import UserNavbar from "./Components/userNavBar";
+import Login from "./pages/logIn/login";
+import CreateAppointment from "./pages/appointments/createAppointment";
 
 function App() {
   return (
-    
+
 
     <Router>
       <UserNavbar />
       <Routes>
         <Route path="/about" element={<h1>About Us Page</h1>} />
         <Route path="/contact" element={<h1>Contact Us Page</h1>} />
-        <Route path="/book-appointment" element={<h1>Book Appointment Page</h1>} />
+        <Route path="/book-appointment" element={<CreateAppointment />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
-        <h1>"Hello World"</h1> 
     </Router>
-
+    
 
   );
 }

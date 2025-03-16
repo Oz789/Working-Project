@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const UserNavbar = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: "#000000", height:"200px"}} position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between", Height: "200px" }}>
+      <AppBar sx={{ backgroundColor: "#000000", height:"80px"}} position="static">
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between", Height: "80px" }}>
           {}
           <Typography variant="h6" component="div" sx={{ fontWeight: "bold" }}>
             Eye Clinic
@@ -22,6 +22,9 @@ const UserNavbar = () => {
             </Button>
             <Button color="inherit" component={Link} to="/book-appointment">
               Book Appointment
+            </Button>
+            <Button color="inherit" component={Link} to="/login">
+              Login
             </Button>
           </Box>
         </Toolbar>
