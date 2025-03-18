@@ -1,23 +1,22 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import UserNavbar from "./Components/userNavBar";
+import Services from "./pages/services/services"; 
+import PatientProfile from "./pages/patientPortal/patientProfile";
+import Home from "./pages/home/home"
 
 function App() {
   return (
-    
-
     <Router>
-      <UserNavbar />
       <Routes>
-        <Route path="/about" element={<h1>About Us Page</h1>} />
-        <Route path="/contact" element={<h1>Contact Us Page</h1>} />
-        <Route path="/book-appointment" element={<h1>Book Appointment Page</h1>} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/about" />
+        <Route path="/contact" />
+        <Route path="/book-appointment" />
+        <Route path="/services" element={<Services />} />
+        <Route path="/userProfile" element={<PatientProfile/>} />
       </Routes>
-        <h1>"Hello World"</h1> 
     </Router>
-
-
   );
 }
 
-export default App;
+export default App; 
