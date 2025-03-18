@@ -1,0 +1,85 @@
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    height: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  
+.progress-bar-fill {
+    height: 100%;
+    background-color: #4caf50;
+    transition: width 0.4s ease-in-out;
+}
+
+.form-container {
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+  
+input, textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+}
+  
+h2, h3 {
+    margin-top: 20px;
+}
+  
+button {
+    margin-right: 10px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+  
+.nav-buttons {
+    margin-top: 20px;
+}
+  
+.emergency-contact {
+    margin-bottom: 10px;
+}
+  
+textarea {
+    height: 80px;
+}
+  
+.progress-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    height: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+  
+.progress-bar-fill {
+    height: 100%;
+    background-color: #4caf50;
+    transition: width 0.4s ease-in-out;
+}
+
+.checkbox-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+  }
+  
+  .checkbox-row span {
+    flex: 1;
+  }
+  
+  .checkbox-row input[type="checkbox"] {
+    margin-left: 20px;
+  }
+  
