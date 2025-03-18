@@ -1,0 +1,53 @@
+/* Center the entire login container */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 200px); /* Adjust height to consider navbar height */
+    width: 100%;
+}
+
+/* Style the login box */
+.login-box {
+    width: 25rem;
+    padding: 1.5rem;
+    background-color: #fffbed;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure input-row elements are aligned properly */
+.input-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.input-row p {
+    margin: 0;
+    width: 40%;
+    text-align: left;
+}
+
+.input-row input {
+    width: 60%;
+    padding: 5px;
+}
+
+.login-button {
+    font-size: 0.9rem;
+    width: 3rem;
+    height: 2rem;
+}
+
+.forgot-password {
+    margin: 0;
+
+}
