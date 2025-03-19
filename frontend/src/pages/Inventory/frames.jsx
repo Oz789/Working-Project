@@ -2,74 +2,15 @@ import {React, useState} from "react"
 import { Card, CardContent, CardActionArea, CardMedia, Grid2, CardHeader, Typography, Grow} from '@mui/material';
 import { styled } from "@mui/material/styles";
 import Color from "color";
-import Modal from "../../Components/Modal"
+import Modal from "../../components/Modal"
+import UserNavbar from "../../components/navBar";
 
 //import ca from "../../Images/CapeMay.webp"
 //import { makeStyles } from '@mui/styles';
 
-const CardActionAreaActionArea= styled(CardActionArea)(()=>({
-    borderRadius: 16,
-    transition: "0.2s",
-    "&:hover":{
-        transform: "scale(1.1)",
-    },
-}));
 
-const StyledCard = styled(Card)(({color}) => ({
-    minWidth: 256,
-    borderRadius:16,
-    boxShadow: "none",
-    "&:hover": {
-        boxShadow: `0 6px 12px 0 ${Color(color).rotate(-12).darken(0.2).fade(0.5)}`,
-    },
 
-}));
 
-const CardContentContent = styled(CardContent)(({color}) => {
-    return {
-        backgroundColor: color,
-        padding: "1rem 1.5rem 1.5rem",
-    };
-});
-
-const TypographyTitle = styled(Typography)(()=>({
-    fontFamily: "Roboto",
-    fontSize: "2rem",
-    color: "#fff",
-    textTransform: "uppercase",
-}));
-
-const TypographySubtitle = styled(Typography)(()=>({
-    fontFamily: "Roboto",
-    color: "#fff",
-    opacity: 0.87,
-    marginTop: "2rem",
-    fontWeight: 500,
-    fontSize: 14,
-
-}));
-
-const CustomCard = ({color,image,title,subtitle,}
-  ) => (
-    <CardActionAreaActionArea>
-      <StyledCard color={color}>
-        <CardMedia
-          image={image}
-          sx={{
-            width: "100%",
-            height: 0,
-            paddingBottom: "75%",
-            backgroundColor: "rgba(0,0,0,0.08)",
-          }}
-        />
-        <CardContentContent color={color}>
-          <TypographyTitle variant={"h2"}>{title}</TypographyTitle>
-          <TypographySubtitle>{subtitle}</TypographySubtitle>
-        </CardContentContent>
-      </StyledCard>
-    </CardActionAreaActionArea>
-
-        );
 
 
 
@@ -169,7 +110,7 @@ const Frames = () => {
         
         // <div className={classes.root}>
         <div>
-            
+            <UserNavbar/>
         <Grid2
         
         sx={{ flexGrow: 1, flexShrink:1, paddingLeft: 20}}
