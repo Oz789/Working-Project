@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./patientProfile.css";
-import UserNavbar from "../../components/navBar";
+import Navbar from "../../components/navBar";
 
 const PatientProfile = () => {
 
@@ -36,7 +36,7 @@ const PatientProfile = () => {
 
   return (
     <>
-      <UserNavbar />
+      <Navbar />
 
       <div className="profile-container">
         <div className="profile-wrapper">
