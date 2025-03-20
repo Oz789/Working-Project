@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import GeneralInfoForm from './GeneralInfoForm';
 import MedicalInfoForm from './MedicalInfoForm';
 import AdditionalDetailsForm from './AdditionalDetailsForm';
+import UserNavbar from "../../components/navBar";
 import './form.css';
 
 export default function MultiStepForm() {
@@ -57,11 +58,16 @@ export default function MultiStepForm() {
   };
 
   return (
+
+    <>
+    <UserNavbar/>
+  
     <div className="form-container">
       <div className="progress-container">
         <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
       </div>
       {renderStep()}
     </div>
+    </>
   );
 }

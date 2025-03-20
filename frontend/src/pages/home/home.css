@@ -23,5 +23,18 @@
     transform: scale(1.1); 
 }
 
+.employee-portal {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 16px;
+    font-family: "Bell MT";
+}
+
+.employee-portal:hover {
+    text-decoration: underline;
+    background-color: transparent;
+}
+
 
   

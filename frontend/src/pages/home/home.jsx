@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import HomeNavBar from "../../components/homeNavBar";
 
 import "./home.css";
@@ -7,6 +8,7 @@ import "./home.css";
 const homeBackground = "/images/home.jpg";
 
 const Home = () => {
+const navigate = useNavigate();
   return (
 <>
     <HomeNavBar/>
@@ -16,7 +18,8 @@ const Home = () => {
         backgroundImage: `url(${homeBackground})`, backgroundSize: "cover", backgroundPosition: "center",
       }}
     >
-      <button className="home-button">Book Your Appointment</button>
+      <button onClick={() => navigate("/book-appointment")} className="home-button">Book Your Appointment</button>
+      <a href="/log-in" className="employee-portal">Employee Portal</a>
     </div>
     </>
   );
