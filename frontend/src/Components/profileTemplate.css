@@ -19,7 +19,6 @@
     gap: 20px;
 }
 
-/* Sidebar for Patient Information (Smaller) */
 .profile-sidebar {
     width: 25%;
     background-color: #f8f9fa;
@@ -32,7 +31,6 @@
     min-height: 400px;
 }
 
-/* Main Content Section (Larger) */
 .profile-content {
     width: 50%;
     padding: 30px;
@@ -44,7 +42,6 @@
     gap: 10px;
 }
 
-/* New Third Section (Smaller) */
 .profile-extra {
     width: 25%;
     padding: 20px;
@@ -56,52 +53,3 @@
     gap: 10px;
     min-height: 400px;
 }
-
-/* Styling for Input Fields */
-.input-field, .textarea-field {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-    background-color: white;
-}
-
-/* Section Titles */
-.section-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-/* Subsection Titles */
-.subsection-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
-/* Buttons Styling */
-.button-group {
-    display: flex;
-    justify-content: flex-start;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.edit-btn, .save-btn, .cancel-btn {
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.edit-btn { background-color: #007bff; color: white; }
-.save-btn { background-color: #28a745; color: white; }
-.cancel-btn { background-color: #dc3545; color: white; }
-
-
-  
-  
-  
