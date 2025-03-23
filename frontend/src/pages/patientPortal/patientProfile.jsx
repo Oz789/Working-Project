@@ -117,7 +117,6 @@ const PatientProfile = () => {
         </div>
       }
 
-      /* Right Section (Extra Content, Placeholder for Now) */
       extraContent={
         <p style={{ color: "#aaa", fontStyle: "italic" }}>Content coming soon...</p>
       }

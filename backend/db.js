@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mysql = require("mysql2");
 
 const db = mysql.createConnection({
@@ -18,5 +19,14 @@ db.connect((err) => {
   }
   console.log("Connected to Azure MySQL Database");
 });
+
+db.query('SELECT DATABASE() AS name', (err, result) => {
+  if (err) {
+    console.error("Could not fetch DB name:", err.message);
+  } else {
+    console.log("Connected to DB:", result[0].name);
+  }
+});
+
 
 module.exports = db;

@@ -8,6 +8,7 @@ import Frames from "./pages/Inventory/frames"
 //import CreateAppointment from "./pages/appointments/createAppointment";
 import MultiStepForm from "./pages/appointments/MultiStepForm";
 import ProfileTemplate from "./components/profileTemplate";
+import AdminDashboard from "./pages/admin/adminDashboard";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/employeeProfile" element={<ProfileTemplate/>} />
         <Route path="/frames" element={<Frames/>} />
         <Route path="/log-in" element={<Login/>}/>
+        <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
       </Routes>
     </Router>
   );
