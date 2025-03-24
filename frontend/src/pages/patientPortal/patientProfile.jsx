@@ -118,7 +118,7 @@ const PatientProfile = () => {
       }
 
       extraContent={
-        <p style={{ color: "#aaa", fontStyle: "italic" }}>Content coming soon...</p>
+        <p style={{ color: "#aaa", fontStyle: "italic" }}></p>
       }
     />
   );

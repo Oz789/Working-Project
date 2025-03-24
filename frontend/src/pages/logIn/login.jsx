@@ -31,7 +31,8 @@ const Login = () => {
       if (data.role === "admin") {
         navigate("/admin-dashboard");
       } else if (data.role === "doctor") {
-        navigate("/doctor-dashboard");
+        const doctorID = data.doctorInfo.doctorID;
+        navigate(`/doctorProfile/${doctorID}`);
       } else if (data.role === "employee") {
         navigate("/employeeProfile")
       }
@@ -42,6 +43,8 @@ const Login = () => {
     }
   };
 
+
+  
   return (
     <>
       <UserNavBar />

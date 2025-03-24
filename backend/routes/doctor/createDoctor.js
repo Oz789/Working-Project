@@ -3,6 +3,9 @@ const router = express.Router();
 const db = require('../../db');
 
 router.post('/add-doctor', (req, res) => {
+
+    console.log("Received add-doctor data:", req.body);
+
   const { employeeID, licenseNumber, specialization } = req.body;
 
   if (!employeeID || !licenseNumber || !specialization) {
