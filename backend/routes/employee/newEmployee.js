@@ -3,7 +3,11 @@ const router = express.Router();
 const db = require('../../db');
 
 
+
+
+
 // Insert Employee Route
+
 router.post('/add-employee', (req, res) => {
   const { isAdmin, firstName, lastName, role, phone, email, password } = req.body;
 
@@ -13,8 +17,9 @@ router.post('/add-employee', (req, res) => {
 
   const sql = `
     INSERT INTO Employee (isAdmin, firstName, lastName, role, phone, email, password)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`
-  ;
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
 
   db.query(sql, [isAdmin || 0, firstName, lastName, role, phone, email, password], (err, result) => {
     if (err) {
@@ -25,4 +30,6 @@ router.post('/add-employee', (req, res) => {
   });
 });
 
+
 module.exports = router;
+
