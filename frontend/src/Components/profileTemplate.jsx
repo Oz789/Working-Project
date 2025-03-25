@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./profileTemplate.css";
-import UserNavbar from "../components/navBar";
+import UserNavbar from "./navBar";
 
 const ProfileTemplate = ({ sidebarContent, mainContent, extraContent }) => {
   return (
@@ -10,15 +10,15 @@ const ProfileTemplate = ({ sidebarContent, mainContent, extraContent }) => {
         <div className="profile-wrapper">
 
           <div className="profile-sidebar">
-            {sidebarContent ? sidebarContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Add</p>}
+            {sidebarContent ? sidebarContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
           </div>
 
           <div className="profile-content">
-            {mainContent ? mainContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Shit</p>}
+            {mainContent ? mainContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
           </div>
 
           <div className="profile-extra">
-            {extraContent ? extraContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Here</p>}
+            {extraContent ? extraContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
           </div>
 
         </div>

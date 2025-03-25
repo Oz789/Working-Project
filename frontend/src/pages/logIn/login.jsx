@@ -20,22 +20,34 @@ const Login = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      if (!res.ok) {
-        alert("Invalid credentials");
-        return;
+      if (res.ok) {
+        const data = await res.json();
+  
+        if (data.role === "admin") {
+          return navigate("/admin-dashboard");
+        } else if (data.role === "doctor") {
+          const doctorID = data.doctorInfo.doctorID;
+          return navigate(`/doctorProfile/${doctorID}`);
+        } else if (data.role === "employee") {
+          return navigate("/employeeProfile");
+        }
       }
 
+      const resPatient = await fetch("http://localhost:5001/api/login/patient", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      const data = await res.json();
-
-      if (data.role === "admin") {
-        navigate("/admin-dashboard");
-      } else if (data.role === "doctor") {
-        const doctorID = data.doctorInfo.doctorID;
-        navigate(`/doctorProfile/${doctorID}`);
-      } else if (data.role === "employee") {
-        navigate("/employeeProfile")
+      if (resPatient.ok) {
+        const data = await resPatient.json();
+        if (data.role === "patient") {
+          const patientID = data.user.patientID;
+          return navigate(`/userProfile/${patientID}`);
+        }
       }
+
+      alert("Invalid credentials");
       
     } catch (err) {
       console.error("Login error:", err);

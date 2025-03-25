@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const db = require('../db');
 
 // Create patient record
@@ -68,8 +69,9 @@ router.post('/submit', async (req, res) => {
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
+    const hashedPassword = await bcrypt.hash(password, 10);
     const patientValues = [
-      firstName, lastName, dob, sex, occupation, address, phoneNumber, email, password
+      firstName, lastName, dob, sex, occupation, address, phoneNumber, email, hashedPassword
     ];
 
     const [result] = await db.promise().query(patientQuery, patientValues);

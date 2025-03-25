@@ -3,6 +3,12 @@ const router = express.Router();
 const db = require('../db');
 const bcrypt = require('bcrypt');
 
+
+router.get("/test", (req, res) => {
+    res.send("login.js route file is active");
+  });
+  
+
 router.post("/employee", (req, res) => {
     const { email, password } = req.body;
     console.log("Login attempt for:", email);
@@ -50,6 +56,7 @@ console.log("Plain input password:", password);
   router.post("/patient", (req, res) => {
 
     const { email, password } = req.body;
+    console.log(" Patient login attempt for:", email); 
 
         const sql = "SELECT * FROM Patient WHERE email = ?";
   

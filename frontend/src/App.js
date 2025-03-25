@@ -20,7 +20,7 @@ function App() {
         <Route path="/contact" />
         <Route path="/book-appointment" element={<MultiStepForm/>}/>
         <Route path="/services" element={<Services />} />
-        <Route path="/userProfile" element={<PatientProfile/>} />
+        <Route path="/userProfile/:patientID" element={<PatientProfile />} />
         <Route path="/employeeProfile" element={<ProfileTemplate/>} />
         <Route path="/frames" element={<Frames/>} />
         <Route path="/log-in" element={<Login/>}/>
