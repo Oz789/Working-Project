@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Grid2 } from '@mui/material';
 import axios from 'axios'
 import "./replyManager.css"
-import UserNavbar from "../components/navBar";
+import UserNavbar from "../components/NavBar";
 
 const ReplyManager = (props) => {
 

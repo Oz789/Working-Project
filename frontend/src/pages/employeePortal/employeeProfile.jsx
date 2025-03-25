@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import ProfileTemplate from "../../components/profileTemplate";
 import MsgManager from "../../components/msgManager";
 import ReplyManager from "../../components/replyManager";
+import {Grid2} from '@mui/material';
+
+import "./employeeProfile.css"
 
 const EmployeeProfile = () => {
 
@@ -58,10 +61,13 @@ const EmployeeProfile = () => {
       /* Left Sidebar (Patient Information) */
       
       sidebarContent={
-        <div>
+        <div className="cont">
+          <img className="rounded" src="/Images/dog-secretary.webp" alt="A pic of John Doe, a white dog" width="300"></img>
           <h2 className="section-title">John Doe</h2>
-          <label>Name:</label>
-          <input type="text" name="name" value={patientData.name} onChange={handleChange} className="input-field" readOnly={!isEditing} />
+          <h5 className="job"> Employee: Secretary</h5>
+          <h5 ><b>About Me:</b></h5>
+          <p className="bio">...Arf!</p>
+
         </div>
       }
 
@@ -69,7 +75,7 @@ const EmployeeProfile = () => {
       mainContent={
         <div>
             
-          <h2 className="section-title">Schedule</h2>
+          <h2 className="section-title">Inbox</h2>
           <MsgManager
           bool={toggleMessager}
           pass={msgPasser}
@@ -82,9 +88,18 @@ const EmployeeProfile = () => {
 
       /* Right Section (Extra Content, Placeholder for Now) */
       extraContent={
-        <div>
-        <h2 className="section-title"> Messages </h2>
+        <div className="cont">
+        <Grid2
+            container
+            spacing={10}
+            direction="column"
+            //alignItems="center"
+            justifyContent="center"
+        >
+        <h2 className="section-title"> Schedule </h2>
         <p style={{ color: "#aaa", fontStyle: "italic" }}></p>
+        <h2 className="section-title"> Inventory </h2>
+        </Grid2>
         </div>
       }
     />

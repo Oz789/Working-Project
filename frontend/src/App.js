@@ -11,6 +11,7 @@ import ProfileTemplate from "./components/profileTemplate";
 import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
+import EmployeeForm from "./pages/employeePortal/employeeForm"
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/employeeProfile" element={<EmployeeProfile/>} />
         <Route path="/frames" element={<Frames/>} />
         <Route path="/log-in" element={<Login/>}/>
+        <Route path="/employeeForm" element={<EmployeeForm/>}/>
       </Routes>
     </Router>
   );
