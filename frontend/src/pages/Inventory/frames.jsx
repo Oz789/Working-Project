@@ -3,7 +3,7 @@ import { Card, CardContent, CardActionArea, CardMedia, Grid2, CardHeader, Typogr
 import { styled } from "@mui/material/styles";
 import Color from "color";
 import Modal from "../../components/Modal"
-import UserNavbar from "../../components/navBar";
+import UserNavbar from "../../components/NavBar";
 
 //import ca from "../../Images/CapeMay.webp"
 //import { makeStyles } from '@mui/styles';
@@ -96,6 +96,7 @@ const Frames = () => {
     //    const dataId = event.currentTarget.dataset.id;
     //    const clickedItem = data.find(data => data.id === parseInt(dataId) );
         console.log('Clicked item:', buffer.name);
+        console.log(modal);
 
         
     }
