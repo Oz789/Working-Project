@@ -16,8 +16,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/about" />
-        <Route path="/contact" />
+        <Route path="/about" element={<AboutP/>} />
+        <Route path="/contact" element={<ContactP/>} />
         <Route path="/book-appointment" element={<MultiStepForm/>}/>
         <Route path="/services" element={<Services />} />
         <Route path="/userProfile/:patientID" element={<PatientProfile />} />
