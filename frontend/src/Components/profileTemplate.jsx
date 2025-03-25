@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./profileTemplate.css";
 import UserNavbar from "./navBar";
 
+
 const ProfileTemplate = ({ sidebarContent, mainContent, extraContent }) => {
   return (
     <>

@@ -12,6 +12,8 @@ import AdminDashboard from "./pages/admin/adminDashboard";
 import DoctorProfile from "./pages/staff/doctorProfile";
 import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
+import EmployeeProfile from "./pages/employeePortal/employeeProfile";
+import EmployeeForm from "./pages/employeePortal/employeeForm"
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
         <Route path="/log-in" element={<Login/>}/>
         <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
         <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
+
       </Routes>
     </Router>
   );

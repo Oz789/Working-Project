@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import ProfileTemplate from "../../components/profileTemplate";
 import MsgManager from "../../components/msgManager";
 import ReplyManager from "../../components/replyManager";
-import Grid2 from '@mui/material/Unstable_Grid2';
-
+import {Grid2} from '@mui/material';
 
 
 import "./employeeProfile.css"

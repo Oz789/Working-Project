@@ -1,5 +1,5 @@
 import React from "react";
-import UserNavbar from "../../components/navBar";
+import UserNavbar from "../../components/NavBar";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Grid2 as Grid } from "@mui/material";
 import "./services.css";
