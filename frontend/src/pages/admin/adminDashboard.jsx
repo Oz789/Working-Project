@@ -72,7 +72,7 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
   
       alert("Employee added successfully!");
   
-      
+
       setShowModal(false);
     } catch (err) {
       console.error("Submission error:", err);
@@ -89,11 +89,11 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
         <div className="profile-wrapper">
 
           <div className="profile-sidebar">
-            {sidebarContent ? sidebarContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Add</p>}
+            {sidebarContent ? sidebarContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
           </div>
 
           <div className="profile-content">
-            {mainContent ? mainContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Shit</p>}
+            {mainContent ? mainContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
               {mainContent ? mainContent : (
             <button className="add-employee-button"  onClick={() => setShowModal(true)}> Add New Employee
               </button> )}
@@ -101,7 +101,7 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
           </div>
 
           <div className="profile-extra">
-            {extraContent ? extraContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Here</p>}
+            {extraContent ? extraContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
           </div>
         </div>
 

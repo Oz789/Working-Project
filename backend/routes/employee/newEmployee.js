@@ -31,7 +31,6 @@ router.post('/add-employee', (req, res) => {
   });
 });
 });
-});
 
 
 module.exports = router;

@@ -10,6 +10,8 @@ import MultiStepForm from "./pages/appointments/MultiStepForm";
 import ProfileTemplate from "./components/profileTemplate";
 import AdminDashboard from "./pages/admin/adminDashboard";
 import DoctorProfile from "./pages/staff/doctorProfile";
+import ContactP from "./pages/contact/contactUs";
+import AboutP from "./pages/about/aboutPage";
 
 function App() {
   return (
