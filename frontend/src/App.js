@@ -1,23 +1,32 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import UserNavbar from "./Components/userNavBar";
+import Services from "./pages/services/services"; 
+import PatientProfile from "./pages/patientPortal/patientProfile";
+import Home from "./pages/home/home"
+import Login from "./pages/logIn/login";
+import Frames from "./pages/Inventory/frames"
+//import CreateAppointment from "./pages/appointments/createAppointment";
+import MultiStepForm from "./pages/appointments/MultiStepForm";
+import ProfileTemplate from "./components/profileTemplate";
+import ContactP from "./pages/contact/contactUs";
+import AboutP from "./pages/about/aboutPage";
 
 function App() {
   return (
-    
-
     <Router>
-      <UserNavbar />
       <Routes>
-        <Route path="/about" element={<h1>About Us Page</h1>} />
-        <Route path="/contact" element={<h1>Contact Us Page</h1>} />
-        <Route path="/book-appointment" element={<h1>Book Appointment Page</h1>} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/about" element={<AboutP/>} />
+        <Route path="/contact" element={<ContactP/>} />
+        <Route path="/book-appointment" element={<MultiStepForm/>}/>
+        <Route path="/services" element={<Services />} />
+        <Route path="/userProfile" element={<PatientProfile/>} />
+        <Route path="/employeeProfile" element={<ProfileTemplate/>} />
+        <Route path="/frames" element={<Frames/>} />
+        <Route path="/log-in" element={<Login/>}/>
       </Routes>
-        <h1>"Hello World"</h1> 
     </Router>
-
-
   );
 }
 
-export default App;
+export default App; 
