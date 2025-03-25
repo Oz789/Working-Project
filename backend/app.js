@@ -24,7 +24,7 @@ app.use('/api', getDoctorRoute);
 app.use('/api/patients', patientRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/submit-form', formRoutes);
-
+app.use('/api/contact', createContacts);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
