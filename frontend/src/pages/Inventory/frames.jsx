@@ -3,7 +3,7 @@ import { Card, CardContent, CardActionArea, CardMedia, Grid2, CardHeader, Typogr
 import { styled } from "@mui/material/styles";
 import Color from "color";
 import Modal from "../../components/Modal"
-import UserNavbar from "../../components/NavBar";
+import UserNavbar from "../../components/navBar";
 
 //import ca from "../../Images/CapeMay.webp"
 //import { makeStyles } from '@mui/styles';

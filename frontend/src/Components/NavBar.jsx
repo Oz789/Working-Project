@@ -70,7 +70,6 @@ const Navbar = () => {
         </Toolbar>
       </AppBar>
     </Box>
-  );
 };
 
 export default Navbar;

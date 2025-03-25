@@ -17,7 +17,8 @@ const ContactP = () => {
     e.preventDefault();
     try {
       console.log("Sending data to the server:", formData); // Debug: log form data
-      const res = await axios.post("http://localhost:5001/submit-form", formData);
+      const res = await axios.post("http://localhost:5001/api/submit-form", formData);
+
       setStatus(res.data.message);
       setFormData({ name: "", email: "", phone: "", message: "" }); // Reset form
     } catch (error) {

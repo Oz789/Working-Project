@@ -9,7 +9,11 @@ const createDoctorRoute = require('./routes/doctor/createDoctor');
 const getDoctorRoute = require('./routes/doctor/getDoctor');
 const patientRoutes = require('./routes/patientRoutes');
 const messageRoutes = require('./routes/message/getMessage');
+//const formRoutes = require('./routes/patients/createContacts');
+
 const formRoutes = require('./routes/patients/createContacts');
+app.use('/api/submit-form', formData);
+
 
 
 const app = express();
@@ -23,7 +27,7 @@ app.use('/api/doctor', createDoctorRoute);
 app.use('/api', getDoctorRoute);
 app.use('/api/patients', patientRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/submit-form', formRoutes);
+//app.use('/api/submit-form', formRoutes);
 
 
 const PORT = process.env.PORT || 5001;
