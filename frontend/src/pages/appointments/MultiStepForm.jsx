@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import GeneralInfoForm from './GeneralInfoForm';
 import MedicalInfoForm from './MedicalInfoForm';
 import AdditionalDetailsForm from './AdditionalDetailsForm';
+import UserNavbar from "../../components/navBar";
 import './form.css';
 
 export default function MultiStepForm() {
@@ -13,8 +14,11 @@ export default function MultiStepForm() {
     lastName: '',
     dob: '',
     email: '',
-    phone: '',
+    phoneNumber: '',
     address: '',
+    sex: '',
+    password: '',
+    occupation: '',
     insurance: '',
     emergencyContacts: [{ name: '', phone: '' }],
     lastExamDate: '',
@@ -34,10 +38,14 @@ export default function MultiStepForm() {
     additionalDetails: '',
   });
 
-  const nextStep = () => setStep(step + 1);
+  const nextStep = () => {
+    console.log('Moving to next step. Current form data:', formData);
+    setStep(step + 1);
+  };
   const prevStep = () => setStep(step - 1);
 
   const handleChange = (newData) => {
+    console.log('Updating form data:', newData);
     setFormData({ ...formData, ...newData });
   };
 
@@ -50,18 +58,23 @@ export default function MultiStepForm() {
       case 2:
         return <MedicalInfoForm nextStep={nextStep} prevStep={prevStep} handleChange={handleChange} values={formData} />;
       case 3:
-        return <AdditionalDetailsForm prevStep={prevStep} values={formData} />;
+        return <AdditionalDetailsForm prevStep={prevStep} values={formData} handleChange={handleChange} />;
       default:
         return null;
     }
   };
 
   return (
+
+    <>
+    <UserNavbar/>
+  
     <div className="form-container">
       <div className="progress-container">
         <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
       </div>
       {renderStep()}
     </div>
+    </>
   );
 }

@@ -6,60 +6,102 @@
     background-color: white;
     min-height: 100vh;
     padding: 20px;
-  }
-  
-  .profile-wrapper {
+}
+
+.profile-wrapper {
     display: flex;
     width: 80%;
     max-width: 1200px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .profile-sidebar {
-    width: 30%;
-    background-color: rgb(241, 241, 240);
-    padding: 30px;
-    border-radius: 10px 0 0 10px;
-    border-color: black;
-  }
-  
-  .profile-content {
-    flex-grow: 1;
-    padding: 40px;
-  }
-  
-  .profile-card {
-    background-color: #fffbed;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
     padding: 20px;
-  }
-  
-  .input-field {
+    gap: 20px;
+}
+
+/* Sidebar for Patient Information (Smaller) */
+.profile-sidebar {
+    width: 25%;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 400px;
+}
+
+/* Main Content Section (Larger) */
+.profile-content {
+    width: 50%;
+    padding: 30px;
+    background-color: #fffbed;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* New Third Section (Smaller) */
+.profile-extra {
+    width: 25%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 400px;
+}
+
+/* Styling for Input Fields */
+.input-field, .textarea-field {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
-  }
-  
-  .button-group {
+    background-color: white;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Subsection Titles */
+.subsection-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* Buttons Styling */
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
     margin-top: 20px;
-  }
-  
-  .edit-btn, .save-btn, .cancel-btn {
+}
+
+.edit-btn, .save-btn, .cancel-btn {
     padding: 10px;
-    margin-right: 10px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  
-  .edit-btn { background-color: #007bff; color: white; }
-  .save-btn { background-color: #28a745; color: white; }
-  .cancel-btn { background-color: #dc3545; color: white; }
+    font-weight: bold;
+}
+
+.edit-btn { background-color: #007bff; color: white; }
+.save-btn { background-color: #28a745; color: white; }
+.cancel-btn { background-color: #dc3545; color: white; }
+
+
   
   
   
