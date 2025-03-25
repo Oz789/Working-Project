@@ -35,7 +35,7 @@ export default function AdditionalDetailsForm({ prevStep, values, handleChange }
       console.log('Form submitted successfully:', data);
       
       // Redirect to patient profile
-      navigate('/userProfile');
+      navigate('/log-in');
     } catch (error) {
       console.error('Error submitting form:', error);
       alert(error.message || 'Failed to submit form. Please try again.');

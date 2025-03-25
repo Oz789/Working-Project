@@ -8,6 +8,8 @@ import Frames from "./pages/Inventory/frames"
 //import CreateAppointment from "./pages/appointments/createAppointment";
 import MultiStepForm from "./pages/appointments/MultiStepForm";
 import ProfileTemplate from "./components/profileTemplate";
+import AdminDashboard from "./pages/admin/adminDashboard";
+import DoctorProfile from "./pages/staff/doctorProfile";
 import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
@@ -22,11 +24,13 @@ function App() {
         <Route path="/contact" element={<ContactP/>} />
         <Route path="/book-appointment" element={<MultiStepForm/>}/>
         <Route path="/services" element={<Services />} />
-        <Route path="/userProfile" element={<PatientProfile/>} />
-        <Route path="/employeeProfile" element={<EmployeeProfile/>} />
+        <Route path="/userProfile/:patientID" element={<PatientProfile />} />
+        <Route path="/employeeProfile" element={<ProfileTemplate/>} />
         <Route path="/frames" element={<Frames/>} />
         <Route path="/log-in" element={<Login/>}/>
-        <Route path="/employeeForm" element={<EmployeeForm/>}/>
+        <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
+        <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
+
       </Routes>
     </Router>
   );
