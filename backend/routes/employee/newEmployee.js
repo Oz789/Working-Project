@@ -4,6 +4,10 @@ const db = require('../../db');
 
 
 
+
+
+// Insert Employee Route
+
 router.post('/add-employee', (req, res) => {
   const { isAdmin, firstName, lastName, role, phone, email, password } = req.body;
 
@@ -16,6 +20,7 @@ router.post('/add-employee', (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `;
 
+
   db.query(sql, [isAdmin || 0, firstName, lastName, role, phone, email, password], (err, result) => {
     if (err) {
       console.error('Error inserting employee:', err);
@@ -25,4 +30,6 @@ router.post('/add-employee', (req, res) => {
   });
 });
 
+
 module.exports = router;
+
