@@ -126,6 +126,5 @@ router.post('/submit', async (req, res) => {
     console.error('Error creating patient record:', error);
     res.status(500).json({ error: 'Failed to create patient record' });
   }
-});
 
-module.exports = router; 
+});
