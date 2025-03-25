@@ -1,23 +1,17 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-
+const express = require('express');
+const cors = require('cors');
+const employeeRoutes = require('./routes/employee/newEmployee'); 
+const patientRoutes = require('./routes/patientRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
 
+//if doesnt work, switch the two to have express.json first
+app.use(cors());
+app.use(express.json());
 
+// Routes
+app.use('/api/employees', employeeRoutes); 
+app.use('/api/patients', patientRoutes);
 
-
-app.use(express.json()); 
-app.use(cors()); 
-
-
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
-
-
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

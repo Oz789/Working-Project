@@ -53,6 +53,13 @@ const Navbar = () => {
               </Typography>
             </Button>
 
+            <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
+            <Button className="nav-link" component={Link} to="/book-appointment">
+              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight: "bold" ,color: "#3E2723" }}>
+                Book Appointment
+              </Typography>
+            </Button>
+
 
             <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
             <Button className="nav-link" component={Link} to="/contact">
