@@ -8,8 +8,8 @@
 }
 
 .home-button { 
-    background-color: transparent;
-    border: 2px solid transparent;
+    background-color: transparent !important;
+    border: 2px solid transparent !important;
     color: rgb(0, 0, 0); 
     font-size: 35px;
     font-family: "Bell MT" !important;

@@ -1,4 +1,3 @@
-/* Center the entire login container */
 .login-container {
     display: flex;
     justify-content: center;
@@ -30,36 +29,35 @@
 
 .input-row p {
     margin: 0;
-    width: 20%;  
-    text-align: right; 
+    width: 20%;
+    text-align: right;
     font-size: 0.9rem;
-    padding-right: 6px; 
-    line-height: normal;
+    padding-right: 6px;
+    line-height: 1.5rem; 
     display: flex;
-    align-items: center; 
+    align-items: center;
+    height: 32px; 
 }
 
 
 .input-row input {
-    width: 65%;
+    width: 60%;
     padding: 6px;
     border-radius: 8px;
     border: 1px solid #ccc;
     font-size: 0.9rem;
     font-family: "serif";
-    height: 20px; /* Make sure all inputs have a consistent height */
-    display: flex;
-    align-items: center; 
+    height: 32px;
+    box-sizing: border-box;
 }
 
 
-/* Style the login button */
 .login-button {
     font-size: 0.9rem;
     width: 6rem;
     height: 2.2rem;
     border-radius: 12px; 
-    border: 2px solid black;/* More rounded button */
+    border: 2px solid black;
     background-color: #d1d1d1;
     color: #333;
     font-weight: bold;
@@ -72,7 +70,6 @@
     background-color: #9b9b9b;
 }
 
-/* Forgot password & Sign Up links */
 .forgot-password, .login-box p {
     font-size: 0.85rem;
     margin-top: 10px;
