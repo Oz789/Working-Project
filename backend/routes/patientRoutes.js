@@ -128,44 +128,4 @@ router.post('/submit', async (req, res) => {
   }
 });
 
-// Get patient and form data
-router.get('/:id', async (req, res) => {
-  try {
-    const patientId = req.params.id;
-
-    // Get patient data
-    const [patientRows] = await db.promise().query(
-      'SELECT * FROM patient WHERE patientID = ?',
-      [patientId]
-    );
-
-    if (patientRows.length === 0) {
-      return res.status(404).json({ error: 'Patient not found' });
-    }
-
-    // Get form data
-    const [formRows] = await db.promise().query(
-      'SELECT * FROM patientform WHERE patientID = ? ORDER BY visitDate DESC LIMIT 1',
-      [patientId]
-    );
-
-    const patientData = {
-      ...patientRows[0],
-      medicalForm: formRows[0] || null
-    };
-
-    // Convert comma-separated strings back to arrays
-    if (patientData.medicalForm) {
-      patientData.medicalForm.healthConcerns = patientData.medicalForm.healthConcerns ? patientData.medicalForm.healthConcerns.split(',') : [];
-      patientData.medicalForm.conditions = patientData.medicalForm.conditions ? patientData.medicalForm.conditions.split(',') : [];
-      patientData.medicalForm.surgeries = patientData.medicalForm.surgeries ? patientData.medicalForm.surgeries.split(',') : [];
-    }
-
-    res.json(patientData);
-  } catch (error) {
-    console.error('Error fetching patient data:', error);
-    res.status(500).json({ error: 'Failed to fetch patient data' });
-  }
-});
-
 module.exports = router; 
