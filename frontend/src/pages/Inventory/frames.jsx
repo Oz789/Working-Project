@@ -96,6 +96,7 @@ const Frames = () => {
     //    const dataId = event.currentTarget.dataset.id;
     //    const clickedItem = data.find(data => data.id === parseInt(dataId) );
         console.log('Clicked item:', buffer.name);
+        console.log(modal);
 
         
     }

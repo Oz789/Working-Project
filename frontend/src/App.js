@@ -8,6 +8,7 @@ import Frames from "./pages/Inventory/frames"
 //import CreateAppointment from "./pages/appointments/createAppointment";
 import MultiStepForm from "./pages/appointments/MultiStepForm";
 import ProfileTemplate from "./components/profileTemplate";
+import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
         <Route path="/book-appointment" element={<MultiStepForm/>}/>
         <Route path="/services" element={<Services />} />
         <Route path="/userProfile" element={<PatientProfile/>} />
-        <Route path="/employeeProfile" element={<ProfileTemplate/>} />
+        <Route path="/employeeProfile" element={<EmployeeProfile/>} />
         <Route path="/frames" element={<Frames/>} />
         <Route path="/log-in" element={<Login/>}/>
       </Routes>
