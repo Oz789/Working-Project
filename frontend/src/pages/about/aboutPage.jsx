@@ -5,7 +5,7 @@ import UserNavbar from "../../components/navBar";
 const AboutP = () => {
   return (
     <>
-      <UserNavbar />
+      <UserNavbar/>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
         <div className="max-w-4xl bg-white rounded-2xl shadow-lg p-10">
           <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
