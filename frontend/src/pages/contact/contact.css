@@ -10,6 +10,18 @@
   .contact-form {
     background-color: #ffffff;
     padding: 20px;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+  }
+  
+  .contact-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -81,4 +93,4 @@
       flex-direction: column;
     }
   }
-
+}
