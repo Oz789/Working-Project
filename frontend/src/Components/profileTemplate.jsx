@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./profileTemplate.css";
-import UserNavbar from "./navBar";
+import UserNavbar from "./NavBar";
 
 
 const ProfileTemplate = ({ sidebarContent, mainContent, extraContent }) => {
