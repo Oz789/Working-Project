@@ -12,6 +12,8 @@ const messageRoutes = require('./routes/message/getMessage');
 const formRoutes = require('./routes/patients/createContacts');
 const createFramesRoute = require('./routes/admin/createFrames');
 const getFramesRoute = require('./routes/admin/getFrames');
+const deleteFrameRoute = require('./routes/admin/deleteFrames');
+
 
 
 
@@ -30,6 +32,7 @@ app.use('/api/submit-form', formRoutes);
 app.use('/api/contact', createContacts);
 app.use('/api', createFramesRoute);
 app.use('/api', getFramesRoute);
+app.use('/api', deleteFrameRoute);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

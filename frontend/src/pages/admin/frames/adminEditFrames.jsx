@@ -34,7 +34,13 @@ const AdminEditFrameModal = ({ data, onClose, onEdit, onDelete }) => {
                 <Button variant="outlined" color="primary" onClick={onEdit}>Edit</Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" color="error" onClick={onDelete}>Delete</Button>
+              <Button
+    variant="outlined"
+    color="error"
+    onClick={() => onDelete(data.frameID)}  // pass frameID
+  >
+    Delete
+  </Button>
               </Grid>
             </Grid>
           </Grid>

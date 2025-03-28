@@ -56,6 +56,17 @@ const AdminFrames = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5001/api/frames/${id}`);
+      setViewModal(false);         // Close the modal
+      fetchFrames();               // Refresh frame list
+      console.log("Deleted frame ID:", id);
+    } catch (error) {
+      console.error("Error deleting frame:", error);
+    }
+  };
+
   return (
     <div>
       <AdminNavbar />
@@ -126,7 +137,7 @@ const AdminFrames = () => {
     data={selectedFrame}
     onClose={() => setViewModal(false)}
     onEdit={() => console.log("Edit", selectedFrame.frameID)}
-    onDelete={() => console.log("Delete", selectedFrame.frameID)}
+    onDelete={handleDelete}
   />
 )}
 
