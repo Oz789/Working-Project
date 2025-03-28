@@ -7,25 +7,25 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   
   const [productsDropdown, setProductsDropdown] = useState(false);
-  return(
+
+  return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar sx={{ backgroundColor: "#fffbed", height: "65px", boxShadow: "brown", borderBottom: "2px solid #8B5A2B" }} position="static">
+      <AppBar sx={{ backgroundColor: "white", height: "65px", boxShadow: "brown", borderBottom: "2px solid #8B5A2B" }} position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Button className="nav-link" component={Link} to="/home">
+        <Button className="nav-link" component={Link} to="/home">
               <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic",fontWeight: "bold", color: "#3E2723" }}>
                 Home
               </Typography>
-          </Button>
+            </Button>
 
           <Box sx={{ display: "flex", flex: 2, gap: "20px", justifyContent: "center", alignItems: "center"}}>
-         
 
 
             <Typography sx={{ color: "#3E2723", fontSize: "25px"}}></Typography>
-                <Button className="nav-link" component={Link} to="/log-in">
-                <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight:"bold", color: "#3E2723" }}>
+            <Button className="nav-link" component={Link} to="/log-in">
+              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight:"bold", color: "#3E2723" }}>
                 Patient's Center
-          </Typography>
+              </Typography>
             </Button>
             
             
@@ -49,13 +49,6 @@ const Navbar = () => {
             <Button className="nav-link" component={Link} to="/about">
               <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight: "bold" ,color: "#3E2723" }}>
                 About
-              </Typography>
-            </Button>
-
-            <Typography sx={{ color: "#3E2723", fontSize: "25px"}}>|</Typography>
-            <Button className="nav-link" component={Link} to="/book-appointment">
-              <Typography sx={{ fontFamily: "'Bell MT', serif", fontStyle: "italic", fontWeight: "bold" ,color: "#3E2723" }}>
-                Book Appointment
               </Typography>
             </Button>
 

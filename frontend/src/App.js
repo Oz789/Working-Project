@@ -26,10 +26,10 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/userProfile/:patientID" element={<PatientProfile />} />
         <Route path="/employeeProfile" element={<EmployeeProfile/>} />
-        <Route path="/employeeForm" element={<EmployeeForm/>} />
         <Route path="/frames" element={<Frames/>} />
         <Route path="/log-in" element={<Login/>}/>
         <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
+        <Route path="/employeeForm" element={<EmployeeForm/>}/>
         <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
 
       </Routes>
