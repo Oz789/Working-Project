@@ -14,6 +14,7 @@ import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm"
+import AdminFrames from "./pages/admin/frames/adminFrames";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard/>}/>
         <Route path="/employeeForm" element={<EmployeeForm/>}/>
         <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
+        <Route path="/admin/admin-frames" element={<AdminFrames />} />
 
       </Routes>
     </Router>

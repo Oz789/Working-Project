@@ -10,6 +10,9 @@ const getDoctorRoute = require('./routes/doctor/getDoctor');
 const patientRoutes = require('./routes/patientRoutes');
 const messageRoutes = require('./routes/message/getMessage');
 const formRoutes = require('./routes/patients/createContacts');
+const createFramesRoute = require('./routes/admin/createFrames');
+const getFramesRoute = require('./routes/admin/getFrames');
+
 
 
 const app = express();
@@ -25,6 +28,8 @@ app.use('/api/patients', patientRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/submit-form', formRoutes);
 app.use('/api/contact', createContacts);
+app.use('/api', createFramesRoute);
+app.use('/api', getFramesRoute);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
