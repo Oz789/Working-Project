@@ -11,7 +11,6 @@ router.delete('/frames/:id', (req, res) => {
       console.error('Error deleting frame:', err);
       return res.status(500).json({ error: 'Failed to delete frame' });
     }
-
     res.status(200).json({ message: 'Frame deleted successfully' });
   });
 });

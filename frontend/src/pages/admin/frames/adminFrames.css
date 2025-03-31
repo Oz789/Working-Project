@@ -36,7 +36,7 @@ body.active-modal {
     border-radius: 10px;
     width: 900px;          /* fixed width */
     height: 600px;         /* fixed height */
-    overflow-y: auto;      /* scrollable if content overflows */
+    overflow-y: auto;      
     box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 40px;
   }
   
@@ -71,3 +71,29 @@ body.active-modal {
 .shifter{
     transform: translate(1835%,-865%);
 }
+
+.admin-frame-card {
+    width: 400px;
+    border: none;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  }
+  
+  .admin-frame-card:hover {
+    transform: scale(1.04);
+  }
+  
+  .admin-frame-image {
+    height: 180px;
+    object-fit: cover;
+    width: 100%;
+  }
+  
+  .admin-frame-details {
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  

@@ -16,6 +16,10 @@ import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm"
 import AdminFrames from "./pages/admin/frames/adminFrames";
 import AdminContacts from "./pages/admin/contacts/adminContactsPage";
+import AdminServices from "./pages/admin/services/adminServicesPage";
+
+
+
 
 function App() {
   return (
@@ -35,6 +39,8 @@ function App() {
         <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
         <Route path="/admin/admin-frames" element={<AdminFrames />} />
         <Route path="/admin/admin-eyeContacts" element={<AdminContacts />} />
+        <Route path="/admin/admin-services" element={<AdminServices />} />
+
 
 
       </Routes>

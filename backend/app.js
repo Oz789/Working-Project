@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const db = require("./db"); // Import the database connection
-//const createContact = require("./routes/createContact"); // Ensure correct path
+const db = require("./db"); 
 const createContacts = require('./routes/patient/createContacts');
 const employeeRoutes = require('./routes/employee/newEmployee'); 
 const loginRoutes = require('./login/login');
@@ -17,6 +16,9 @@ const updateFrameRoute = require('./routes/admin/updateFrames');
 const createContactRoute = require('./routes/admin/createContacts');
 const getContactsRoute = require('./routes/admin/getContacts');
 const deleteContactsRoute = require('./routes/admin/deleteContacts');
+const createServiceRoute = require('./routes/admin/createService');
+const getServicesRoute = require('./routes/admin/getService');
+const deleteServiceRoute = require('./routes/admin/deleteService');
 
 
 
@@ -42,6 +44,10 @@ app.use('/api', updateFrameRoute);
 app.use('/api', createContactRoute);
 app.use('/api', getContactsRoute);
 app.use('/api', deleteContactsRoute);
+app.use('/api', createServiceRoute);
+app.use('/api', getServicesRoute);
+app.use('/api', deleteServiceRoute);
+
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

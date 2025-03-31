@@ -13,6 +13,7 @@ import axios from "axios";
 import AdminFrameModal from "./adminCreateFrameModal";
 import AdminNavbar from "../../../components/navBar"; 
 import AdminEditFrameModal from "./adminEditFrames";
+import "./adminFrames.css";
 
 const AdminFrames = () => {
   const [frames, setFrames] = useState([]);
@@ -90,39 +91,29 @@ const AdminFrames = () => {
         justifyContent="center"
         sx={{ padding: 2 }}
       >
-        {frames.map((frame) => (
-          <Grid2 item key={frame.id} minWidth={100}>
-            <Card>
-
-
-              <CardActionArea onClick={() => handleFramesClick(frame)}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={frame.img}
-                  alt="Eyeglass"
-                />
-
-
-                <CardContent>
-                  <Grid2 container justifyContent="space-between">
-                    <Grid2 item>
-                      <Typography variant="h5">{frame.name}</Typography>
-                    </Grid2>
-                    <Grid2 item>
-                      <Typography variant="h5" fontWeight="bold">
-                        {frame.price}
-                      </Typography>
-                    </Grid2>
-                  </Grid2>
-                </CardContent>
-
-
-              </CardActionArea>
-            </Card>
-          </Grid2>
-        ))}
-      </Grid2>
+  {frames.map((frame) => (
+    <Grid2 item key={frame.id}>
+      <Card className="admin-frame-card">
+        <CardActionArea onClick={() => handleFramesClick(frame)}>
+          <CardMedia
+            component="img"
+            image="/Images/brevik.webp"
+            alt="Eyeglass"
+            className="admin-frame-image"
+          />
+          <div className="admin-frame-details">
+            <Typography variant="h6" fontFamily="Roboto">
+              {frame.name}
+            </Typography>
+            <Typography variant="h6" fontWeight="bold">
+              {parseFloat(frame.price).toFixed(2)} {/* Ensure consistent $ format */}
+            </Typography>
+          </div>
+        </CardActionArea>
+      </Card>
+    </Grid2>
+  ))}
+</Grid2>
 
       {modal && (
         <AdminFrameModal

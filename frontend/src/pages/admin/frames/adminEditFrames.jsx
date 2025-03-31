@@ -22,7 +22,7 @@ const AdminEditFrameModal = ({ data, onClose, onEdit, onDelete }) => {
         <Grid container spacing={2} padding={2}>
      
           <Grid item xs={12} sm={6}>
-            <img src={img} alt="Eyeglass" className="item-image" />
+            <img src="/images/brevik.webp" alt="Eyeglass" className="item-image" />
           </Grid>
 
           <Grid item xs={12} sm={6}>

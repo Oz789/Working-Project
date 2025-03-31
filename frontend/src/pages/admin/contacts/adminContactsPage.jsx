@@ -12,6 +12,7 @@ import axios from "axios";
 import AdminCreateContactModal from "./adminCreateContacts";
 import AdminNavbar from "../../../components/navBar";
 import AdminEditContacts from "./adminEditContacts";
+import "./adminContactsPage.css";
 
 
 const AdminContacts = () => {
@@ -78,31 +79,28 @@ const AdminContacts = () => {
 
         {contacts.map((lens) => (
           <Grid item key={lens.contactID} minWidth={100}>
-            <Card>
-            <CardActionArea onClick={() => {
-  setSelectedContact(lens);
-  setViewModal(true);
-}}>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={lens.img}
-                  alt="Contact Lens"
-                />
-                <CardContent>
-                  <Grid container justifyContent="space-between">
-                       <Grid item>
-                      <Typography variant="h5">{lens.name}</Typography>
-                      </Grid>
-                        <Grid item>
-                      <Typography variant="h5" fontWeight="bold">
-                        ${parseFloat(lens.price).toFixed(2)}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  </CardContent>
-                </CardActionArea>
-             </Card>
+            <Card className="admin-contact-card">
+  <CardActionArea onClick={() => {
+    setSelectedContact(lens);
+    setViewModal(true);
+  }}>
+    <CardMedia
+      component="img"
+      image="/Images/1_DAY_ACUVUE_MOIST_90_Pack.avif" 
+      alt="Contact Lens"
+      className="admin-contact-image"
+    />
+    <div className="admin-contact-details">
+      <Typography variant="h6" fontFamily="Roboto">
+        {lens.name}
+      </Typography>
+      <Typography variant="h6" fontWeight="bold">
+        ${parseFloat(lens.price).toFixed(2)}
+      </Typography>
+    </div>
+  </CardActionArea>
+</Card>
+
           </Grid>
         ))}
       </Grid>
