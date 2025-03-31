@@ -33,6 +33,7 @@ const AdminCreateContactModal = ({ toggleModal, onSubmit }) => {
   return (
     <div className="modal">
       <div className="overlay"></div>
+      
       <div className="modal-content">
         <Grid container spacing={2} direction="column" padding={2}>
           <Typography variant="h4">Create New Contact Lens</Typography>
@@ -42,12 +43,12 @@ const AdminCreateContactModal = ({ toggleModal, onSubmit }) => {
           <TextField name="img" label="Image Path (e.g. /Images/example.webp)" value={form.img} onChange={handleChange} />
 
           <Grid container spacing={2}>
-            <Grid item xs={6}><TextField name="brand" label="Brand" value={form.brand} onChange={handleChange} fullWidth /></Grid>
+              <Grid item xs={6}><TextField name="brand" label="Brand" value={form.brand} onChange={handleChange} fullWidth /></Grid>
             <Grid item xs={6}><TextField name="model" label="Model" value={form.model} onChange={handleChange} fullWidth /></Grid>
-            <Grid item xs={6}><TextField name="visionType" label="Vision Type" value={form.visionType} onChange={handleChange} fullWidth /></Grid>
-            <Grid item xs={6}><TextField name="use" label="Use (Daily, Monthly...)" value={form.use} onChange={handleChange} fullWidth /></Grid>
-            <Grid item xs={6}><TextField name="daysSupply" label="Days Supply" value={form.daysSupply} onChange={handleChange} fullWidth /></Grid>
-            <Grid item xs={6}><TextField name="waterContent" label="Water Content" value={form.waterContent} onChange={handleChange} fullWidth /></Grid>
+              <Grid item xs={6}><TextField name="visionType" label="Vision Type" value={form.visionType} onChange={handleChange} fullWidth /></Grid>
+            < Grid item xs={6}><TextField name="use" label="Use (Daily, Monthly...)" value={form.use} onChange={handleChange} fullWidth /></Grid>
+              <Grid item xs={6}><TextField name="daysSupply" label="Days Supply" value={form.daysSupply} onChange={handleChange} fullWidth /></Grid>
+              <Grid item xs={6}><TextField name="waterContent" label="Water Content" value={form.waterContent} onChange={handleChange} fullWidth /></Grid>
           </Grid>
 
           <Button variant="contained" sx={{ marginTop: 3 }} onClick={handleSubmit}>

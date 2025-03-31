@@ -15,11 +15,8 @@ router.post('/createContact', (req, res) => {
     img
   } = req.body;
 
-  const query = `
-    INSERT INTO eyeContacts 
-    (name, price, brand, model, visionType, useType, daysSupply, waterContent, img)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+  const query = ` INSERT INTO eyeContacts (name, price, brand, model, visionType, useType, daysSupply, waterContent, img)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
 
   db.query(query, [
     name,

@@ -15,7 +15,7 @@ import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm"
 import AdminFrames from "./pages/admin/frames/adminFrames";
-import AdminContacts from "./pages/admin/contacts/adminContacts";
+import AdminContacts from "./pages/admin/contacts/adminContactsPage";
 
 function App() {
   return (

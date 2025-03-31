@@ -16,6 +16,7 @@ const deleteFrameRoute = require('./routes/admin/deleteFrames');
 const updateFrameRoute = require('./routes/admin/updateFrames');
 const createContactRoute = require('./routes/admin/createContacts');
 const getContactsRoute = require('./routes/admin/getContacts');
+const deleteContactsRoute = require('./routes/admin/deleteContacts');
 
 
 
@@ -40,6 +41,7 @@ app.use('/api', deleteFrameRoute);
 app.use('/api', updateFrameRoute);
 app.use('/api', createContactRoute);
 app.use('/api', getContactsRoute);
+app.use('/api', deleteContactsRoute);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
