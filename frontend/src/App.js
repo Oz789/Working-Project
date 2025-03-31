@@ -15,6 +15,7 @@ import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm"
 import AdminFrames from "./pages/admin/frames/adminFrames";
+import AdminContacts from "./pages/admin/contacts/adminContacts";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
         <Route path="/employeeForm" element={<EmployeeForm/>}/>
         <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
         <Route path="/admin/admin-frames" element={<AdminFrames />} />
+        <Route path="/admin/admin-eyeContacts" element={<AdminContacts />} />
+
 
       </Routes>
     </Router>
