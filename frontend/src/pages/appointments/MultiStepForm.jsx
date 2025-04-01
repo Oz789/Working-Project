@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import GeneralInfoForm from './GeneralInfoForm';
 import MedicalInfoForm from './MedicalInfoForm';
 import AdditionalDetailsForm from './AdditionalDetailsForm';
-import UserNavbar from "../../components/NavBar";
+import UserNavbar from "../../components/navBar";
 import './form.css';
 
 export default function MultiStepForm() {

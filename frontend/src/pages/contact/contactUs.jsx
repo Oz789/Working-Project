@@ -39,13 +39,7 @@ const ContactP = () => {
         <h1 className="text-2xl font-semibold mb-8">Contact Us</h1>
 
         <div className="w-full max-w-5xl flex">
-          {/* Left Side: Locations */}
-          <div className="w-1/2 pr-8">
-            <h2 className="text-xl font-semibold mb-4">Locations</h2>
-            <p>29077 Place St.<br /> Suite 500<br /> San Antonio, TX 77494</p>
-            <p className="mt-2 font-semibold">Call: (832) 555-2121</p>
-          </div>
-
+          
           {/* Right Side: Contact Form */}
           <div className="w-1/2 flex justify-end">
             <form onSubmit={handleSubmit} className="form-container w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
