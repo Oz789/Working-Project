@@ -22,8 +22,6 @@ const AdminEditService = ({ data, onClose, onEdit, onDelete }) => {
       <div className="overlay"></div>
       <div className="modal-content">
         <Grid container spacing={2} padding={2}>
-
-          {/* Left: Image */}
           <Grid item xs={12} sm={6}>
             <img
               src={img || "/images/default.jpg"}
@@ -32,8 +30,6 @@ const AdminEditService = ({ data, onClose, onEdit, onDelete }) => {
               style={{ border: "2px solid black" }}
             />
           </Grid>
-
-          {/* Right: Info and Actions */}
           <Grid item xs={12} sm={6}>
             <Typography variant="h4" className="service-title">{serviceName}</Typography>
             <Typography variant="body1" className="service-description">{description}</Typography>
@@ -49,7 +45,7 @@ const AdminEditService = ({ data, onClose, onEdit, onDelete }) => {
               </Grid>
               <Grid item>
                 <Button variant="outlined" color="error" onClick={() => onDelete(serviceID)}>
-                  Delete
+            Delete
                 </Button>
               </Grid>
             </Grid>
