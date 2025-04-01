@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./adminDashboard.css";
-import UserNavbar from "../../components/navBar";
+import UserNavbar from "../../components/NavBar";
 
 
 
