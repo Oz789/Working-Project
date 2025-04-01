@@ -49,7 +49,7 @@ const columns = [
 
 
 
-  const MsgManager = (props) => {
+  const InvManager = () => {
 
     let [buffer2, setBuffer2] = useState("null")
 
@@ -87,20 +87,20 @@ const columns = [
       //{ id: 1, email: 'Snow', created_at: 'Jon PENIS PSOSIJSENFEFSH'},
 
   
-      const handleRowClick = (params) => {
-        const clickedRow = params.row;
-        console.log('Clicked row data:', clickedRow.email);
-        let entry = msgList.find( element => element.id === clickedRow.id)
-        props.pass(entry);
-        props.bool();
-        //let test = props.setMessager()
+    //   const handleRowClick = (params) => {
+    //     const clickedRow = params.row;
+    //     console.log('Clicked row data:', clickedRow.email);
+    //     let entry = msgList.find( element => element.id === clickedRow.id)
+    //     props.pass(entry);
+    //     props.bool();
+    //     //let test = props.setMessager()
         
  
         
-        // Access specific values:
-        // const name = clickedRow.name;
-        // const age = clickedRow.age;
-      };
+    //     // Access specific values:
+    //     // const name = clickedRow.name;
+    //     // const age = clickedRow.age;
+    //   };
     
 
     return(
@@ -123,7 +123,7 @@ const columns = [
         // checkboxSelection
          disableRowSelectionOnClick
          //onRowClick={(rows)=>{handleClick(rows.email)}}
-         onRowClick={handleRowClick}
+         //onRowClick={handleRowClick}
 
         //  onCellClick={(params,event) => {
         //    event.stopPropagation();
@@ -138,4 +138,4 @@ const columns = [
 };
 
 
-export default MsgManager;
+export default InvManager

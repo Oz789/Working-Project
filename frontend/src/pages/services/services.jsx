@@ -1,5 +1,5 @@
 import React from "react";
-import UserNavbar from "../../components/navBar";
+import UsernavBar from "../../components/navBar";
 import { Card, CardContent, Typography } from "@mui/material";
 import { Grid2 as Grid } from "@mui/material";
 import "./services.css";
@@ -14,7 +14,7 @@ const services = [
 const Services = () => {
   return (
     <>
-    <UserNavbar/>
+    <UsernavBar/>
     <div >
       <Typography className="services-text" variant="h2">
        
