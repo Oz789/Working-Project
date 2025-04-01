@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const db = require("../../db"); // Import the database connection
+const db = require("./db"); // Import the database connection
 const createContacts = require('./routes/patient/createContacts');
 const employeeRoutes = require("./routes/employee/newEmployee");
 const loginRoutes = require("./login/login");

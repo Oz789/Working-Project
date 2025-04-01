@@ -1,0 +1,9 @@
+.shifter{
+    /* transform: translate(-10.5%,-130%); */
+    border: "2px solid #ddd";
+    border-radius: 10px;
+}
+
+.test{
+    background-color: #fffbed;
+}

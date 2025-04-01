@@ -1,11 +1,16 @@
 import React, { useState } from "react";
-import ProfileTemplate from "../../components/profileTemplate";
+import EmployeeTemplate from "../../components/employee/employeeTemplate";
 import MsgManager from "../../components/msgManager";
 import ReplyManager from "../../components/replyManager";
 import {Grid2} from '@mui/material';
 
+import InvManager from "../../components/employee/invManager";
+
+
 
 import "./employeeProfile.css"
+
+
 
 const EmployeeProfile = () => {
 
@@ -37,6 +42,10 @@ const EmployeeProfile = () => {
     
       const [messager, setMessager] = useState(false);
 
+      const [tabIn, setTab] = React.useState(0);
+
+      
+
       const toggleMessager = () => {
         setMessager(!messager)
         console.log(messager)
@@ -46,10 +55,16 @@ const EmployeeProfile = () => {
         setPatientData({ ...patientData, [e.target.name]: e.target.value });
       };
 
+      const handleTab = ( newTab) => {
+        setTab(newTab)
+        console.log(newTab)
+      }
+
       const [ message, setMessage] = useState("null");
       const msgPasser = (m) => {
         setMessage(m);
       }
+      
 
     return(
 
@@ -58,7 +73,7 @@ const EmployeeProfile = () => {
       <div>
 
         
-       {!messager && ( <ProfileTemplate
+        {!messager && ( <EmployeeTemplate
       /* Left Sidebar (Patient Information) */
       
       sidebarContent={
@@ -75,34 +90,45 @@ const EmployeeProfile = () => {
       /* Center Section (Medical Form Data) */
       mainContent={
         <div>
+
+          <>
+            {tabIn === 0 && (
+              <>
+                {/* <h2 className="section-title">Inbox</h2> */}
+                <MsgManager
+                  bool={toggleMessager}
+                  pass={msgPasser}
+                />
+              </>
+            )}
             
-          <h2 className="section-title">Inbox</h2>
-          <MsgManager
-          bool={toggleMessager}
-          pass={msgPasser}
-          />
+            {tabIn === 1 && (
+              
+              <InvManager
+            //bool={toggleMessager}
+            //pass={msgPasser}
+              />
+              
+              
+            )}
 
-         
-          
+            {tabIn === 2 && (
+              
+              <InvManager
+            //bool={toggleMessager}
+            //pass={msgPasser}
+              />
+              
+              
+            )}
+          </>
+        
         </div>
       }
 
-      /* Right Section (Extra Content, Placeholder for Now) */
-      extraContent={
-        <div className="cont">
-        <Grid2
-            container
-            spacing={10}
-            direction="column"
-            //alignItems="center"
-            justifyContent="center"
-        >
-        <h2 className="section-title"> Schedule </h2>
-        <p style={{ color: "#aaa", fontStyle: "italic" }}></p>
-        <h2 className="section-title"> Inventory </h2>
-        </Grid2>
-        </div>
-      }
+      handleTab={handleTab}
+
+
     />
 
   )}
