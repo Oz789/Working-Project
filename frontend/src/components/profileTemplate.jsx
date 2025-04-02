@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import "./profileTemplate.css";
-import UserNavbar from "./navBar";
+import UsernavBar from "./navBar";
 
 
 const ProfileTemplate = ({ sidebarContent, mainContent, extraContent }) => {
   return (
     <>
-      <UserNavbar />
+      <UsernavBar />
       <div className="profile-container">
         <div className="profile-wrapper">
 

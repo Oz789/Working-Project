@@ -26,9 +26,8 @@ const deleteServiceRoute = require('./routes/admin/deleteService');
 
 
 const app = express();
-
-app.use(express.json()); 
-app.use(cors()); 
+app.use(express.json());
+app.use(cors());
 
 app.use('/api/employees', employeeRoutes); 
 app.use('/api/login', loginRoutes);

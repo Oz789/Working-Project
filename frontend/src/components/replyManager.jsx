@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import { Grid2 } from '@mui/material';
 import axios from 'axios'
 import "./replyManager.css"
-import UserNavbar from "./navBar";
+import UsernavBar from "./navBar";
 
 
 const ReplyManager = (props) => {
@@ -38,7 +38,7 @@ const ReplyManager = (props) => {
     console.log(props.mes.email)
     return(
         <div>
-        <UserNavbar />
+        <UsernavBar />
 
         <div className="container">
             <div className="wrapper">

@@ -3,7 +3,7 @@ import { Card, CardContent, CardActionArea, CardMedia, Grid2, CardHeader, Typogr
 import { styled } from "@mui/material/styles";
 import Color from "color";
 import Modal from "../../components/Modal"
-import UserNavbar from "../../components/navBar";
+import UsernavBar from "../../components/navBar";
 
 //import ca from "../../Images/CapeMay.webp"
 //import { makeStyles } from '@mui/styles';
@@ -111,7 +111,7 @@ const Frames = () => {
         
         // <div className={classes.root}>
         <div>
-            <UserNavbar/>
+            <UsernavBar/>
         <Grid2
         
         sx={{ flexGrow: 1, flexShrink:1, paddingLeft: 20}}
