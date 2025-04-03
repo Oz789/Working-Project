@@ -62,8 +62,7 @@ router.post('/submit', async (req, res) => {
     surgeries,
     otherSurgeries,
     allergies,
-    additionalDetails,
-    lastExamDate
+    additionalDetails
   } = req.body;
 
   try {
@@ -116,7 +115,7 @@ router.post('/submit', async (req, res) => {
     const medicalFormQuery = `
       INSERT INTO patientform (
         patientID, visitDate, usesCorrectiveLenses, usesContacts, 
-        LensesPrescription, ContactsPrescription, lastPrescriptionDate, 
+        LensesPrescription, ContactsPrescription, lastPrescriptionDate,
         healthConcerns, otherConcerns, conditions, otherConditions, 
         hadSurgery, surgeries, otherSurgeries, allergies, additionalDetails
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
