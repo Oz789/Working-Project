@@ -1,17 +1,12 @@
-// Frames.jsx
-import { React, useState } from "react";
-import { Card, CardContent, CardActionArea, CardMedia, Grid2, Typography } from '@mui/material';
-import { useNavigate } from "react-router-dom";
-import Modal from "../../components/Modal";
-import UserNavbar from "../../components/navBar";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Frames = () => {
-    const navigate = useNavigate();
-    const [modal, setModal] = useState(false);
-    let [buffer, setBuffer] = useState("null");
+function PrescriptionForm() {
+  const { state } = useLocation();
+  const navigate = useNavigate();
 
-    const data = [
-        { id: 1, name: "Brescia", price: "$99.99", img: "/Images/Brescia.webp", brand: "Aura", model: "AUM-16-64", material: "Plastic", shape: "Rectangular", gender: "Men", frameType: "Full Frame", lensWidth: 54, lensHeight: 33, bridgeWidth: 14, templeLength: 140 },
+  const data = [
+    { id: 1, name: "Brescia", price: "$99.99", img: "/Images/Brescia.webp", brand: "Aura", model: "AUM-16-64", material: "Plastic", shape: "Rectangular", gender: "Men", frameType: "Full Frame", lensWidth: 54, lensHeight: 33, bridgeWidth: 14, templeLength: 140 },
         { id: 2, name: "Cape May", price: "$199.99", img: "/Images/CapeMay.webp", brand: "Elements", model: "VC-M04", material: "Metal", shape: "Double Bar", gender: "Men", frameType: "Full Frame", lensWidth: 57, lensHeight: 49, bridgeWidth: 18, templeLength: 140 },
         { id: 3, name: "Brevik", price: "$79.99", img: "/Images/Brevik.webp", brand: "Coast", model: "COAW-22-02", material: "Plastic", shape: "Round", gender: "Women", frameType: "Full Frame", lensWidth: 49, lensHeight: 42, bridgeWidth: 20, templeLength: 145 },
         { id: 4, name: "Minden", price: "$139.99", img: "/Images/Minden.webp", brand: "Carter", model: "CART-18-14", material: "Metal", shape: "Square", gender: "Men", frameType: "Full Frame", lensWidth: 59, lensHeight: 44, bridgeWidth: 20, templeLength: 145 },
@@ -29,74 +24,63 @@ const Frames = () => {
         { id: 16, name: "Haslingden", price: "$169.99", img: "/Images/Haslingden.webp", brand: "Christian of Paris", model: "COP-15-25", material: "Plastic", shape: "Butterfly", gender: "Women", frameType: "Full Frame", lensWidth: 54, lensHeight: 41, bridgeWidth: 15, templeLength: 135 }
     ];
 
-    const handleClick = (elem) => {
-        setBuffer(elem);
-        setModal(!modal);
-    };
+  const [frame, setFrame] = useState(null);
 
-    const toggleModal = () => {
-        setModal(!modal);
-    };
+  useEffect(() => {
+    if (state && state.frameId) {
+      const foundFrame = data.find((item) => item.id === state.frameId);
+      setFrame(foundFrame);
+    } else {
+      navigate("/frames");
+    }
+  }, [state, navigate]);
 
-    const handleAddToCart = (frameData) => {
-        navigate("/prescription-form", { state: { frameId: frameData.id } }); // Pass only the ID
-        setModal(false);
-    };
+  const [prescriptionDetails, setPrescriptionDetails] = useState({
+    prescription: "",
+    insurance: "",
+  });
 
-    return (
-        <div>
-            <Grid2 sx={{ flexGrow: 1, flexShrink: 1, paddingLeft: 20 }}>
-                <h1 fontFamily="Roboto">Eyeglasses</h1>
-                <h5 fontFamily="Roboto" sx={{ padding: 500 }}>Showing {data.length} Products</h5>
-            </Grid2>
+  const handleChange = (e) => {
+    setPrescriptionDetails({ ...prescriptionDetails, [e.target.name]: e.target.value });
+  };
 
-            <Grid2
-                container
-                spacing={2}
-                direction="row"
-                alignItems="center"
-                justifyContent="center"
-                sx={{ flexGrow: 1, flexShrink: 1, paddingLeft: 2, paddingRight: 2, paddingBottom: 2 }}
-            >
-                {data.map((elem) => (
-                    <Grid2 item minWidth={100} key={data.indexOf(elem)}>
-                        <Card>
-                            <CardActionArea onClick={() => handleClick(elem)}>
-                                <CardMedia
-                                    component="img"
-                                    alt="A pair of glasses"
-                                    height="140"
-                                    src={`${elem.img}`}
-                                />
-                                <CardContent>
-                                    <Grid2 container justifyContent='space-between'>
-                                        <Grid2 item>
-                                            <Typography variant="h5" gutterBottom fontFamily={"Roboto"}>
-                                                {elem.name}
-                                            </Typography>
-                                        </Grid2>
-                                        <Grid2 item>
-                                            <Typography variant="h5" gutterBottom fontWeight={'bold'}>
-                                                {elem.price}
-                                            </Typography>
-                                        </Grid2>
-                                    </Grid2>
-                                </CardContent>
-                            </CardActionArea>
-                        </Card>
-                    </Grid2>
-                ))}
-            </Grid2>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/payment", { state: { frame, prescription: prescriptionDetails.prescription, insurance: prescriptionDetails.insurance } });
+  };
 
-            {modal && (
-                <Modal
-                    data={buffer}
-                    bool={toggleModal}
-                    addToCart={handleAddToCart}
-                />
-            )}
-        </div>
-    );
-};
+  if (!frame) {
+    return <div>Loading...</div>;
+  }
 
-export default Frames;
+  return (
+    <div>
+      <h1>Prescription Form for {frame.name}</h1>
+      <form onSubmit={handleSubmit} style={{ border: "1px solid #ccc", padding: "20px", borderRadius: "5px", width: "300px" }}>
+        <label>Prescription Details:</label>
+        <input
+          type="text"
+          name="prescription"
+          value={prescriptionDetails.prescription}
+          onChange={handleChange}
+          required
+          style={{ display: "block", width: "100%", marginBottom: "10px" }}
+        />
+
+        <label>Insurance:</label>
+        <input
+          type="text"
+          name="insurance"
+          value={prescriptionDetails.insurance}
+          onChange={handleChange}
+          required
+          style={{ display: "block", width: "100%", marginBottom: "10px" }}
+        />
+
+        <button type="submit" style={{ display: "block", width: "100%" }}>Proceed to Payment</button>
+      </form>
+    </div>
+  );
+}
+
+export default PrescriptionForm;
