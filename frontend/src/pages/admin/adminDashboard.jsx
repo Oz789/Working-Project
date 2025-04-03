@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./adminDashboard.css";
-import UserNavbar from "../../components/navBar";
+import UsernavBar from "../../components/navBar";
 
 
 
@@ -84,7 +84,7 @@ const AdminDashboard = ({ sidebarContent, mainContent, extraContent }) => {
   return (
 
     <>
-      <UserNavbar />
+      <UsernavBar />
       <div className="profile-container">
         <div className="profile-wrapper">
 

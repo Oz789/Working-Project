@@ -30,7 +30,6 @@ const PatientProfile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  // 🔥 ADD THIS:
   useEffect(() => {
     const fetchPatientData = async () => {
       try {

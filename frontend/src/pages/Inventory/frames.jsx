@@ -1,9 +1,28 @@
-// Frames.jsx
-import { React, useState } from "react";
-import { Card, CardContent, CardActionArea, CardMedia, Grid2, Typography } from '@mui/material';
-import { useNavigate } from "react-router-dom";
-import Modal from "../../components/Modal";
-import UserNavbar from "../../components/navBar";
+import {React, useState} from "react"
+import { Card, CardContent, CardActionArea, CardMedia, Grid2, CardHeader, Typography, Grow} from '@mui/material';
+import { styled } from "@mui/material/styles";
+import Color from "color";
+import Modal from "../../components/Modal"
+import UsernavBar from "../../components/navBar";
+
+//import ca from "../../Images/CapeMay.webp"
+//import { makeStyles } from '@mui/styles';
+
+
+
+
+
+
+
+// const useStyles = makeStyles(theme => ({
+//     root: {
+//         flexGrow: 1,
+//         padding: theme.spacing(2)
+//     }
+// }))
+
+
+
 
 const Frames = () => {
     const navigate = useNavigate();
@@ -45,10 +64,15 @@ const Frames = () => {
 
     return (
         <div>
-            <Grid2 sx={{ flexGrow: 1, flexShrink: 1, paddingLeft: 20 }}>
-                <h1 fontFamily="Roboto">Eyeglasses</h1>
-                <h5 fontFamily="Roboto" sx={{ padding: 500 }}>Showing {data.length} Products</h5>
-            </Grid2>
+            <UsernavBar/>
+        <Grid2
+        
+        sx={{ flexGrow: 1, flexShrink:1, paddingLeft: 20}}
+        
+        >
+            <h1 fontFamily="Roboto">Eyeglasses</h1>
+            <h5 fontFamily="Roboto" sx={{padding:500}}>Showing 16 Products</h5>
+        </Grid2>
 
             <Grid2
                 container
