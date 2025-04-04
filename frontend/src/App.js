@@ -19,6 +19,7 @@ import AdminFrames from "./pages/admin/frames/adminFrames";
 import AdminContacts from "./pages/admin/contacts/adminContactsPage";
 import AdminServices from "./pages/admin/services/adminServicesPage";
 import AdminStaff from "./pages/admin/employee/manageStaff";
+import UserFrames from "./pages/Inventory/userFrames";
 
 
 
@@ -34,7 +35,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/userProfile/:patientID" element={<PatientProfile />} />
         <Route path="/employeeProfile" element={<EmployeeProfile/>} />
-        <Route path="/frames" element={<Frames/>} />
+        <Route path="/frames" element={<UserFrames/>} />
         <Route path="/log-in" element={<Login/>}/>
         <Route path="/admin-dashboard" element={<AdminProfile/>}/>
         <Route path="/employeeForm" element={<EmployeeForm/>}/>
