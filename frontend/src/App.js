@@ -16,8 +16,6 @@ import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm";
 
 // 🔹 Updated imports for PrescriptionForm and Checkout to match new folder structure
-import PrescriptionForm from "./pages/Inventory/PrescriptionForm";
-//import Checkout from "./pages/Inventory/Checkout";
 import PaymentForm from "./pages/Inventory/PaymentForm"; // Import PaymentForm
 
 function App() {
@@ -38,7 +36,7 @@ function App() {
         <Route path="/doctorProfile/:doctorID" element={<DoctorProfile />} />
 
         {/* 🔹 Routes updated for the Inventory folder */}
-        <Route path="/prescription-form" element={<PrescriptionForm />} />
+        
         <Route path="/payment" element={<PaymentForm />} /> {/* Add this route */}
       </Routes>
     </Router>
