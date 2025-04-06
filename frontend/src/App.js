@@ -10,7 +10,7 @@ import MultiStepForm from "./pages/appointments/MultiStepForm";
 import ProfileTemplate from "./components/profileTemplate";
 import AdminProfile from "./pages/admin/adminProfile";
 import AdminDashboard from "./pages/admin/adminDashboard";
-import DoctorProfile from "./pages/staff/doctorProfile";
+import DoctorProfilePage from "./pages/doctor/doctorProfilePage";
 import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
@@ -20,6 +20,9 @@ import AdminContacts from "./pages/admin/contacts/adminContactsPage";
 import AdminServices from "./pages/admin/services/adminServicesPage";
 import AdminStaff from "./pages/admin/employee/manageStaff";
 import UserFrames from "./pages/Inventory/userFrames";
+import AdminProfilePage from "./pages/admin/adminProfile2";
+
+
 
 
 
@@ -39,11 +42,12 @@ function App() {
         <Route path="/log-in" element={<Login/>}/>
         <Route path="/admin-dashboard" element={<AdminProfile/>}/>
         <Route path="/employeeForm" element={<EmployeeForm/>}/>
-        <Route path="/doctorProfile/:doctorID" element={<DoctorProfile/>}/>
+        <Route path="/doctorProfile/:doctorID" element={<DoctorProfilePage/>}/>
         <Route path="/admin/admin-frames" element={<AdminFrames />} />
         <Route path="/admin/admin-eyeContacts" element={<AdminContacts />} />
         <Route path="/admin/admin-services" element={<AdminServices />} />
         <Route path="/admin/manageStaff" element={<AdminStaff />} />
+        <Route path="/admin-profile" element={<AdminProfilePage />} />
 
 
 

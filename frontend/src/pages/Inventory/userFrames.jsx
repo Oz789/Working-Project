@@ -21,8 +21,7 @@ const UserFrames = () => {
       setFrames(res.data);
     } catch (error) {
       console.error("Failed to fetch frames", error);
-    }
-  };
+    }};
 
   useEffect(() => {
     fetchFrames();
@@ -41,7 +40,19 @@ const handleFrameClick = (frame) => {
     <UsernavBar/>
     <div>
       
-
+    <div>
+  <Typography
+    variant="subtitle1"
+    sx={{
+    fontFamily: "Serif",
+      fontSize: "20px",
+      textAlign: "center",
+      flexGrow: 1
+    }}
+  >
+    Showing {frames.length} Products
+  </Typography>
+  </div>
       <Grid
         container
         spacing={2}

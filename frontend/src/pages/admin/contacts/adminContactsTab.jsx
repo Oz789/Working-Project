@@ -16,7 +16,7 @@ import AdminEditContacts from "./adminEditContacts";
 import "./adminContactsPage.css";
 
 
-const AdminContacts = () => {
+const AdminContactsTab = () => {
     const [contacts, setContacts] = useState([]);
     const [modal, setModal] = useState(false);
     
@@ -64,8 +64,7 @@ const AdminContacts = () => {
 
   return (
     <div>
-      <AdminNavbar />
-      <Grid sx={{ paddingLeft: 4, paddingTop: 2 }}>
+           <Grid sx={{ paddingLeft: 4, paddingTop: 2 }}>
       <div>
   <Typography
     variant="subtitle1"
@@ -79,7 +78,7 @@ const AdminContacts = () => {
     Showing {contacts.length} Products
   </Typography>
   </div>
-
+        
 
   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
     <Button
@@ -105,7 +104,7 @@ const AdminContacts = () => {
     >Add a Product
     </Typography>
   </Box>
-      </Grid>
+  </Grid>
 
       <Grid container spacing={2} justifyContent="center" sx={{ padding: 2 }}>
 
@@ -157,4 +156,4 @@ const AdminContacts = () => {
   );
 };
 
-export default AdminContacts;
+export default AdminContactsTab;

@@ -4,10 +4,12 @@ import MsgManager from "../../components/msgManager";
 import ReplyManager from "../../components/replyManager";
 import {Grid2} from '@mui/material';
 import InvManager from "../../components/employee/invManager";
-
-
+import AdminDashboard from "./adminDashboard";
+import AdminPanel from "./adminPanel";
+import UserNavBar from "../../components/navBar"
 
 import "../employeePortal/employeeProfile.css"
+import AdminFramesTab from "./frames/adminFramesTab";
 
 
 
@@ -67,11 +69,12 @@ const AdminProfile = () => {
 
     return(
 
-      // {messager && (
-
       <div>
+           <UserNavBar/>
+        <div>
+             <AdminPanel />
+           </div>
 
-        
         {!messager && ( <EmployeeTemplate
       /* Left Sidebar (Patient Information) */
       
@@ -89,44 +92,39 @@ const AdminProfile = () => {
       /* Center Section (Medical Form Data) */
       mainContent={
         <div>
-
           <>
             {tabIn === 0 && (
               <>
                 {/* <h2 className="section-title">Inbox</h2> */}
                 <MsgManager
                   bool={toggleMessager}
-                  pass={msgPasser}
-                />
+                  pass={msgPasser}/>
               </>
             )}
             
             {tabIn === 1 && (
-              
-              <InvManager
+              <AdminFramesTab
             //bool={toggleMessager}
             //pass={msgPasser}
-              />
-              
-              
+            />
             )}
 
             {tabIn === 2 && (
-              
               <InvManager
             //bool={toggleMessager}
             //pass={msgPasser}
               />
-              
-              
             )}
+
+          {tabIn === 3 && (
+          <AdminDashboard />
+          )}
+
           </>
-        
         </div>
       }
 
       handleTab={handleTab}
-
 
     />
 
@@ -140,6 +138,7 @@ const AdminProfile = () => {
 
     
   )}
+
     </div>
     
 

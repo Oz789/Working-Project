@@ -16,7 +16,7 @@ import AdminNavbar from "../../../components/navBar";
 import AdminEditFrameModal from "./adminEditFrames";
 import "./adminFrames.css";
 
-const AdminFrames = () => {
+const AdminFramesTab = () => {
   const [frames, setFrames] = useState([]);
   const [modal, setModal] = useState(false);
   const [buffer, setBuffer] = useState(null);
@@ -62,7 +62,7 @@ const AdminFrames = () => {
     try {
       await axios.delete(`http://localhost:5001/api/frames/${id}`);
       setViewModal(false);       
-      fetchFrames();              
+      fetchFrames();               
       console.log("Deleted frame ID:", id);
     } catch (error) {
       console.error("Error deleting frame:", error);
@@ -71,13 +71,9 @@ const AdminFrames = () => {
 
   return (
     <div>
-      <AdminNavbar />
-      <Grid2
-
-  sx={{ paddingX: 4, paddingTop: 2 }}
->
-
-  <div>
+      
+      <Grid2 sx={{ paddingLeft: 4, paddingTop: 2 }}>
+      <div>
   <Typography
     variant="subtitle1"
     sx={{
@@ -90,6 +86,7 @@ const AdminFrames = () => {
     Showing {frames.length} Products
   </Typography>
   </div>
+        
 
   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
     <Button
@@ -115,8 +112,7 @@ const AdminFrames = () => {
     >Add a Frame
     </Typography>
   </Box>
-</Grid2>
-
+      </Grid2>
 
       <Grid2
         container
@@ -169,4 +165,4 @@ const AdminFrames = () => {
   );
 };
 
-export default AdminFrames;
+export default AdminFramesTab;

@@ -34,8 +34,8 @@ body.active-modal {
     background: #f1f1f1;
     padding: 24px;
     border-radius: 10px;
-    width: 900px;          /* fixed width */
-    height: 600px;         /* fixed height */
+    width: 900px;         
+    height: 600px;        
     overflow-y: auto;      
     box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 40px;
   }

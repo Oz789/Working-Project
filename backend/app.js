@@ -21,6 +21,11 @@ const getServicesRoute = require('./routes/admin/getService');
 const deleteServiceRoute = require('./routes/admin/deleteService');
 const deleteEmployeeRoute = require('./routes/employee/deleteEmployee');
 const getEmployeeRoute = require('./routes/employee/getEmployee');
+const updateContactsRoute = require('./routes/admin/updateContacts');
+const updateServicesRoute = require('./routes//admin/updateServices');
+
+
+
 
 
 
@@ -43,12 +48,14 @@ app.use('/api', deleteFrameRoute);
 app.use('/api', updateFrameRoute);
 app.use('/api', createContactRoute);
 app.use('/api', getContactsRoute);
+app.use('/api', updateContactsRoute);
 app.use('/api', deleteContactsRoute);
 app.use('/api', createServiceRoute);
 app.use('/api', getServicesRoute);
 app.use('/api', deleteServiceRoute);
 app.use('/api/employees', deleteEmployeeRoute)
 app.use('/api', getEmployeeRoute)
+app.use('/api', updateServicesRoute);
 
 
 const PORT = process.env.PORT || 5001;

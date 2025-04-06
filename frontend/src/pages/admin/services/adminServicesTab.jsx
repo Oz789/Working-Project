@@ -6,7 +6,8 @@ import {
   CardMedia,
   Typography,
   Grid,
-  Button, Box
+  Button,
+  Box
 } from "@mui/material";
 import axios from "axios";
 import AdminNavbar from "../../../components/navBar";
@@ -14,7 +15,7 @@ import AdminCreateService from "./adminCreateService";
 import AdminEditService from "./adminEditService";
 
 
-    const AdminServices = () => {
+    const AdminServicesTab = () => {
   const [services, setServices] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -59,12 +60,23 @@ const [selectedService, setSelectedService] = useState(null);
 
   return (
     <div>
-      <AdminNavbar />
-      <Grid sx={{ padding: 4 }}>
-       
-        <Typography variant="h3" fontFamily={"Bell MT"} textAlign={"center"}>Our Services</Typography>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Grid sx={{ padding: 4 }}>
+      <div>
+  <Typography
+    variant="subtitle1"
+    sx={{
+      fontFamily: "Serif",
+      fontSize: "20px",
+      textAlign: "center",
+      flexGrow: 1
+    }}
+  >
+    Our Services
+  </Typography>
+  </div>
+
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
     <Button
       variant="contained"
       color="primary"
@@ -139,4 +151,4 @@ const [selectedService, setSelectedService] = useState(null);
   );
 };
 
-export default AdminServices;
+export default AdminServicesTab;
