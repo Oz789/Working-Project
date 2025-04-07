@@ -21,6 +21,8 @@ import AdminServices from "./pages/admin/services/adminServicesPage";
 import AdminStaff from "./pages/admin/employee/manageStaff";
 import UserFrames from "./pages/Inventory/userFrames";
 import AdminProfilePage from "./pages/admin/adminProfile2";
+import InventoryReport from "./pages/admin/reports/inventoryReport";
+import PaymentForm from "./pages/billing/paymentForm";
 
 
 
@@ -48,6 +50,9 @@ function App() {
         <Route path="/admin/admin-services" element={<AdminServices />} />
         <Route path="/admin/manageStaff" element={<AdminStaff />} />
         <Route path="/admin-profile" element={<AdminProfilePage />} />
+        <Route path="/inventory-report" element={<InventoryReport/>} />
+        <Route path="/payment" element={<PaymentForm/>}/>
+        
 
 
 
