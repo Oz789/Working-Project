@@ -3,12 +3,46 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const db = require('../db');
 
+// Get patient by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const patientId = req.params.id;
+    
+    // Get patient basic info
+    const patientQuery = `
+      SELECT * FROM patient WHERE patientID = ?
+    `;
+    const [patientResult] = await db.promise().query(patientQuery, [patientId]);
+    
+    if (patientResult.length === 0) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    // Get patient's medical form data
+    const medicalFormQuery = `
+      SELECT * FROM patientform WHERE patientID = ? ORDER BY visitDate DESC LIMIT 1
+    `;
+    const [medicalFormResult] = await db.promise().query(medicalFormQuery, [patientId]);
+
+    // Combine the data
+    const patientData = {
+      ...patientResult[0],
+      medicalForm: medicalFormResult[0] || {}
+    };
+
+    res.json(patientData);
+  } catch (error) {
+    console.error('Error fetching patient data:', error);
+    res.status(500).json({ error: 'Failed to fetch patient data' });
+  }
+});
+
 // Create patient record
 router.post('/submit', async (req, res) => {
   const {
     firstName,
     lastName,
-    dob,
+    DOB,
     email,
     password,
     phoneNumber,
@@ -71,7 +105,7 @@ router.post('/submit', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const patientValues = [
-      firstName, lastName, dob, sex, occupation, address, phoneNumber, email, hashedPassword
+      firstName, lastName, DOB, sex, occupation, address, phoneNumber, email, hashedPassword
     ];
 
     const [result] = await db.promise().query(patientQuery, patientValues);
@@ -81,7 +115,7 @@ router.post('/submit', async (req, res) => {
     const medicalFormQuery = `
       INSERT INTO patientform (
         patientID, visitDate, usesCorrectiveLenses, usesContacts, 
-        LensesPrescription, ContactsPrescription, lastPrescriptionDate, 
+        LensesPrescription, ContactsPrescription, lastPrescriptionDate,
         healthConcerns, otherConcerns, conditions, otherConditions, 
         hadSurgery, surgeries, otherSurgeries, allergies, additionalDetails
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -128,6 +162,7 @@ router.post('/submit', async (req, res) => {
     console.error('Error creating patient record:', error);
     res.status(500).json({ error: 'Failed to create patient record' });
   }
+
 });
 
-module.exports = router; 
+module.exports = router;

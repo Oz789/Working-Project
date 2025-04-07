@@ -3,7 +3,7 @@ import ProfileTemplate from "../../components/profileTemplate";
 import { useParams } from "react-router-dom";
 
 const PatientProfile = () => {
-  const { id } = useParams();  // grabbing patient ID from URL param
+  const { patientID } = useParams();  // grabbing patient ID from URL param
   
   const [patientData, setPatientData] = useState({
     name: "",
@@ -33,40 +33,46 @@ const PatientProfile = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/patients/${id}`);
+        const res = await fetch(`http://localhost:5001/api/patients/${patientID}`);
+        console.log("Fetch response status:", res.status); // ← LOG STATUS
         if (!res.ok) throw new Error("Failed to fetch patient");
         const data = await res.json();
-
+        console.log("Fetched patient data:", data); // ← LOG RAW DATA
+  
         setPatientData({
           name: `${data.firstName} ${data.lastName}`,
-          email: data.email,
-          dob: data.dob,
-          sex: data.sex,
-          address: data.address,
-          phone: data.phoneNumber,
-          lastExamDate: data.medicalForm.lastExamDate,
+          email: data.email || "",
+          ///dob: data.dob || "",
+          DOB: data.DOB ? data.DOB.slice(0, 10) : "",
+          sex: data.sex || "",
+          address: data.address || "",
+          phone: data.phoneNumber || "",
+          //lastExamDate: data.medicalForm.lastExamDate || "",
+          //lastExamDate: data.medicalForm.lastExamDate ? data.medicalForm.lastExamDate.slice(0, 10) : "",
           usesCorrectiveLenses: data.medicalForm.usesCorrectiveLenses ? "Yes" : "No",
           usesContacts: data.medicalForm.usesContacts ? "Yes" : "No",
-          lensesPrescription: data.medicalForm.LensesPrescription,
-          contactsPrescription: data.medicalForm.ContactsPrescription,
-          lastPrescriptionDate: data.medicalForm.lastPrescriptionDate,
-          healthConcerns: data.medicalForm.healthConcerns,
-          otherConcerns: data.medicalForm.otherConcerns,
-          conditions: data.medicalForm.conditions,
-          otherConditions: data.medicalForm.otherConditions,
+          lensesPrescription: data.medicalForm.LensesPrescription || "",
+          contactsPrescription: data.medicalForm.ContactsPrescription || "",
+          //lastPrescriptionDate: data.medicalForm.lastPrescriptionDate || "",
+          lastPrescriptionDate: data.medicalForm.lastPrescriptionDate ? data.medicalForm.lastPrescriptionDate.slice(0, 10) : "",
+          healthConcerns: (data.medicalForm.healthConcerns || "").split(',').join(', '),
+          otherConcerns: data.medicalForm.otherConcerns || "",
+          conditions: (data.medicalForm.conditions || "").split(',').join(', '),
+          otherConditions: data.medicalForm.otherConditions || "",
           hadSurgery: data.medicalForm.hadSurgery ? "Yes" : "No",
-          surgeries: data.medicalForm.surgeries,
-          otherSurgeries: data.medicalForm.otherSurgeries,
-          allergies: data.medicalForm.allergies,
-          additionalDetails: data.medicalForm.additionalDetails,
+          surgeries: (data.medicalForm.surgeries || "").split(',').join(', '),
+          otherSurgeries: data.medicalForm.otherSurgeries || "",
+          allergies: data.medicalForm.allergies || "",
+          additionalDetails: data.medicalForm.additionalDetails || "",
         });
       } catch (err) {
         console.error("Error fetching patient data:", err);
       }
     };
-
+  
     fetchPatientData();
-  }, [id]);
+  }, [patientID]);
+  
 
   //const [isEditing, setIsEditing] = useState(false);
 
@@ -87,7 +93,7 @@ const PatientProfile = () => {
           <input type="email" name="email" value={patientData.email} onChange={handleChange} className="input-field" readOnly={!isEditing} />
 
           <label>DOB:</label>
-          <input type="date" name="dob" value={patientData.dob} onChange={handleChange} className="input-field" readOnly={!isEditing} />
+          <input type="date" name="dob" value={patientData.DOB} onChange={handleChange} className="input-field" readOnly={!isEditing} />
 
           <label>Sex:</label>
           <select name="sex" value={patientData.sex} onChange={handleChange} className="input-field" disabled={!isEditing}>
