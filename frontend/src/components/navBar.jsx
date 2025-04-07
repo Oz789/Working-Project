@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 
 
 
-const navBar = () => {
+const Navbar = () => {
   
+
   //const [productsDropdown, setProductsDropdown] = useState(false);
 
   return (
@@ -74,4 +75,4 @@ const navBar = () => {
   );
 };
 
-export default navBar;
+export default Navbar;
