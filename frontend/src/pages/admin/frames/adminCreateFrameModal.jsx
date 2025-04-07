@@ -5,14 +5,31 @@ import {
   TextField,
   Button,
   IconButton,
+  MenuItem
 } from '@mui/material';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import './adminFrames.css';
 
+const sizeOptions = {
+  Small: {
+    lensWidth: '42-48 mm',
+    bridgeWidth: '16-17 mm',
+    templeLength: '130-135 mm',
+  },
+  Medium: {
+    lensWidth: '49-52 mm',
+    bridgeWidth: '18-19 mm',
+    templeLength: '136-140 mm',
+  },
+  Large: {
+    lensWidth: '53-58 mm',
+    bridgeWidth: '20-22 mm',
+    templeLength: '141-150 mm',
+  }
+};
 
-// These are the SQL table attributes
-const AdminFrameModal = ({ toggleModal, onSubmit }) => {
-  const [form, setForm] = useState({ 
+const AdminFrameModal = ({  onClose, onSubmit }) => {
+  const [form, setForm] = useState({
     name: '',
     price: '',
     brand: '',
@@ -20,24 +37,40 @@ const AdminFrameModal = ({ toggleModal, onSubmit }) => {
     model: '',
     material: '',
     lensWidth: '',
-    lensHeight: '',
     bridgeWidth: '',
     templeLength: '',
     img: '',
+    stockCount: '',
   });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleSizeChange = (e) => {
+    const selected = e.target.value;
+    const values = sizeOptions[selected];
+    setForm({
+      ...form,
+      lensWidth: values.lensWidth,
+      bridgeWidth: values.bridgeWidth,
+      templeLength: values.templeLength,
+    });
+  };
+
   const handleSubmit = () => {
     onSubmit(form);
-    toggleModal();
+    if (typeof onClose === "function") onClose();
+    
   };
 
   return (
     <div className="modal">
-      <div className="overlay"></div>
+        <div className="overlay"
+    onClick={(e) => { e.stopPropagation();
+      if (typeof onClose === "function") onClose();
+  }}
+></div>
       <div className="modal-content">
         <Grid container spacing={2} direction="column" padding={2}>
           <Typography variant="h4">Create New Frame</Typography>
@@ -80,21 +113,58 @@ const AdminFrameModal = ({ toggleModal, onSubmit }) => {
             <Grid item xs={6}>
               <TextField name="color" label="Color" value={form.color} onChange={handleChange} fullWidth />
             </Grid>
+            
           </Grid>
 
           <Grid container spacing={2} paddingTop={2}>
-            <Grid item xs={6}>
-              <TextField name="lensWidth" label="Lens Width (mm)" value={form.lensWidth} onChange={handleChange} fullWidth />
+            <Grid item xs={12}>
+              <TextField
+                select
+                label="Select Size"
+                fullWidth
+                onChange={handleSizeChange}
+              >
+                {Object.keys(sizeOptions).map((key) => (
+                  <MenuItem key={key} value={key}>{key}</MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={6}>
-              <TextField name="lensHeight" label="Lens Height (mm)" value={form.lensHeight} onChange={handleChange} fullWidth />
+              <TextField
+                name="lensWidth"
+                label="Lens Width (mm)"
+                value={form.lensWidth}
+                onChange={handleChange}
+                fullWidth
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField name="bridgeWidth" label="Bridge Width (mm)" value={form.bridgeWidth} onChange={handleChange} fullWidth />
+              <TextField
+                name="bridgeWidth"
+                label="Bridge Width (mm)"
+                value={form.bridgeWidth}
+                onChange={handleChange}
+                fullWidth
+              />
             </Grid>
             <Grid item xs={6}>
-              <TextField name="templeLength" label="Temple Length (mm)" value={form.templeLength} onChange={handleChange} fullWidth />
+              <TextField
+                name="templeLength"
+                label="Temple Length (mm)"
+                value={form.templeLength}
+                onChange={handleChange}
+                fullWidth
+              />
             </Grid>
+            <Grid item xs={6}>
+        <TextField
+           name="stockCount"
+          label="Stock Count"
+          value={form.stockCount}
+        onChange={handleChange}
+        fullWidth
+    />
+</Grid>
           </Grid>
 
           <Button variant="contained" sx={{ marginTop: 3 }} onClick={handleSubmit}>
@@ -102,7 +172,7 @@ const AdminFrameModal = ({ toggleModal, onSubmit }) => {
           </Button>
         </Grid>
 
-        <IconButton className="shifter" onClick={toggleModal}>
+        <IconButton className="shifter" onClick={onClose}>
           <CancelPresentationIcon sx={{ fontSize: 50 }} />
         </IconButton>
       </div>
@@ -111,5 +181,6 @@ const AdminFrameModal = ({ toggleModal, onSubmit }) => {
 };
 
 export default AdminFrameModal;
+
 
 

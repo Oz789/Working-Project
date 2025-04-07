@@ -61,7 +61,7 @@ const AdminFrames = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5001/api/frames/${id}`);
-      setViewModal(false);       
+      setViewModal(false);         // Close the modal
       fetchFrames();              
       console.log("Deleted frame ID:", id);
     } catch (error) {
@@ -150,7 +150,7 @@ const AdminFrames = () => {
 
       {modal && (
         <AdminFrameModal
-          toggleModal={() => setModal(false)}
+        onClose={() => setModal(false)}
           onSubmit={handleCreate}
         />
       )}

@@ -146,7 +146,7 @@ const AdminFramesTab = () => {
 
       {modal && (
         <AdminFrameModal
-          toggleModal={() => setModal(false)}
+          onClose={() => setModal(false)}
           onSubmit={handleCreate}
         />
       )}

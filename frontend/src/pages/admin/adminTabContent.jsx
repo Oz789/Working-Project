@@ -5,7 +5,7 @@ import ManageStaffTab from "./employee/manageStaffTab";
 import AdminContactsTab from "./contacts/adminContactsTab";
 import AdminServicesTab from "./services/adminServicesTab";
 import MsgManager from "../../components/msgManager";
-import AdminReports from "./reports/adminReports";
+import AdminReportsPage from "./reports/adminReportsPage";
 
 const AdminTabContent = ({ activeTab }) => {
 
@@ -34,7 +34,7 @@ const AdminTabContent = ({ activeTab }) => {
     case 5:
       return <ManageStaffTab/>
     case 6:
-      return <AdminReports/>
+      return <AdminReportsPage/>
     default:
       return null;
   }
