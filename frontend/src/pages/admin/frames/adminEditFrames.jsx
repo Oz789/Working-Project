@@ -12,7 +12,9 @@ import axios from 'axios';
 const AdminEditFrameModal = ({ data, onClose, onEdit, onDelete }) => {
 
   const [editMode, setEditMode] = useState(false);
-const [editedFrame, setEditedFrame] = useState({ ...data });
+const [editedFrame, setEditedFrame] = useState({ ...data, stockCount: data.stockCount || 0  });
+
+
 
 
   useEffect(() => {
@@ -35,13 +37,17 @@ const [editedFrame, setEditedFrame] = useState({ ...data });
   };
   const {
     name, price, img,
-    brand, model, material, shape,
-    frameType, lensWidth, lensHeight, bridgeWidth, templeLength
+    brand, model, material, shape, size,
+   lensWidth, bridgeWidth, templeLength
   } = data;
 
   return (
     <div className="modal">
-      <div className="overlay"></div>
+        <div className="overlay"
+    onClick={(e) => { e.stopPropagation();
+      if (typeof onClose === "function") onClose();
+  }}
+></div>
       <div className="modal-content">
         <Grid container spacing={2} padding={2}>
   
@@ -108,15 +114,46 @@ const [editedFrame, setEditedFrame] = useState({ ...data });
                 <Typography variant="h6">Dimensions</Typography>
                 {editMode ? (
                   <>
-                    <TextField fullWidth name="lensWidth" label="Lens Width" value={editedFrame.lensWidth} onChange={handleChange} margin="dense" />
-                    <TextField fullWidth name="lensHeight" label="Lens Height" value={editedFrame.lensHeight} onChange={handleChange} margin="dense" />
-                    <TextField fullWidth name="bridgeWidth" label="Bridge Width" value={editedFrame.bridgeWidth} onChange={handleChange} margin="dense" />
-                    <TextField fullWidth name="templeLength" label="Temple Length" value={editedFrame.templeLength} onChange={handleChange} margin="dense" />
+                  <TextField
+                  select
+                  label="Size"
+                  fullWidth
+                  value={editedFrame.size || ""}
+                  onChange={(e) => {
+                    const size = e.target.value;
+                    const sizeMap = {
+                      Small: { lensWidth: "48", bridgeWidth: "16", templeLength: "135" },
+                      Medium: { lensWidth: "52", bridgeWidth: "18", templeLength: "140" },
+                      Large: { lensWidth: "56", bridgeWidth: "20", templeLength: "145" },
+                    };
+                    const dims = sizeMap[size] || {};
+                    setEditedFrame((prev) => ({
+                      ...prev,
+                      size,
+                      ...dims,
+                    }));
+                  }}
+                  margin="dense"
+                  SelectProps={{
+                    native: true,
+                  }}
+                >
+                  <option value="">Select Size</option>
+                  <option value="Small">Small</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Large">Large</option>
+                </TextField>
+
+                <TextField fullWidth name="lensWidth" label="Lens Width" value={editedFrame.lensWidth} onChange={handleChange} margin="dense" />
+                <TextField fullWidth name="bridgeWidth" label="Bridge Width" value={editedFrame.bridgeWidth} onChange={handleChange} margin="dense" />
+                <TextField fullWidth name="templeLength" label="Temple Length" value={editedFrame.templeLength} onChange={handleChange} margin="dense" />
                   </>
+
                 ) : (
                   <>
+                    <Typography><b>Size:</b>{size}</Typography>
                     <Typography><b>Lens Width:</b> {lensWidth}mm</Typography>
-                    <Typography><b>Lens Height:</b> {lensHeight}mm</Typography>
+
                     <Typography><b>Bridge Width:</b> {bridgeWidth}mm</Typography>
                     <Typography><b>Temple Length:</b> {templeLength}mm</Typography>
                   </>
@@ -132,7 +169,8 @@ const [editedFrame, setEditedFrame] = useState({ ...data });
                     <TextField fullWidth name="model" label="Model" value={editedFrame.model} onChange={handleChange} margin="dense" />
                     <TextField fullWidth name="material" label="Material" value={editedFrame.material} onChange={handleChange} margin="dense" />
                     <TextField fullWidth name="shape" label="Shape" value={editedFrame.shape} onChange={handleChange} margin="dense" />
-                    <TextField fullWidth name="frameType" label="Frame Type" value={editedFrame.frameType} onChange={handleChange} margin="dense" />
+                    <TextField fullWidth name="stockCount"label="Stock Count" type="number" value={editedFrame.stockCount} onChange={handleChange}margin="dense"
+/>
                   </>
                 ) : (
                   <>
@@ -140,7 +178,9 @@ const [editedFrame, setEditedFrame] = useState({ ...data });
                     <Typography><b>Model:</b> {model}</Typography>
                     <Typography><b>Material:</b> {material}</Typography>
                     <Typography><b>Shape:</b> {shape}</Typography>
-                    <Typography><b>Frame Type:</b> {frameType}</Typography>
+                    <Typography><b>Stock:</b> {editedFrame.stockCount}</Typography>
+
+
                   </>
                 )}
               </Grid>
@@ -148,7 +188,7 @@ const [editedFrame, setEditedFrame] = useState({ ...data });
           </Grid>
         </Grid>
   
-        
+        {/* Close Icon */}
         <IconButton className="shifter" onClick={onClose}>
           <CancelPresentationIcon sx={{ fontSize: 50 }} />
         </IconButton>

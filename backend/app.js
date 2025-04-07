@@ -22,7 +22,8 @@ const deleteServiceRoute = require('./routes/admin/deleteService');
 const deleteEmployeeRoute = require('./routes/employee/deleteEmployee');
 const getEmployeeRoute = require('./routes/employee/getEmployee');
 const updateContactsRoute = require('./routes/admin/updateContacts');
-const updateServicesRoute = require('./routes//admin/updateServices');
+const updateServicesRoute = require('./routes/admin/updateServices');
+const getInventoryRoute = require('./routes/reports/getInventory');
 
 
 
@@ -56,6 +57,7 @@ app.use('/api', deleteServiceRoute);
 app.use('/api/employees', deleteEmployeeRoute)
 app.use('/api', getEmployeeRoute)
 app.use('/api', updateServicesRoute);
+app.use('/api', getInventoryRoute);
 
 
 const PORT = process.env.PORT || 5001;

@@ -18,7 +18,7 @@ const AdminCreateContactModal = ({ toggleModal, onSubmit }) => {
     visionType: "",
     use: "",
     daysSupply: "",
-    waterContent: "",
+    stockCount: "",
     img: ""
   });
 
@@ -28,27 +28,58 @@ const AdminCreateContactModal = ({ toggleModal, onSubmit }) => {
 
   const handleSubmit = () => {
     onSubmit(form);
+    toggleModal();
   };
 
   return (
     <div className="modal">
       <div className="overlay"></div>
-      
+
       <div className="modal-content">
         <Grid container spacing={2} direction="column" padding={2}>
           <Typography variant="h4">Create New Contact Lens</Typography>
 
-          <TextField name="name" label="Name" value={form.name} onChange={handleChange} />
-          <TextField name="price" label="Price (e.g. $99.99)" value={form.price} onChange={handleChange} />
-          <TextField name="img" label="Image Path (e.g. /Images/example.webp)" value={form.img} onChange={handleChange} />
+          <TextField
+            name="name"
+            label="Name"
+            value={form.name}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField
+            name="price"
+            label="Price (e.g. $99.99)"
+            value={form.price}
+            onChange={handleChange}
+            fullWidth
+          />
+          <TextField
+            name="img"
+            label="Image Path (e.g. /Images/example.webp)"
+            value={form.img}
+            onChange={handleChange}
+            fullWidth
+          />
 
-          <Grid container spacing={2}>
-              <Grid item xs={6}><TextField name="brand" label="Brand" value={form.brand} onChange={handleChange} fullWidth /></Grid>
-            <Grid item xs={6}><TextField name="model" label="Model" value={form.model} onChange={handleChange} fullWidth /></Grid>
-              <Grid item xs={6}><TextField name="visionType" label="Vision Type" value={form.visionType} onChange={handleChange} fullWidth /></Grid>
-            < Grid item xs={6}><TextField name="use" label="Use (Daily, Monthly...)" value={form.use} onChange={handleChange} fullWidth /></Grid>
-              <Grid item xs={6}><TextField name="daysSupply" label="Days Supply" value={form.daysSupply} onChange={handleChange} fullWidth /></Grid>
-              <Grid item xs={6}><TextField name="waterContent" label="Water Content" value={form.waterContent} onChange={handleChange} fullWidth /></Grid>
+          <Grid container spacing={2} paddingTop={2}>
+            <Grid item xs={6}>
+              <TextField name="brand" label="Brand" value={form.brand} onChange={handleChange} fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField name="model" label="Model" value={form.model} onChange={handleChange} fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField name="visionType" label="Vision Type" value={form.visionType} onChange={handleChange} fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField name="use" label="Use (Daily, Monthly...)" value={form.use} onChange={handleChange} fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField name="daysSupply" label="Days Supply" value={form.daysSupply} onChange={handleChange} fullWidth />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField name="stockCount" label="Stock Count" value={form.stockCount} onChange={handleChange} fullWidth />
+            </Grid>
           </Grid>
 
           <Button variant="contained" sx={{ marginTop: 3 }} onClick={handleSubmit}>
@@ -65,3 +96,4 @@ const AdminCreateContactModal = ({ toggleModal, onSubmit }) => {
 };
 
 export default AdminCreateContactModal;
+

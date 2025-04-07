@@ -10,15 +10,10 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import './adminContactsModal.css'; 
 import axios from 'axios';
 
-
 const AdminEditContacts = ({ data, onClose, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({ ...data });
-  const {
-    name, price, img,
-    brand, model, visionType, use,
-    daysSupply, waterContent
-  } = data;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
@@ -36,13 +31,19 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
 
   return (
     <div className="modal">
-      <div className="overlay"></div>
+      <div className="overlay"
+    onClick={(e) => { e.stopPropagation();
+      if (typeof onClose === "function") onClose();
+  }}
+></div>
       <div className="modal-content">
         <Grid container spacing={2} padding={2}>
+   
           <Grid item xs={12} sm={6}>
-            <img src="/Images/1_DAY_ACUVUE_MOIST_90_Pack.avif" alt="Contact Lens" className="item-image" />
+            <img src={data.img || "/Images/1_DAY_ACUVUE_MOIST_90_Pack.avif"} alt="Contact Lens" className="item-image" />
           </Grid>
-
+                                       {/* CHANGE IMAGE HERE !!!!! */}
+         
           <Grid item xs={12} sm={6}>
             {isEditing ? (
               <>
@@ -72,11 +73,13 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
             </Grid>
           </Grid>
 
+          {/* Details */}
           <Grid item xs={12}>
             <Grid container spacing={2}>
+              {/* Left column */}
               <Grid item xs={12} sm={6}>
                 <Typography variant="h6">Lens Details</Typography>
-                {["brand", "model", "use", "visionType"].map((field) => (
+                {["brand", "model", "use", "visionType"].map((field) =>
                   isEditing ? (
                     <TextField
                       key={field}
@@ -90,12 +93,12 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
                   ) : (
                     <Typography key={field}><b>{field}:</b> {data[field]}</Typography>
                   )
-                ))}
+                )}
               </Grid>
 
               <Grid item xs={12} sm={6}>
                 <Typography variant="h6">Additional Info</Typography>
-                {["daysSupply", "waterContent"].map((field) => (
+                {["daysSupply", "stockCount"].map((field) =>
                   isEditing ? (
                     <TextField
                       key={field}
@@ -109,11 +112,14 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
                   ) : (
                     <Typography key={field}><b>{field}:</b> {data[field]}</Typography>
                   )
-                ))}
+                )}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
+
+
+
 
         <IconButton className="shifter" onClick={onClose}>
           <CancelPresentationIcon sx={{ fontSize: 50 }} />
@@ -124,3 +130,4 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
 };
 
 export default AdminEditContacts;
+

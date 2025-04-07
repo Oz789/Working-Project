@@ -11,14 +11,16 @@ router.post('/createContact', (req, res) => {
     visionType,
     use,
     daysSupply,
-    waterContent,
-    img
+    img,
+    stockCount // new field expected from frontend
   } = req.body;
 
-  const query = ` INSERT INTO eyeContacts (name, price, brand, model, visionType, useType, daysSupply, waterContent, img)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) `;
+  const insertContactQuery = `
+    INSERT INTO eyeContacts (name, price, brand, model, visionType, useType, daysSupply, img)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
-  db.query(query, [
+  const contactValues = [
     name,
     price,
     brand,
@@ -26,15 +28,32 @@ router.post('/createContact', (req, res) => {
     visionType,
     use,
     daysSupply,
-    waterContent,
     img
-  ], (err, result) => {
+  ];
+
+  db.query(insertContactQuery, contactValues, (err, result) => {
     if (err) {
       console.error("Error inserting contact lens:", err);
       return res.status(500).json({ error: "Failed to create contact lens" });
     }
-    res.status(201).json({ message: "Contact lens created successfully" });
+
+    const contactID = result.insertId;
+
+    const inventoryQuery = `
+      INSERT INTO inventory (contactID, stockCount)
+      VALUES (?, ?)
+    `;
+
+    db.query(inventoryQuery, [contactID, stockCount], (invErr) => {
+      if (invErr) {
+        console.error("Error inserting into inventory:", invErr);
+        return res.status(500).json({ error: "Contact lens created, but failed to add to inventory" });
+      }
+
+      res.status(201).json({ message: "Contact and inventory added", contactID });
+    });
   });
 });
 
 module.exports = router;
+
