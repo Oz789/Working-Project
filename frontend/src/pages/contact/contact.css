@@ -1,96 +1,89 @@
-/* Centering the form container */
-.contact-form-container {
-    display: flex;
-    justify-content: center;
+/* Overall page layout */
+.contact-page {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.contact-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+}
+
+.contact-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Shared styles for both boxes */
+.contact-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
+}
+
+.contact-box h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.contact-box p {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+/* Form elements */
+.contact-box form input,
+.contact-box form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.contact-box form textarea {
+  resize: vertical;
+  height: 120px;
+}
+
+.contact-box form button {
+  background-color: #007bff;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-box form button:hover {
+  background-color: #0056b3;
+}
+
+.status-message {
+  margin-top: 1rem;
+  color: green;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .contact-grid {
+    flex-direction: column;
     align-items: center;
-    min-height: 80vh;
-    padding: 20px;
-  }
-  
-  .contact-form {
-    background-color: #ffffff;
-    padding: 20px;
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-  }
-  
-  .contact-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  /* Styling form labels */
-  .contact-form label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  /* Styling input fields */
-  .contact-form input,
-  .contact-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    border-color: #0056b3;
-    outline: none;
-  }
-  
-  /* Submit button styling */
-  .submit-button {
-    background-color: #002855;
-    color: #ffffff;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submit-button:hover {
-    background-color: #004080;
-  }
-  
-  /* Row layout for first and last name fields */
-  .form-group.row {
-    display: flex;
-    gap: 15px;
-  }
-  
-  .col {
-    flex: 1;
-  }
-  
-  /* Styling the required note */
-  .required-note {
-    color: #333;
-    font-size: 14px;
-    margin-top: 10px;
-    text-align: left;
-  }
-  
-  /* Media query for better responsiveness */
-  @media (max-width: 600px) {
-    .form-group.row {
-      flex-direction: column;
-    }
   }
 }
