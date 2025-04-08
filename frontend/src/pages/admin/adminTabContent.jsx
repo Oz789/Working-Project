@@ -34,7 +34,22 @@ const AdminTabContent = ({ activeTab }) => {
     case 5:
       return <ManageStaffTab/>
     case 6:
-      return <AdminReportsPage/>
+      
+      return (
+       /* <div
+        style={{
+          backgroundImage: `url('/images/white.jpg')`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          padding: '2rem'
+        }}
+      >
+      </div>*/
+      <AdminReportsPage />
+      );
+    
     default:
       return null;
   }
