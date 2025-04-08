@@ -3,7 +3,8 @@ import GeneralInfoForm from './GeneralInfoForm';
 import MedicalInfoForm from './MedicalInfoForm';
 import AdditionalDetailsForm from './AdditionalDetailsForm';
 import ScheduleAppointment from './ScheduleAppointment'; // NEW
-import UserNavbar from "../../components/navBar";
+import UserNavbar from "../../components/NavBar";
+//import UsernavBar from "../../components/navBar";
 import './form.css';
 
 export default function MultiStepForm() {
