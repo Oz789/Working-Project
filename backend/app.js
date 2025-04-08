@@ -26,6 +26,8 @@ const updateServicesRoute = require('./routes/admin/updateServices');
 const getInventoryRoute = require('./routes/reports/getInventory');
 
 
+const checkoutRoutes = require('./routes/checkoutRoutes');
+
 
 
 
@@ -35,6 +37,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+
+app.use('/api/checkout', checkoutRoutes);
 app.use('/api/employees', employeeRoutes); 
 app.use('/api/login', loginRoutes);
 app.use('/api/doctor', createDoctorRoute);
