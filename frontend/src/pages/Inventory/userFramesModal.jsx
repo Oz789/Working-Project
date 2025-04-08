@@ -6,14 +6,18 @@ import {
   IconButton
 } from '@mui/material';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
+import { useCart } from "../../context/CartContext"; // Correct import path
 import '../admin/frames/adminFrames.css';
 
-const UserFramesModal = ({ data, onClose, onPurchase }) => {
-  const {
-    name, price, img,
-    brand, model, material, shape,
-    frameType, lensWidth, lensHeight, bridgeWidth, templeLength
-  } = data;
+const UserFramesModal = ({ data, onClose }) => {
+  const { name, price, img, brand, model, material, shape, frameType, lensWidth, lensHeight, bridgeWidth, templeLength } = data;
+
+  const { addToCart } = useCart();  // Accessing addToCart from the CartContext
+
+  const handlePurchase = () => {
+    addToCart(data);  // Adding the selected frame to the cart
+    onClose();  // Close the modal after adding to cart
+  };
 
   return (
     <div className="modal">
@@ -21,7 +25,7 @@ const UserFramesModal = ({ data, onClose, onPurchase }) => {
       <div className="modal-content">
         <Grid container spacing={2} padding={2}>
           <Grid item xs={12} sm={6}>
-            <img src="/images/brevik.webp" alt="Eyeglass" className="item-image" />
+            <img src={img} alt="Eyeglass" className="item-image" />
           </Grid>
 
           <Grid item xs={12} sm={6}>
@@ -30,7 +34,7 @@ const UserFramesModal = ({ data, onClose, onPurchase }) => {
 
             <Grid container spacing={2} paddingTop={4}>
               <Grid item>
-                <Button variant="contained" color="success" onClick={onPurchase}>
+                <Button variant="contained" color="success" onClick={handlePurchase}>
                   Purchase
                 </Button>
               </Grid>
