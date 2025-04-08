@@ -8,6 +8,7 @@ const createDoctorRoute = require("./routes/doctor/createDoctor");
 const getDoctorRoute = require("./routes/doctor/getDoctor");
 const patientRoutes = require("./routes/patientRoutes");
 const messageRoutes = require("./routes/message/getMessage");
+const appointmentRoutes = require('./routes/appointmentRoutes');
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ app.use("/api/login", loginRoutes);
 app.use("/api/doctor", createDoctorRoute);
 app.use("/api", getDoctorRoute);
 app.use("/api/patients", patientRoutes);
+app.use('/api/appointments', appointmentRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/", createContacts);
 
