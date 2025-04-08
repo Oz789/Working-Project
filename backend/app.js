@@ -24,6 +24,7 @@ const getEmployeeRoute = require('./routes/employee/getEmployee');
 const updateContactsRoute = require('./routes/admin/updateContacts');
 const updateServicesRoute = require('./routes/admin/updateServices');
 const getInventoryRoute = require('./routes/reports/getInventory');
+const appointmentRoutes = require('./routes/appointmentRoutes');
 
 
 const checkoutRoutes = require('./routes/checkoutRoutes');
@@ -38,7 +39,15 @@ app.use(express.json());
 app.use(cors());
 
 
-app.use('/api/checkout', checkoutRoutes);
+app.use("/api/employees", employeeRoutes);
+app.use("/api/login", loginRoutes);
+app.use("/api/doctor", createDoctorRoute);
+app.use("/api", getDoctorRoute);
+app.use("/api/patients", patientRoutes);
+app.use('/api/appointments', appointmentRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/", createContacts);
+
 app.use('/api/employees', employeeRoutes); 
 app.use('/api/login', loginRoutes);
 app.use('/api/doctor', createDoctorRoute);
