@@ -35,6 +35,7 @@ const theme = createTheme({
 
 const Modal = (props) => {
     const { id, name, price, img, brand, model, material, shape, gender, frameType, lensWidth, lensHeight, bridgeWidth, templeLength} = props.data;
+
     const navigate = useNavigate();
 
     const handleAddToCartClick = () => {
@@ -55,6 +56,7 @@ const Modal = (props) => {
                         paddingTop={2}
                     >
                         {/* <img src={`${img}`} className="item-image" alt="Test" /> */}
+
                         <Grid2>
                             <img src={`${img}`} className="item-image" alt="Test" />
                         </Grid2>
@@ -80,6 +82,8 @@ const Modal = (props) => {
                     {}
                     {}
                     </Grid2>
+
+
                     <Grid2
                         container
                         direction="row"

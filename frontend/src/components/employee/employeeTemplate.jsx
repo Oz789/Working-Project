@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "./employeeTemplate.css";
-import UsernavBar from "../navBar";
+import UsernavBar from "../NavBar";
 import  TabsSerrated  from "../../components/tabs";
 import {Grid2} from '@mui/material';
 
 const EmployeeTemplate = ({ sidebarContent, mainContent, handleTab}) => {
   return (
     <>
-      <UsernavBar />
+   
       <div className="profile-container">
         <div className="profile-wrapper">
 
@@ -24,7 +24,7 @@ const EmployeeTemplate = ({ sidebarContent, mainContent, handleTab}) => {
 
             
               <div className="profile-content">
-                {mainContent ? mainContent : <p style={{ color: "#aaa", fontStyle: "italic" }}>Penis</p>}
+                {mainContent ? mainContent : <p style={{ color: "#aaa", fontStyle: "italic" }}></p>}
               </div>
             
           </Grid2>
