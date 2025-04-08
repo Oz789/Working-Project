@@ -3,7 +3,7 @@ import GeneralInfoForm from './GeneralInfoForm';
 import MedicalInfoForm from './MedicalInfoForm';
 import AdditionalDetailsForm from './AdditionalDetailsForm';
 import ScheduleAppointment from './ScheduleAppointment'; // NEW
-import UserNavbar from "../../components/NavBar";
+import UserNavbar from "../../components/navBar";
 //import UsernavBar from "../../components/navBar";
 import './form.css';
 

@@ -16,7 +16,7 @@ import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 
 import EmployeeForm from "./pages/employeePortal/employeeForm";
-import PaymentForm from "./pages/Inventory/PaymentForm"; // Import PaymentForm
+//import PaymentForm from "./pages/Inventory/PaymentForm"; // Import PaymentForm
 import AdminFrames from "./pages/admin/frames/adminFrames";
 import AdminContacts from "./pages/admin/contacts/adminContactsPage";
 import AdminServices from "./pages/admin/services/adminServicesPage";
