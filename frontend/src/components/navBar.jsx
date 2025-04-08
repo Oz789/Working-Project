@@ -7,8 +7,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   
   const [productsDropdown, setProductsDropdown] = useState(false);
-
-  return (
+  return(
     <Box sx={{ flexGrow: 1 }}>
       <AppBar sx={{ backgroundColor: "#fffbed", height: "65px", boxShadow: "brown", borderBottom: "2px solid #8B5A2B" }} position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
