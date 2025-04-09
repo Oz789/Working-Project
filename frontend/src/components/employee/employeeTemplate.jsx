@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./employeeTemplate.css";
-import UsernavBar from "../navBar";
+//import UsernavBar from "../navBar";
 import  TabsSerrated  from "../../components/tabs";
 import {Grid2} from '@mui/material';
 
