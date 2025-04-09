@@ -16,7 +16,7 @@ import AboutP from "./pages/about/aboutPage";
 import EmployeeProfile from "./pages/employeePortal/employeeProfile";
 
 import EmployeeForm from "./pages/employeePortal/employeeForm";
-import PaymentForm from "./pages/Inventory/PaymentForm"; // Import PaymentForm
+//import PaymentForm from "./pages/Inventory/PaymentForm"; // Import PaymentForm
 import AdminFrames from "./pages/admin/frames/adminFrames";
 import AdminContacts from "./pages/admin/contacts/adminContactsPage";
 import AdminServices from "./pages/admin/services/adminServicesPage";
@@ -25,6 +25,8 @@ import UserFrames from "./pages/Inventory/userFrames";
 import AdminProfilePage from "./pages/admin/adminProfile2";
 import InventoryReport from "./pages/admin/reports/inventoryReport";
 import PaymentForm from "./pages/billing/paymentForm";
+
+import EmployeeProfilePage from "./pages/employeePortal/employeeProfile2";
 
 function App() {
   return (
@@ -37,7 +39,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/userProfile/:patientID" element={<PatientProfile />} />
 
-        <Route path="/employeeProfile" element={<EmployeeProfile/>} />
+        <Route path="/employeeProfile" element={<EmployeeProfilePage/>} />
         <Route path="/frames" element={<UserFrames/>} />
         <Route path="/log-in" element={<Login/>}/>
         <Route path="/admin-dashboard" element={<AdminProfile/>}/>
