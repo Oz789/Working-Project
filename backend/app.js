@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const db = require("./db"); 
@@ -25,8 +26,8 @@ const updateContactsRoute = require('./routes/admin/updateContacts');
 const updateServicesRoute = require('./routes/admin/updateServices');
 const getInventoryRoute = require('./routes/reports/getInventory');
 const appointmentRoutes = require('./routes/appointmentRoutes');
-
-
+const checkoutRoutes = require('./routes/checkoutRoutes');
+const authenticateToken = require('./middleware/auth');
 
 
 
@@ -36,6 +37,13 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.get("/api/protected", authenticateToken, (req, res) => {
+    res.json({
+      message: "Access granted to protected route ✅",
+      user: req.user
+    });
+  });
+
 app.use("/api/employees", employeeRoutes);
 app.use("/api/login", loginRoutes);
 app.use("/api/doctor", createDoctorRoute);
@@ -44,6 +52,7 @@ app.use("/api/patients", patientRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/", createContacts);
+app.use("/", checkoutRoutes)
 app.use('/api/employees', employeeRoutes); 
 app.use('/api/login', loginRoutes);
 app.use('/api/doctor', createDoctorRoute);

@@ -14,46 +14,57 @@ const Login = () => {
 
   const handleLogin = async () => {
     console.log("Sending login for:", email, password);
-
-    try {const res = await fetch("http://localhost:5001/api/login/employee", {
+  
+    try {
+      const res = await fetch("http://localhost:5001/api/login/employee", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
+  
       if (res.ok) {
         const data = await res.json();
+  
+        // ✅ Save token
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("userID", data.user.employeeID);
   
         if (data.role === "admin") {
           return navigate("/admin-dashboard");
         } else if (data.role === "doctor") {
-          const doctorID = data.doctorInfo.doctorID;
-          return navigate(`/doctorProfile/${doctorID}`);
+          localStorage.setItem("doctorID", data.doctorInfo.doctorID);
+          return navigate(`/doctorProfile/${data.doctorInfo.doctorID}`);
         } else if (data.role === "employee") {
           return navigate("/employeeProfile");
         }
       }
-
+  
+      // Try patient login if employee fails
       const resPatient = await fetch("http://localhost:5001/api/login/patient", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (resPatient.ok) {
         const data = await resPatient.json();
-        if (data.role === "patient") {
-          const patientID = data.user.patientID;
-          return navigate(`/userProfile/${patientID}`);
-        }
-      }
+  
 
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userRole", data.role);
+        localStorage.setItem("userID", data.user.patientID);
+  
+        return navigate(`/userProfile/${data.user.patientID}`);
+      }
+  
       alert("Invalid credentials");
-      
     } catch (err) {
       console.error("Login error:", err);
       alert("Login failed.");
     }
   };
+  
 
 
   
