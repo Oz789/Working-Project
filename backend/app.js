@@ -28,6 +28,8 @@ const getInventoryRoute = require('./routes/reports/getInventory');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const checkoutRoutes = require('./routes/checkoutRoutes');
 const authenticateToken = require('./middleware/auth');
+const updateEmployee = require('./routes/employee/updateEmployee');
+
 
 
 
@@ -38,11 +40,11 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/api/protected", authenticateToken, (req, res) => {
-    res.json({
-      message: "Access granted to protected route ✅",
-      user: req.user
-    });
+  res.json({
+    message: "Access granted to protected route ",
+    user: req.user
   });
+});
 
 app.use("/api/employees", employeeRoutes);
 app.use("/api/login", loginRoutes);
@@ -74,9 +76,12 @@ app.use('/api', getServicesRoute);
 app.use('/api', deleteServiceRoute);
 app.use('/api/employees', deleteEmployeeRoute)
 app.use('/api', getEmployeeRoute)
+app.use('/api/employees', updateEmployee);
 app.use('/api', updateServicesRoute);
 app.use('/api', getInventoryRoute);
 
 
+
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
