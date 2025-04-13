@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 //import AdminFrames from "./frames/adminFrames";
 import AdminFramesTab from "../admin/frames/adminFramesTab";
-import ManageStaffTab from "../admin/employee/manageStaffTab";
+//import ManageStaffTab from "../admin/employee/manageStaffTab";
 import AdminContactsTab from "../admin/contacts/adminContactsTab";
-import AdminServicesTab from "../admin/services/adminServicesTab";
+//import AdminServicesTab from "../admin/services/adminServicesTab";
 import MsgManager from "../../components/msgManager";
-import AdminReportsPage from "../admin/reports/adminReportsPage";
+//import AdminReportsPage from "../admin/reports/adminReportsPage";
+import SchManager from "../../components/employee/schManager";
+import TestManager from "../../components/employee/testManager";
+import { DayPilotCalendar } from "@daypilot/daypilot-lite-react";
 
 const EmpTabContent = ({ activeTab }) => {
 
@@ -26,16 +29,17 @@ const EmpTabContent = ({ activeTab }) => {
         bool={toggleMessager}
         pass={msgPasser}/>
     case 2:
-      //return <AdminServicesTab/>
-      return null;
+       return <TestManager/>
     case 3:
       return <AdminFramesTab/>
     case 4:
       return <AdminContactsTab/>
     case 5:
-      return <ManageStaffTab/>
+     // return <ManageStaffTab/>
+        return;
     case 6:
-      return <AdminReportsPage/>
+    //  return <AdminReportsPage/>
+    return;
     default:
       return null;
   }

@@ -26,6 +26,8 @@ const updateServicesRoute = require('./routes/admin/updateServices');
 const getInventoryRoute = require('./routes/reports/getInventory');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 
+const schRoute = require('./routes/employee/schManager');
+
 
 const checkoutRoutes = require('./routes/checkoutRoutes');
 
@@ -55,7 +57,8 @@ app.use('/api', getDoctorRoute);
 app.use('/api/patients', patientRoutes);
 app.use('/api/messages', messageRoutes);
 //app.use('/api/submit-form', formRoutes);
-app.use('/api/contact', createContacts);
+app.use('/api/schedule', schRoute);
+app.use('/', createContacts);
 app.use('/api', createFramesRoute);
 app.use('/api', getFramesRoute);
 app.use('/api', deleteFrameRoute);
