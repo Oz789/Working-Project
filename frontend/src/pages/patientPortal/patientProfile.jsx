@@ -47,7 +47,7 @@ const PatientProfile = () => {
           sex: data.sex || "",
           address: data.address || "",
           phone: data.phoneNumber || "",
-          //lastExamDate: data.medicalForm.lastExamDate || "",
+          lastExamDate: data.medicalForm.lastExamDate || "",
           lastExamDate: data.medicalForm.lastExamDate ? data.medicalForm.lastExamDate.slice(0, 10) : "",
           usesCorrectiveLenses: data.medicalForm.usesCorrectiveLenses ? "Yes" : "No",
           usesContacts: data.medicalForm.usesContacts ? "Yes" : "No",

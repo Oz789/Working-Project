@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // ✅ Check for conflict for the same doctor
+    // Check for conflict for the same doctor
     const [existing] = await db.promise().query(
       'SELECT * FROM appointments WHERE appointmentDate = ? AND appointmentTime = ? AND doctorId = ?',
       [date, time, doctorId]
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
       return res.status(409).json({ error: 'Time slot already booked for this doctor' });
     }
 
-    // ✅ Insert appointment
+    // Insert appointment
     await db.promise().query(
       'INSERT INTO appointments (appointmentDate, appointmentTime, patientId, doctorId, service1ID) VALUES (?, ?, ?, ?, ?)',
       [date, time, patientId, doctorId, service1ID]
