@@ -15,6 +15,7 @@ router.get('/doctors/:doctorID/appointments', async (req, res) => {
         a.appointmentDate,
         a.appointmentTime,
         a.status,
+        a.service1ID,
         p.firstName,
         p.lastName
       FROM appointments a

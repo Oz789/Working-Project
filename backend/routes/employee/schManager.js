@@ -59,29 +59,42 @@ router.get('/all', (req, res) => {
   });
 });
 
-router.get('/options', (req, res) => { //retrieve doctor name, location and location id
-    const sql = `SELECT DISTINCT D.doctorID, E.firstName, E.lastName, L.name, L.locationID 
-                 FROM doctorschedule S
-                 JOIN doctors  D ON S.doctorID   = D.doctorID
-                 JOIN employee E ON D.employeeID = E.employeeID
-                 JOIN location L ON `; // SELECT * FROM doctorschedule
-    db.query(sql, (err, results) => {
-      if (err)
-      {
-        console.error("Error retrieving from database", err);
-        return res.status(500).json({ error: "Database error. Please try again later."});
+router.get('/options', (req, res) => {
+  const locationsSql = `SELECT locationID, name FROM location`;
+  const doctorsSql = `
+    SELECT D.doctorID, E.firstName, E.lastName
+    FROM doctors D
+    JOIN employee E ON D.employeeID = E.employeeID
+  `;
+
+  db.query(locationsSql, (err1, locations) => {
+    if (err1) {
+      console.error("Error retrieving locations:", err1);
+      return res.status(500).json({ error: "Database error (locations)." });
+    }
+
+    db.query(doctorsSql, (err2, doctors) => {
+      if (err2) {
+        console.error("Error retrieving doctors:", err2);
+        return res.status(500).json({ error: "Database error (doctors)." });
       }
 
-      const columns = results.map(room => ({
-        id: room.doctorID,
-        name: room.firstName + ' ' + room.lastName,
-
-      })
-
-      )
-         
-      res.json(columns);
+      // Return both lists in one JSON object
+      res.json({
+        locations: locations.map(loc => ({
+          id: loc.locationID,
+          name: loc.name
+        })),
+        doctors: doctors.map(doc => ({
+          id: doc.doctorID,
+          name: `${doc.firstName} ${doc.lastName}`
+        }))
+      });
     });
+  });
 });
+
+
+
 
 module.exports = router;

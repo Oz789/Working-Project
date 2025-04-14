@@ -4,7 +4,7 @@ import './form.css';
 
 export default function ScheduleAppointment({ prevStep, patientId }) {
   const [appointments, setAppointments] = useState({});
-  const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', serviceID: '' });
+  const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', service1ID: '' });
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [doctorSchedules, setDoctorSchedules] = useState([]);
@@ -103,13 +103,20 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   }, [selectedLocation]);
 
   // ---------------- ACTIONS ----------------
-  const handleSelect = (date, time, doctorId, serviceID) => {
-    setSelected({ date, time, doctorId, serviceID });
+  const handleSelect = (date, time, doctorId, service1ID) => {
+    setSelected({ date, time, doctorId, service1ID });
   };
 
   const handleConfirm = async () => {
-    const { date, time, doctorId, serviceID } = selected;
-    if (!date || !time || !doctorId || !serviceID) return;
+    const { date, time, doctorId, service1ID } = selected;
+    console.log("🟢 Confirming:", selected);
+
+    if (!date || !time || !doctorId || !service1ID) {
+      console.warn("❌ Missing required fields");
+      console.log("d: " + date + " time: " + time + " doctorId: " + doctorId + " service1Id: " + service1ID);
+      return;
+    }
+      
 
     const time24 = convertTo24Hour(time);
 
@@ -121,7 +128,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
         time: time24,
         patientId,
         doctorId,
-        service1ID: serviceID,
+        service1ID: service1ID,
       }),
     });
 
@@ -209,7 +216,7 @@ baseDate.setHours(12);
                         <button
                         key={hour}
                         onClick={() =>
-                          handleSelect(dateStr, hour, sched.doctorID, sched.serviceID)
+                          handleSelect(dateStr, hour, sched.doctorID, sched.service1ID)
                         }
                         disabled={isBooked}
                         style={{

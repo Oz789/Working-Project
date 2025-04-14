@@ -9,6 +9,8 @@ import AdminReportsPage from "../admin/reports/adminReportsPage";
 import EmployeeDetails from "./employeeDetails";
 import ReceptionistAppointments from "./receptionistAppointments";
 
+import TestManager from "../../components/employee/testManager";
+
 const EmpTabContent = ({ activeTab }) => {
 
   const toggleMessager = () => {
@@ -72,9 +74,10 @@ const EmpTabContent = ({ activeTab }) => {
     case 2:
       return <ReceptionistAppointments/>
     case 3:
-      return <MsgManager
-      bool={toggleMessager}
-      pass={msgPasser}/>
+      // return <MsgManager
+      // bool={toggleMessager}
+      // pass={msgPasser}/>
+      return <TestManager/>
     default:
       return null;
   }
