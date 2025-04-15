@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs, Tab, Box } from "@mui/material";
 //import PatientDataForm from "./patientsDataForm";
 
-const tabLabels = ["Profile", "Appointments", "Patients", "Inbox"]
+const tabLabels = ["Profile", "Appointments", "Active Appointments", "Inbox", "checking"]
 
 const DoctorTabs = ({ activeTab, setActiveTab }) => {
   const handleChange = (e, newVal) => setActiveTab(newVal);

@@ -4,7 +4,7 @@ import './form.css';
 
 export default function ScheduleAppointment({ prevStep, patientId }) {
   const [appointments, setAppointments] = useState({});
-  const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', serviceID: '' });
+  const [selected, setSelected] = useState({ date: '', time: '', doctorId: ''});
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [doctorSchedules, setDoctorSchedules] = useState([]);
@@ -103,35 +103,48 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   }, [selectedLocation]);
 
   // ---------------- ACTIONS ----------------
-  const handleSelect = (date, time, doctorId, serviceID) => {
-    setSelected({ date, time, doctorId, serviceID });
+  const handleSelect = (date, time, doctorId) => {
+    setSelected({ date, time, doctorId});
   };
 
   const handleConfirm = async () => {
-    const { date, time, doctorId, serviceID } = selected;
-    if (!date || !time || !doctorId || !serviceID) return;
-
+    const { date, time, doctorId} = selected;
+    if (!date || !time || !doctorId) {
+      console.log("Missing fields:", selected);
+      return;
+    }
+  
     const time24 = convertTo24Hour(time);
-
-    const res = await fetch('http://localhost:5001/api/appointments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        date,
-        time: time24,
-        patientId,
-        doctorId,
-        service1ID: serviceID,
-      }),
-    });
-
-    if (res.ok) {
-      alert('Appointment scheduled!');
-      navigate(`/userProfile/${patientId}`);
-    } else {
-      alert('That time is no longer available.');
+    console.log("Submitting appointment:", { date, time: time24, doctorId, patientId });
+  
+    try {
+      const res = await fetch('http://localhost:5001/api/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date,
+          time: time24,
+          patientId,
+          doctorId,
+          service1ID: 4
+        }),
+      });
+  
+      const text = await res.text(); // Show raw response in console
+      console.log("Server response:", res.status, text);
+  
+      if (res.ok) {
+        alert('Appointment scheduled!');
+        navigate(`/userProfile/${patientId}`);
+      } else {
+        alert('That time is no longer available or server error.');
+      }
+    } catch (err) {
+      console.error("Fetch failed:", err);
+      alert("Something went wrong");
     }
   };
+  
 
   // ---------------- DISPLAY ----------------
   const scheduleMap = {};
@@ -209,7 +222,7 @@ baseDate.setHours(12);
                         <button
                         key={hour}
                         onClick={() =>
-                          handleSelect(dateStr, hour, sched.doctorID, sched.serviceID)
+                          handleSelect(dateStr, hour, sched.doctorID)
                         }
                         disabled={isBooked}
                         style={{
@@ -247,21 +260,17 @@ baseDate.setHours(12);
       })()}
 
     </div>
-  </div>
-)}
-
           {/* CONFIRM BUTTON */}
           <div className="nav-buttons" style={{ marginTop: '2rem' }}>
             <button onClick={prevStep}>Back</button>
-            <button
-              onClick={handleConfirm}
-              disabled={!selected.date || !selected.time || !selected.doctorId}
-            >
-              Confirm Appointment
-            </button>
+            <button type="button" onClick={handleConfirm}>Confirm Appointment</button>
           </div>
+  </div>
+)}
+
         </div>
       </div>
+      <button onClick={() => alert("Clicked!")}>Test Click</button>
     </div>
   );
 }

@@ -8,6 +8,8 @@ import MsgManager from "../../components/msgManager";
 import AdminReportsPage from "../admin/reports/adminReportsPage";
 import EmployeeDetails from "./employeeDetails";
 import ReceptionistAppointments from "./receptionistAppointments";
+import ClinicAppointments from "./clinicAppointments";
+import CheckedInAppointments from "./checkedIn";
 
 const EmpTabContent = ({ activeTab }) => {
 
@@ -72,6 +74,8 @@ const EmpTabContent = ({ activeTab }) => {
     case 2:
       return <ReceptionistAppointments/>
     case 3:
+      return ;
+    case 4:
       return <MsgManager
       bool={toggleMessager}
       pass={msgPasser}/>

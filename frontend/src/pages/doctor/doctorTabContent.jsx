@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import DoctorAppointments from "./doctorAppointments";
 import PatientFormViewer from "../patientPortal/patientFormViewer";
 import EmployeeDetails from "../employeePortal/employeeDetails";
-
+import CheckedInAppointments from "../employeePortal/checkedIn";
+import DocActiveAppointments from "./doctorActiveAppointments";
+import ReceptionistAppointments from "../employeePortal/receptionistAppointments";
+import ClinicAppointments from "../employeePortal/clinicAppointments";
 
 // import other tab content 
 
@@ -30,12 +33,12 @@ const DoctorTabContent = ({ activeTab,doctor }) => {
               </div>
             );
     case 2:
-      return <PatientFormViewer />
+      return <DocActiveAppointments/>;
 
     case 3:
-      return;
+      return <ReceptionistAppointments/>;
     case 4:
-   return ;
+   return <ClinicAppointments/>;
     default:
       return null;
   }

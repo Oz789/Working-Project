@@ -28,6 +28,9 @@ import PatientFormViewer from "./pages/doctor/doctorsPatientView";
 import RegisterPatient from "./pages/logIn/register";
 import NurseProfilePage from "./pages/employeePortal/nurseProfile";
 import NurseExamPage from "./pages/employeePortal/nurseExamPage";
+import DoctorExamForm from './pages/doctor/doctorExamForm';
+//import ReferralForm from "./pages/doctor/referral";
+
 
 
 
@@ -62,6 +65,12 @@ function App() {
           <Route path="/appt" element={<ScheduleAppointment/>}/>
           <Route path="/nurseProfile/:id" element={<NurseProfilePage />} />
           <Route path="/nurseExamPage/:id" element={<NurseExamPage />} />
+          <Route path="/doctorexamform/:appointmentID/:patientID" element={<DoctorExamForm />} />
+          
+
+
+
+
 
 
         </Routes>
