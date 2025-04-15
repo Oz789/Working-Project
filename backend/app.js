@@ -119,6 +119,7 @@ app.use('/api/appointments', updateStatus);
 app.use('/api/examReports', createExamReport);
 app.use('/api/referrals', createReferralRoute);
 app.use('/api/appointments', endAppointmentRoute);
+app.use('/api/insurance', insuranceRoutes);
 
 
 

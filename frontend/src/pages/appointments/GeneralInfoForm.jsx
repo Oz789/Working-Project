@@ -13,9 +13,11 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
   useEffect(() => {
     const fetchInsuranceOptions = async () => {
       try {
+        console.log('Fetching insurance options...');
         const response = await fetch('http://localhost:5001/api/insurance');
         if (!response.ok) throw new Error('Failed to fetch insurance options');
         const data = await response.json();
+        console.log('Insurance options received:', data);
         setInsuranceOptions(data);
       } catch (error) {
         console.error('Error fetching insurance options:', error);
@@ -263,26 +265,17 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
           className={errors.insuranceID ? 'error' : ''}
         >
           <option value="">Select Insurance Provider</option>
-          {insuranceOptions.map((insurance) => (
-            <option key={insurance.insuranceID} value={insurance.insuranceID}>
-              {insurance.insuranceProvider}
-            </option>
-          ))}
+          {insuranceOptions.map((insurance) => {
+            console.log('Rendering insurance option:', insurance);
+            return (
+              <option key={insurance.insuranceID} value={insurance.insuranceID}>
+                {insurance.insuranceProvider}
+              </option>
+            );
+          })}
         </select>
         {errors.insuranceID && <span className="error-message">{errors.insuranceID}</span>}
       </div>
-
-      {selectedInsurance && (
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="Policy Number"
-            value={selectedInsurance.policyNumber}
-            readOnly
-            className="readonly-input"
-          />
-        </div>
-      )}
 
       <h3>Emergency Contacts (Optional)</h3>
       {formData.emergencyContacts.map((contact, idx) => (

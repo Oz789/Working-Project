@@ -128,13 +128,13 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
   const handleConfirm = async () => {
     const { date, time, doctorId} = selected;
-    if (!date || !time || !doctorId) {
-      console.log("Missing fields:", selected);
+    if (!date || !time || !doctorId || !selectedLocation) {
+      console.log("Missing fields:", { ...selected, locationID: selectedLocation });
       return;
     }
   
     const time24 = convertTo24Hour(time);
-    console.log("Submitting appointment:", { date, time: time24, doctorId, patientId });
+    console.log("Submitting appointment:", { date, time: time24, doctorId, patientId, locationID: selectedLocation });
   
     try {
       const res = await fetch('http://localhost:5001/api/appointments', {
@@ -145,7 +145,8 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
           time: time24,
           patientId,
           doctorId,
-          service1ID: 4
+          service1ID: 4,
+          locationID: selectedLocation
         }),
       });
   
@@ -309,7 +310,6 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
         </div>
       </div>
-      <button onClick={() => alert("Clicked!")}>Test Click</button>
     </div>
   );
 }

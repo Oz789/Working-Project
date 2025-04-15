@@ -5,7 +5,9 @@ const db = require('../db');
 // Get all insurance providers
 router.get('/', async (req, res) => {
   try {
+    console.log('Fetching all insurance providers...');
     const [results] = await db.promise().query('SELECT * FROM insurance');
+    console.log('Insurance providers found:', results);
     res.json(results);
   } catch (err) {
     console.error('Error fetching insurance providers:', err);
