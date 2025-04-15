@@ -31,13 +31,15 @@ const Login = () => {
           return navigate(`/adminProfile/${data.user.employeeID}`);
         } else if (data.role === "doctor") {
           localStorage.setItem("doctorID", data.doctorInfo.doctorID);
+          console.log("DOCTOR INFO:", data.doctorInfo);
+
           return navigate(`/doctorProfile/${data.doctorInfo.doctorID}`);
         } if (data.role === "employee") {
           if (data.user.role === "Nurse") {
             localStorage.setItem("userRole", "nurse"); 
             return navigate(`/nurseProfile/${data.user.employeeID}`);
           } else {
-            localStorage.setItem("userRole", "employee");
+            localStorage.setItem("userRole", "Receptionist");
             return navigate(`/employeeProfile/${data.user.employeeID}`);
           }
         }

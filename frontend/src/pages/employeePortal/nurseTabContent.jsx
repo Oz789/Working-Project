@@ -9,6 +9,8 @@ import EmployeeDetails from "./employeeDetails";
 //import ReceptionistAppointments from "./receptionistAppointments";
 import ClinicAppointments from "./clinicAppointments";
 import CheckedInAppointments from "./checkedIn";
+import TestManager from "../../components/testmanager";
+import ReceptionistAppointments from "./receptionistAppointments";
 
 const EmpTabContent = ({ activeTab }) => {
 
@@ -27,11 +29,11 @@ const EmpTabContent = ({ activeTab }) => {
     case 0:
       return <EmployeeDetails/>
       case 1:
-        return;
+        return <ReceptionistAppointments/>
     case 2:
       return <CheckedInAppointments/>
     case 3:
-      return ;
+      return <TestManager/>
       case 4:
       return <MsgManager
       bool={toggleMessager}

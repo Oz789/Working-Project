@@ -4,7 +4,7 @@ import './form.css';
 
 export default function ScheduleAppointment({ prevStep, patientId }) {
   const [appointments, setAppointments] = useState({});
-  const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', serviceID: '' });
+  const [selected, setSelected] = useState({ date: '', time: '', doctorId: ''});
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedServiceType, setSelectedServiceType] = useState('');
@@ -106,42 +106,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
   // ---------------- ACTIONS ----------------
   const handleSelect = (date, time, doctorId) => {
-    if (!selectedServiceType && (selectedLocation === '1' || selectedLocation === '2')) {
-      alert('Please select a service type first');
-      return;
-    }
-
-    let serviceID;
-    
-    // Determine serviceID based on location and service type
-    if (selectedLocation === '1' || selectedLocation === '2') {
-      if (selectedServiceType === 'eyeExam') {
-        serviceID = 4; // Eye Exam serviceID from services table
-      } else if (selectedServiceType === 'diseaseTreatment') {
-        serviceID = 5; // Disease and Eye Treatment serviceID from services table
-      }
-    } else if (selectedLocation === '3') {
-      serviceID = 6; // Curing Blindness serviceID from services table
-    }
-
-    console.log("Setting serviceID based on:", {
-      location: selectedLocation,
-      serviceType: selectedServiceType,
-      resultingServiceID: serviceID
-    });
-    
-    if (!serviceID) {
-      console.warn("Missing serviceID for selected slot!", { 
-        date, 
-        time, 
-        doctorId,
-        location: selectedLocation,
-        serviceType: selectedServiceType 
-      });
-      return;
-    }
-
-    setSelected({ date, time, doctorId, serviceID });
+    setSelected({ date, time, doctorId});
   };
 
   // Update the test function
@@ -162,102 +127,43 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   };
 
   const handleConfirm = async () => {
-    // Test backend connection first
-    const isBackendConnected = await testBackendConnection();
-    if (!isBackendConnected) {
-      alert('Cannot connect to the server. Please make sure the backend server is running.');
+    const { date, time, doctorId} = selected;
+    if (!date || !time || !doctorId) {
+      console.log("Missing fields:", selected);
       return;
     }
-
-    const { date, time, doctorId, serviceID } = selected;
-    console.log("Selected data:", { 
-      date, 
-      time, 
-      doctorId, 
-      serviceID, 
-      patientId, 
-      location: selectedLocation,
-      serviceType: selectedServiceType 
-    });
-    
-    if (!date || !time || !doctorId || !serviceID || !patientId) {
-      console.log("Missing required fields:", { 
-        date: !date ? 'missing' : 'present',
-        time: !time ? 'missing' : 'present',
-        doctorId: !doctorId ? 'missing' : 'present',
-        serviceID: !serviceID ? 'missing' : 'present',
-        patientId: !patientId ? 'missing' : 'present'
-      });
-      return;
-    }
-
+  
     const time24 = convertTo24Hour(time);
-    const requestBody = {
-      date: date,
-      time: time24,
-      patientId: parseInt(patientId),
-      doctorId: parseInt(doctorId),
-      service1ID: parseInt(serviceID),
-      locationID: parseInt(selectedLocation)
-    };
-
-    console.log("Submitting appointment with request body:", JSON.stringify(requestBody, null, 2));
-
+    console.log("Submitting appointment:", { date, time: time24, doctorId, patientId });
+  
     try {
-      console.log("Sending request to:", 'http://localhost:5001/api/appointments');
       const res = await fetch('http://localhost:5001/api/appointments', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(requestBody),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date,
+          time: time24,
+          patientId,
+          doctorId,
+          service1ID: 4
+        }),
       });
-
-      console.log("Response status:", res.status);
-      console.log("Response headers:", Object.fromEntries(res.headers.entries()));
-      
-      const responseText = await res.text();
-      console.log("Raw server response:", responseText);
-
+  
+      const text = await res.text(); // Show raw response in console
+      console.log("Server response:", res.status, text);
+  
       if (res.ok) {
-        const data = JSON.parse(responseText);
-        console.log("Appointment created successfully:", data);
-        alert('Appointment scheduled successfully!');
+        alert('Appointment scheduled!');
         navigate(`/userProfile/${patientId}`);
       } else {
-        let errorData;
-        try {
-          errorData = JSON.parse(responseText);
-        } catch (e) {
-          errorData = { error: responseText };
-        }
-        console.error("Appointment creation failed. Status:", res.status);
-        console.error("Error response:", errorData);
-        console.error("Request body was:", requestBody);
-        
-        // More detailed error message
-        let errorMessage = 'Failed to schedule appointment. ';
-        if (errorData.error) {
-          errorMessage += errorData.error;
-        } else if (errorData.message) {
-          errorMessage += errorData.message;
-        } else {
-          errorMessage += 'Please try again.';
-        }
-        alert(errorMessage);
+        alert('That time is no longer available or server error.');
       }
-    } catch (error) {
-      console.error("Error creating appointment:", error);
-      console.error("Error details:", {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      });
-      console.error("Request body was:", requestBody);
-      alert('An error occurred while scheduling the appointment. Please try again.');
+    } catch (err) {
+      console.error("Fetch failed:", err);
+      alert("Something went wrong");
     }
   };
+  
 
   // ---------------- DISPLAY ----------------
   const scheduleMap = {};
@@ -351,59 +257,59 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
                                 const isDisabled = isBooked || 
                                   ((selectedLocation === '1' || selectedLocation === '2') && !selectedServiceType);
 
-                                return (
-                                  <button
-                                    key={hour}
-                                    onClick={() => handleSelect(dateStr, hour, sched.doctorID)}
-                                    disabled={isDisabled}
-                                    style={{
-                                      backgroundColor: isSelected
-                                        ? '#28a745'
-                                        : isDisabled
-                                        ? '#f0f0f0'
-                                        : '#ffffff',
-                                      color: isDisabled ? '#aaa' : '#00796B',
-                                      border: isSelected
-                                        ? '2px solid #28a745'
-                                        : '2px solid #00796B',
-                                      margin: '4px',
-                                      padding: '6px',
-                                      width: '100%',
-                                      borderRadius: '6px',
-                                      cursor: isDisabled ? 'not-allowed' : 'pointer',
-                                      fontSize: '0.85rem',
-                                      fontWeight: 'bold',
-                                      opacity: isDisabled ? 0.5 : 1,
-                                      transition: '0.2s ease',
-                                    }}
-                                  >
-                                    {hour}
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  });
-                })()}
-              </div>
+                      return (
+                        <button
+                        key={hour}
+                        onClick={() =>
+                          handleSelect(dateStr, hour, sched.doctorID)
+                        }
+                        disabled={isBooked}
+                        style={{
+                          backgroundColor: isSelected
+                            ? '#28a745'
+                            : isBooked
+                            ? '#f0f0f0'
+                            : '#ffffff',
+                          color: isBooked ? '#aaa' : '#00796B',
+                          border: isSelected
+                            ? '2px solid #28a745'
+                            : '2px solid #00796B',
+                          margin: '4px',
+                          padding: '6px',
+                          width: '100%',
+                          borderRadius: '6px',
+                          cursor: isBooked ? 'not-allowed' : 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: 'bold',
+                          opacity: isBooked ? 0.5 : 1,
+                          transition: '0.2s ease',
+                        }}
+                      >
+                        {hour}
+                      </button>
+                      
+                      );
+                    })}
+                  </div>
+                );
+              })}
             </div>
-          )}
+          );
+        });
+      })()}
 
+    </div>
           {/* CONFIRM BUTTON */}
           <div className="nav-buttons" style={{ marginTop: '2rem' }}>
             <button onClick={prevStep}>Back</button>
-            <button
-              onClick={handleConfirm}
-              disabled={!selected.date || !selected.time || !selected.doctorId || !selected.serviceID}
-            >
-              Confirm Appointment
-            </button>
+            <button type="button" onClick={handleConfirm}>Confirm Appointment</button>
           </div>
+  </div>
+)}
+
         </div>
       </div>
+      <button onClick={() => alert("Clicked!")}>Test Click</button>
     </div>
   );
 }

@@ -21,6 +21,8 @@ const ReceptionistAppointments = () => {
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showTodayOnly, setShowTodayOnly] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('All');
+
 
   const locationID = localStorage.getItem("userLocation"); 
 
@@ -89,9 +91,15 @@ const ReceptionistAppointments = () => {
   );
   const todayStr = new Date().toISOString().slice(0, 10);
 
+  let filteredByStatus = visibleAppointments;
+  if (statusFilter !== 'All') {
+    filteredByStatus = filteredByStatus.filter(appt => appt.status === statusFilter);
+  }
+  
   const filteredByDate = showTodayOnly
-    ? visibleAppointments.filter(appt => appt.appointmentDate === todayStr)
-    : visibleAppointments;
+    ? filteredByStatus.filter(appt => appt.appointmentDate === todayStr)
+    : filteredByStatus;
+  
   
   const grouped = groupByDate(filteredByDate);
 
@@ -109,22 +117,55 @@ const ReceptionistAppointments = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%", borderRadius: "6px", border: "1px solid #ccc" }}
         />
-<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-  <h2 className="appointments-title">Clinic Appointments</h2>
-  <button
-    style={{
-      padding: "0.5rem 1rem",
-      backgroundColor: "#1976d2",
-      color: "white",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer"
-    }}
-    onClick={() => setShowTodayOnly(prev => !prev)}
-  >
-    {showTodayOnly ? "Show All" : "Show Today Only"}
-  </button>
+<div
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '1rem',
+    flexWrap: 'wrap',
+    gap: '1rem',
+  }}
+>
+  <h2 className="appointments-title" style={{ margin: 0 }}>Clinic Appointments</h2>
+
+  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+    <button
+      style={{
+        padding: "0.5rem 1rem",
+        backgroundColor: showTodayOnly ? "#004c9b" : "#1976d2",
+        color: "white",
+        border: "none",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontWeight: "500"
+      }}
+      onClick={() => setShowTodayOnly(prev => !prev)}
+    >
+      {showTodayOnly ? "Show All" : "Show Today Only"}
+    </button>
+
+    <select
+      value={statusFilter}
+      onChange={(e) => setStatusFilter(e.target.value)}
+      style={{
+        padding: "0.5rem",
+        borderRadius: "6px",
+        border: "1px solid #ccc",
+        fontWeight: "500",
+        minWidth: "150px"
+      }}
+    >
+      <option value="All">All Statuses</option>
+      <option value="Scheduled">Scheduled</option>
+      <option value="Checked In">Checked In</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Ended">Ended</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
 </div>
+
         {Object.entries(grouped).map(([date, appts]) => (
           <div key={date} className="appointments-section">
             <h3 className="appointments-date">{date}</h3>

@@ -40,7 +40,15 @@ const getClinicAppointments = require('./routes/receptionist/getClinicAppointmen
 const updateStatus = require("./routes/receptionist/updateStatus");
 const getNursePatient = require("./routes/nurse/nurseExam");
 const updateMedicalForm = require('./routes/nurse/updateNurseForm');
+const createExamReport = require('./routes/doctor/updateEyeExamForm');
+const createReferralRoute = require('./routes/doctor/referral');
 const endAppointmentRoute = require('./routes/doctor/endAppointment');
+
+
+
+
+
+
 
 
 
@@ -108,8 +116,9 @@ app.use('/api/schedule', scheduleRoutes);
 app.use('/api/appointments', scheduledappointmentRoutes);
 app.use('/api/appointments', getClinicAppointments);
 app.use('/api/appointments', updateStatus);
+app.use('/api/examReports', createExamReport);
+app.use('/api/referrals', createReferralRoute);
 app.use('/api/appointments', endAppointmentRoute);
-app.use('/api/insurance', insuranceRoutes);
 
 
 

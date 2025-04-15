@@ -35,3 +35,4 @@ router.get("/clinicAppointments/:locationID", async (req, res) => {
   });
 
   module.exports = router;
+  
