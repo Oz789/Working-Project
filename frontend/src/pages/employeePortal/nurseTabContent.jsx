@@ -27,7 +27,7 @@ const EmpTabContent = ({ activeTab }) => {
     case 0:
       return <EmployeeDetails/>
       case 1:
-        return <ClinicAppointments/>
+        return;
     case 2:
       return <CheckedInAppointments/>
     case 3:

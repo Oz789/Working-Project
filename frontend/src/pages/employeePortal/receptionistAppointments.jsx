@@ -20,9 +20,38 @@ const ReceptionistAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showTodayOnly, setShowTodayOnly] = useState(false);
+
+  const locationID = localStorage.getItem("userLocation"); 
+
+  const handleCheckIn = async (appointmentID) => {
+    try {
+      const res = await fetch(`http://localhost:5001/api/appointments/checkin/${appointmentID}`, {
+        method: "PATCH",
+      });
+  
+      if (res.ok) {
+     
+        setAppointments(prev =>
+          prev.map(appt =>
+            appt.appointmentID === appointmentID
+              ? { ...appt, status: "On Hold", checkInTime: new Date().toISOString() }
+              : appt
+          )
+        );
+      } else {
+        console.error("Check-in failed");
+      }
+    } catch (err) {
+      console.error("Check-in error:", err);
+    }
+  };
+  
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/appointments/all')
+    if (!locationID) return;
+
+    fetch(`http://localhost:5001/api/appointments/clinicAppointments/${locationID}`)
       .then(res => res.json())
       .then(data => {
         const formatted = data.map(appt => {
@@ -31,8 +60,7 @@ const ReceptionistAppointments = () => {
           const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
           const dd = String(dateObj.getDate()).padStart(2, '0');
           const rawDate = `${yyyy}-${mm}-${dd}`;
-
-          const cleanTime = appt.appointmentTime?.slice(0, 5); // 'HH:MM'
+          const cleanTime = appt.appointmentTime?.slice(0, 5);
 
           return {
             appointmentID: appt.appointmentNumber,
@@ -48,21 +76,30 @@ const ReceptionistAppointments = () => {
         setAppointments(formatted);
       })
       .catch(err => {
-        console.error("Failed to fetch all appointments:", err);
+        console.error("Failed to fetch clinic-specific appointments:", err);
       });
-  }, []);
+  }, [locationID]);
 
   const filtered = appointments.filter(appt =>
     appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     appt.doctorName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const visibleAppointments = filtered.filter(appt =>
+    appt.status !== "Completed" && appt.status !== "Paid"
+  );
+  const todayStr = new Date().toISOString().slice(0, 10);
 
-  const grouped = groupByDate(filtered);
+  const filteredByDate = showTodayOnly
+    ? visibleAppointments.filter(appt => appt.appointmentDate === todayStr)
+    : visibleAppointments;
+  
+  const grouped = groupByDate(filteredByDate);
+
 
   return (
     <div className="appointment-wrapper">
       <div className="appointment-left">
-        <h2 className="appointments-title">All Appointments</h2>
+        <h2 className="appointments-title">Clinic Appointments</h2>
 
         <input
           type="text"
@@ -72,7 +109,22 @@ const ReceptionistAppointments = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%", borderRadius: "6px", border: "1px solid #ccc" }}
         />
-
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  <h2 className="appointments-title">Clinic Appointments</h2>
+  <button
+    style={{
+      padding: "0.5rem 1rem",
+      backgroundColor: "#1976d2",
+      color: "white",
+      border: "none",
+      borderRadius: "6px",
+      cursor: "pointer"
+    }}
+    onClick={() => setShowTodayOnly(prev => !prev)}
+  >
+    {showTodayOnly ? "Show All" : "Show Today Only"}
+  </button>
+</div>
         {Object.entries(grouped).map(([date, appts]) => (
           <div key={date} className="appointments-section">
             <h3 className="appointments-date">{date}</h3>
@@ -99,6 +151,38 @@ const ReceptionistAppointments = () => {
                     <div className="appointment-time">{timeStr}</div>
                     <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
                   </div>
+                  {appt.status === "Scheduled" && (
+  <button
+    className="appointment-button"
+    style={{ backgroundColor: "#00796B" }}
+    onClick={async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/api/appointments/update-status/${appt.appointmentID}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "Checked In" }),
+        });
+
+        if (res.ok) {
+          setAppointments(prev =>
+            prev.map(a =>
+              a.appointmentID === appt.appointmentID
+                ? { ...a, status: "Checked In" }
+                : a
+            )
+          );
+        } else {
+          alert("Failed to update status");
+        }
+      } catch (err) {
+        console.error("Update error:", err);
+        alert("Something went wrong");
+      }
+    }}
+  >
+    Check In
+  </button>
+)}
 
                   <button
                     className="appointment-button"
@@ -120,6 +204,7 @@ const ReceptionistAppointments = () => {
           <div className="mock-placeholder">Select an appointment to view the form</div>
         )}
       </div>
+      
     </div>
   );
 };

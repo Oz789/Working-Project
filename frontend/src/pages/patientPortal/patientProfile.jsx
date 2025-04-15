@@ -48,6 +48,12 @@ const PatientProfile = () => {
               <p><strong>Sex:</strong> {patientData.generalInfo.sex}</p>
               <p><strong>Address:</strong> {patientData.generalInfo.address}</p>
               <p><strong>Phone:</strong> {patientData.generalInfo.phoneNumber}</p>
+              {patientData.medicalInfo.insuranceProvider && (
+                <>
+                  <p><strong>Insurance Provider:</strong> {patientData.medicalInfo.insuranceProvider}</p>
+                  <p><strong>Policy Number:</strong> {patientData.medicalInfo.policyNumber}</p>
+                </>
+              )}
             </div>
           </div>
 

@@ -20,7 +20,7 @@ router.get('/:id', async (req, res) => {
 
     // Get medical form information
     const [medicalFormResult] = await db.promise().query(
-      'SELECT * FROM patientform WHERE patientID = ? ORDER BY visitDate DESC LIMIT 1',
+      'SELECT pf.*, i.insuranceProvider, i.policyNumber FROM patientform pf LEFT JOIN insurance i ON pf.insuranceID = i.insuranceID WHERE pf.patientID = ? ORDER BY visitDate DESC LIMIT 1',
       [patientId]
     );
 
@@ -90,6 +90,7 @@ router.post('/submit', async (req, res) => {
     address,
     sex,
     occupation,
+    insuranceID,
     lastExamDate,
     usesCorrectiveLenses,
     usesContacts,
@@ -159,30 +160,10 @@ router.post('/submit', async (req, res) => {
         patientID, visitDate, lastExamDate, usesCorrectiveLenses, usesContacts, 
         LensesPrescription, ContactsPrescription, lastPrescriptionDate,
         healthConcerns, otherConcerns, conditions, otherConditions, 
-        hadSurgery, surgeries, otherSurgeries, allergies, additionalDetails
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        hadSurgery, surgeries, otherSurgeries, allergies, additionalDetails,
+        insuranceID
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
-
-    // Get patient's appointments with doctor and service info
-    const appointmentsQuery = `
-      SELECT 
-        a.appointmentDate,
-        TIME_FORMAT(a.appointmentTime, '%H:%i') AS appointmentTime,
-        e.firstName AS doctorFirstName,
-        e.lastName AS doctorLastName,
-        s.serviceName
-        FROM appointments a
-        JOIN doctors d ON a.doctorId = d.doctorID
-        JOIN employee e ON d.employeeID = e.employeeID
-        JOIN services s ON a.service1ID = s.serviceID
-        WHERE a.patientId = ?
-        ORDER BY a.appointmentDate, a.appointmentTime
-`;
-
-
-    //const [appointmentsResult] = await db.promise().query(appointmentsQuery, [patientId]);
-
 
     const medicalFormValues = [
       patientId,
@@ -201,9 +182,9 @@ router.post('/submit', async (req, res) => {
       (surgeries || []).join(','), 
       otherSurgeries,
       allergies,
-      additionalDetails
+      additionalDetails,
+      insuranceID
     ];
-    
 
     await db.promise().query(medicalFormQuery, medicalFormValues);
 

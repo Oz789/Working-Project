@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DoctorAppointments from "./doctorAppointments";
 import PatientFormViewer from "../patientPortal/patientFormViewer";
 import EmployeeDetails from "../employeePortal/employeeDetails";
+import DoctorActiveAppointments from "./doctorActiveAppointments";
 
 
 // import other tab content 
@@ -26,7 +27,7 @@ const DoctorTabContent = ({ activeTab,doctor }) => {
           case 1:
             return (
               <div className="w-full flex flex-row justify-center">
-                <DoctorAppointments />
+                <DoctorActiveAppointments />
               </div>
             );
     case 2:

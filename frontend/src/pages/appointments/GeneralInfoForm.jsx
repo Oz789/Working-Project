@@ -1,8 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function GeneralInfoForm({ nextStep, handleChange, values }) {
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState(values);
+  const [formData, setFormData] = useState({
+    ...values,
+    insuranceID: values.insuranceID || '',
+    policyNumber: values.policyNumber || ''
+  });
+  const [insuranceOptions, setInsuranceOptions] = useState([]);
+  const [selectedInsurance, setSelectedInsurance] = useState(null);
+
+  useEffect(() => {
+    const fetchInsuranceOptions = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/insurance');
+        if (!response.ok) throw new Error('Failed to fetch insurance options');
+        const data = await response.json();
+        setInsuranceOptions(data);
+      } catch (error) {
+        console.error('Error fetching insurance options:', error);
+      }
+    };
+
+    fetchInsuranceOptions();
+  }, []);
+
+  useEffect(() => {
+    const fetchInsuranceDetails = async () => {
+      if (formData.insuranceID) {
+        try {
+          const response = await fetch(`http://localhost:5001/api/insurance/${formData.insuranceID}`);
+          if (!response.ok) throw new Error('Failed to fetch insurance details');
+          const data = await response.json();
+          setSelectedInsurance(data);
+          handleInputChange('policyNumber', data.policyNumber);
+        } catch (error) {
+          console.error('Error fetching insurance details:', error);
+        }
+      }
+    };
+
+    fetchInsuranceDetails();
+  }, [formData.insuranceID]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -60,6 +99,11 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
       newErrors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    // Insurance validation
+    if (!formData.insuranceID) {
+      newErrors.insuranceID = 'Please select an insurance provider';
     }
 
     setErrors(newErrors);
@@ -211,6 +255,34 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
         />
         {errors.confirmPassword && <span className="error-message">{errors.confirmPassword}</span>}
       </div>
+
+      <div className="form-group">
+        <select
+          value={formData.insuranceID}
+          onChange={(e) => handleInputChange('insuranceID', e.target.value)}
+          className={errors.insuranceID ? 'error' : ''}
+        >
+          <option value="">Select Insurance Provider</option>
+          {insuranceOptions.map((insurance) => (
+            <option key={insurance.insuranceID} value={insurance.insuranceID}>
+              {insurance.insuranceProvider}
+            </option>
+          ))}
+        </select>
+        {errors.insuranceID && <span className="error-message">{errors.insuranceID}</span>}
+      </div>
+
+      {selectedInsurance && (
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Policy Number"
+            value={selectedInsurance.policyNumber}
+            readOnly
+            className="readonly-input"
+          />
+        </div>
+      )}
 
       <h3>Emergency Contacts (Optional)</h3>
       {formData.emergencyContacts.map((contact, idx) => (
