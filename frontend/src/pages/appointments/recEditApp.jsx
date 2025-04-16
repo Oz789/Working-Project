@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './form.css';
+import './receptionistApp.css';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-export default function ScheduleAppointment({ prevStep, patientId }) {
+export default function RecAppEdit({ patientId, appointmentID, onAppointmentChange, onClose, patientName }) {
   const [appointments, setAppointments] = useState({});
   const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', service1ID: '4' });
   const [locations, setLocations] = useState([]);
@@ -39,8 +39,6 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
   const getDayName = (dateStr) =>
     new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long' });
-
-  const toInt = (value) => parseInt(value, 10);
 
   const generateTimeSlots = (start, end) => {
     const slots = [];
@@ -115,11 +113,36 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
     setSelected({ date, time, doctorId, service1ID });
   };
 
+  const handleCancel = async () => {
+    const confirmed = window.confirm("Are you sure you want to cancel this appointment?");
+    if (!confirmed) return;
+  
+    try {
+      const res = await fetch(`http://localhost:5001/api/appointments/${appointmentID}`, {
+        method: 'DELETE',
+      });
+
+      if (onAppointmentChange) {
+        onAppointmentChange();
+      }
+  
+      if (res.ok) {
+        alert("Appointment cancelled successfully.");
+        fetchAppointments();
+        if (onClose) onClose();
+        
+      } else {
+        alert("Failed to cancel the appointment.");
+      }
+    } catch (err) {
+      console.error("Error cancelling appointment:", err);
+      alert("An error occurred.");
+    }
+  };
+
   const handleConfirm = async () => {
     const { date, time, doctorId, service1ID } = selected;
     console.log("🟢 Confirming:", selected);
-
-   
 
     if (!date || !time || !doctorId || !service1ID) {
       console.warn("❌ Missing required fields");
@@ -130,16 +153,18 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
     const time24 = convertTo24Hour(time);
 
-    console.log("🚀 Submitting appointment:", {
-      date,
-      patientId,
-      doctorId,
-      service1ID,
-      locationID: toInt(selectedLocation),
-    });
+    console.log("🟡 Request payload", {
+        date,
+        time: time24,
+        patientId,
+        doctorId,
+        service1ID,
+        appointmentID,
+        locationID: selectedLocation
+      });
 
     const res = await fetch('http://localhost:5001/api/appointments', {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         date,
@@ -147,13 +172,17 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
         patientId,
         doctorId,
         service1ID: service1ID,
-        locationID: toInt(selectedLocation),
+        appointmentID,
+        locationID: selectedLocation
+
       }),
     });
 
     if (res.ok) {
       alert('Appointment scheduled!');
-      navigate(`/userProfile/${patientId}`);
+      await fetchAppointments(); 
+      if (onAppointmentChange) onAppointmentChange();
+      
     } else {
       alert('That time is no longer available.');
     }
@@ -167,13 +196,14 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   });
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-box">
-          <h2 className="login-title">Schedule Appointment</h2>
+    <div className="rec-page">
+      <div className="rec-container ">
+        <div className="rec-box fex">
+          <h2 className="rec-title">Schedule Appointment</h2>
+          <p className="starter"> Appointment for:  {`${patientName}`}</p>
 
           {/* SELECT LOCATION */}
-          <div className="input-row">
+          <div className="rec-row">
             <p>Select Location:</p>
             <select
               value={selectedLocation}
@@ -189,6 +219,8 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
             </select>
           </div>
 
+        {selectedLocation && (
+          <div>
           <div className="calendar-picker-container"> 
             <label>Select Week:</label>
             <DatePicker
@@ -202,9 +234,9 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
           </div>
 
           {/* TIME SLOT PICKER */}
-          {selectedLocation && (
+          
             <div className="appointment-grid" style={{ marginTop: '2rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, minmax(100px, 1fr))`, gap: '10px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, minmax(20px, 1fr))`, gap: '10px' }}>
               
               {(() => {
   // const baseDate = new Date();
@@ -269,17 +301,21 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
     </div>
   </div>
+  </div>
 )}
 
-          {/* CONFIRM BUTTON */}
+          
           <div className="nav-buttons" style={{ marginTop: '2rem' }}>
-            <button onClick={prevStep}>Back</button>
+            <button onClick={handleCancel}>Cancel Original Appointment</button>
+
+            {/* CONFIRM BUTTON */}
             <button
               onClick={handleConfirm}
               disabled={!selected.date || !selected.time || !selected.doctorId}
             >
-              Confirm Appointment
+              Confirm Appointment 
             </button>
+
           </div>
         </div>
       </div>

@@ -42,6 +42,7 @@ const updateStatus = require("./routes/receptionist/updateStatus");
 const getNursePatient = require("./routes/nurse/nurseExam");
 const updateMedicalForm = require('./routes/nurse/updateNurseForm');
 
+const updatePatientInfo = require('./routes/receptionist/getPatientInfo');
 
 
 
@@ -109,6 +110,8 @@ app.use('/api/schedule', scheduleRoutes);
 app.use('/api/appointments', scheduledappointmentRoutes);
 app.use('/api/appointments', getClinicAppointments);
 app.use('/api/appointments', updateStatus);
+
+app.use('/api/allPatients', updatePatientInfo);
 
 
 

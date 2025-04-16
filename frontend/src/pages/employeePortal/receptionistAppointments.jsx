@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import '../doctor/doctorAppointments.css';
 import PatientFormViewer from '../patientPortal/patientFormViewer';
 
+import RecAppEdit from '../appointments/recEditApp';
+
 const groupByDate = (appointments) => {
   return appointments.reduce((acc, appt) => {
     const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
@@ -19,9 +21,13 @@ const groupByDate = (appointments) => {
 const ReceptionistAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [selectedPatientID, setSelectedPatientID] = useState(null);
+  const [selectedAppointmentID, setSelectedAppointmentID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+    const [selectedPatientFirst, setPatientFirst] = useState('');
+    const [selectedPatientLast,  setPatientLast] = useState('');
+    const [selectedPatientName, setPatientName] = useState('');
 
-  useEffect(() => {
+  const fetchAppointments = () => {
     fetch('http://localhost:5001/api/appointments/all')
       .then(res => res.json())
       .then(data => {
@@ -31,9 +37,8 @@ const ReceptionistAppointments = () => {
           const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
           const dd = String(dateObj.getDate()).padStart(2, '0');
           const rawDate = `${yyyy}-${mm}-${dd}`;
-
-          const cleanTime = appt.appointmentTime?.slice(0, 5); // 'HH:MM'
-
+          const cleanTime = appt.appointmentTime?.slice(0, 5);
+  
           return {
             appointmentID: appt.appointmentNumber,
             patientID: appt.patientID,
@@ -44,13 +49,48 @@ const ReceptionistAppointments = () => {
             status: appt.status
           };
         });
-
+  
         setAppointments(formatted);
       })
       .catch(err => {
         console.error("Failed to fetch all appointments:", err);
       });
+  };
+
+  useEffect(() => {
+    fetchAppointments();
   }, []);
+  
+  // useEffect(() => {
+  //   fetch('http://localhost:5001/api/appointments/all')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       const formatted = data.map(appt => {
+  //         const dateObj = new Date(appt.appointmentDate);
+  //         const yyyy = dateObj.getFullYear();
+  //         const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+  //         const dd = String(dateObj.getDate()).padStart(2, '0');
+  //         const rawDate = `${yyyy}-${mm}-${dd}`;
+
+  //         const cleanTime = appt.appointmentTime?.slice(0, 5); // 'HH:MM'
+
+  //         return {
+  //           appointmentID: appt.appointmentNumber,
+  //           patientID: appt.patientID,
+  //           patientName: `${appt.patientFirstName} ${appt.patientLastName}`.trim(),
+  //           doctorName: `${appt.doctorFirstName} ${appt.doctorLastName}`,
+  //           appointmentDate: rawDate,
+  //           appointmentTime: cleanTime,
+  //           status: appt.status
+  //         };
+  //       });
+
+  //       setAppointments(formatted);
+  //     })
+  //     .catch(err => {
+  //       console.error("Failed to fetch all appointments:", err);
+  //     });
+  // }, []);
 
   const filtered = appointments.filter(appt =>
     appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -102,7 +142,15 @@ const ReceptionistAppointments = () => {
 
                   <button
                     className="appointment-button"
-                    onClick={() => setSelectedPatientID(appt.patientID)}
+                    onClick={() => 
+                      { setSelectedPatientID(appt.patientID); console.log(appt.patientID + "Hello"); setSelectedAppointmentID(appt.appointmentID); setPatientName(appt.patientName); } }
+                  >
+                    Edit Form
+                  </button>
+
+                  <button
+                    className="appointment-button"
+                    onClick={() => { setSelectedPatientID(appt.patientID); console.log(appt.patientID); setSelectedAppointmentID(appt.appointmentID); setPatientName(appt.patientName); } }
                   >
                     View Form
                   </button>
@@ -115,7 +163,10 @@ const ReceptionistAppointments = () => {
 
       <div className="appointment-right">
         {selectedPatientID ? (
-          <PatientFormViewer patientID={selectedPatientID} />
+          <RecAppEdit patientId={selectedPatientID} appointmentID={selectedAppointmentID} onAppointmentChange={fetchAppointments} patientName={selectedPatientName} onClose={() => {
+            setSelectedPatientID(null);
+            setSelectedAppointmentID(null);
+          }}/> // <PatientFormViewer patientID={selectedPatientID} />
         ) : (
           <div className="mock-placeholder">Select an appointment to view the form</div>
         )}
