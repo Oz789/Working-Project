@@ -23,9 +23,7 @@ const ReceptionistAppointments = () => {
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [selectedAppointmentID, setSelectedAppointmentID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-    const [selectedPatientFirst, setPatientFirst] = useState('');
-    const [selectedPatientLast,  setPatientLast] = useState('');
-    const [selectedPatientName, setPatientName] = useState('');
+  const [selectedPatientName, setPatientName] = useState('');
   const [showTodayOnly, setShowTodayOnly] = useState(false);
   const [statusFilter, setStatusFilter] = useState('All');
 
@@ -56,37 +54,41 @@ const ReceptionistAppointments = () => {
   };
   
 
-  useEffect(() => {
-    if (!locationID) return;
-
-    fetch(`http://localhost:5001/api/appointments/clinicAppointments/${locationID}`)
-      .then(res => res.json())
-      .then(data => {
-        const formatted = data.map(appt => {
-          const dateObj = new Date(appt.appointmentDate);
-          const yyyy = dateObj.getFullYear();
-          const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
-          const dd = String(dateObj.getDate()).padStart(2, '0');
-          const rawDate = `${yyyy}-${mm}-${dd}`;
-          const cleanTime = appt.appointmentTime?.slice(0, 5);
-
-          return {
-            appointmentID: appt.appointmentNumber,
-            patientID: appt.patientID,
-            patientName: `${appt.patientFirstName} ${appt.patientLastName}`.trim(),
-            doctorName: `${appt.doctorFirstName} ${appt.doctorLastName}`,
-            appointmentDate: rawDate,
-            appointmentTime: cleanTime,
-            status: appt.status
-          };
-        });
+  const fetchClinicAppointments = async (locationID) => {
+    try {
+      const res = await fetch(`http://localhost:5001/api/appointments/clinicAppointments/${locationID}`);
+      const data = await res.json();
   
-        setAppointments(formatted);
-      })
-      .catch(err => {
-        console.error("Failed to fetch clinic-specific appointments:", err);
+      return data.map(appt => {
+        const dateObj = new Date(appt.appointmentDate);
+        const yyyy = dateObj.getFullYear();
+        const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const dd = String(dateObj.getDate()).padStart(2, '0');
+        const rawDate = `${yyyy}-${mm}-${dd}`;
+        const cleanTime = appt.appointmentTime?.slice(0, 5);
+  
+        return {
+          appointmentID: appt.appointmentNumber,
+          patientID: appt.patientID,
+          patientName: `${appt.patientFirstName} ${appt.patientLastName}`.trim(),
+          doctorName: `${appt.doctorFirstName} ${appt.doctorLastName}`,
+          appointmentDate: rawDate,
+          appointmentTime: cleanTime,
+          status: appt.status
+        };
       });
-  }, [locationID]);
+    } catch (err) {
+      console.error("Failed to fetch clinic-specific appointments:", err);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const locationID = localStorage.getItem("userLocation");
+    if (!locationID) return;
+  
+    fetchClinicAppointments(locationID).then(setAppointments);
+  }, []);
 
   const filtered = appointments.filter(appt =>
     appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -254,7 +256,7 @@ const ReceptionistAppointments = () => {
 
       <div className="appointment-right">
         {selectedPatientID ? (
-          <RecAppEdit patientId={selectedPatientID} appointmentID={selectedAppointmentID} onAppointmentChange={fetchAppointments} patientName={selectedPatientName} onClose={() => {
+          <RecAppEdit patientId={selectedPatientID} appointmentID={selectedAppointmentID} onAppointmentChange={fetchClinicAppointments} patientName={selectedPatientName} onClose={() => {
             setSelectedPatientID(null);
             setSelectedAppointmentID(null);
           }}/> // <PatientFormViewer patientID={selectedPatientID} />
