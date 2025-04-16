@@ -223,79 +223,16 @@ input[type="email"] {
 .multi-select option:hover {
     background-color: #f0f0f0;
 }
- 
-/* divider */
 
-.time-column {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 0 8px;
-    border-right: 1px solid #e0e0e0;
-  }
-  
-  .day-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-  
-  }
-  
-  .day-abbrev {
-    font-weight: bold;
-    color: #00796B;
-    font-size: 1rem;
-  }
-  
-  .day-date {
-    font-size: 0.75rem;
-    color: #666;
-  }
-  
-  .slot-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    width: 100%;
-  }
-  
-  .time-slot {
-    padding: 6px;
-    width: 100%;
-    font-size: 0.85rem;
-    font-weight: bold;
-    border-radius: 6px;
-    border: 2px solid #00796B;
-    background-color: #fff;
-    color: #00796B;
-    transition: 0.2s ease;
-    min-height: 40px;
-    cursor: pointer;
-  }
-  
-  .time-slot:hover {
-    background-color: #e6f2f0;
-  }
-  
-  .time-slot.booked {
-    background-color: #f0f0f0;
-    color: #aaa;
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-  
-  .time-slot.selected {
-    background-color: #28a745;
-    color: #fff;
-    border-color: #28a745;
-  }
+.readonly-input {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  border: 1px solid #ddd;
+}
 
-  .calendar-picker-container {
-    margin-bottom: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+.coverage-amount {
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #666;
+}
+  

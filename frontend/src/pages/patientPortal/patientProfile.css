@@ -1,7 +1,9 @@
 .patient-profile-wrapper {
     background: linear-gradient(to bottom, #ecfffb 10%, #edfffc 20%, #ffffff 60%);
     min-height: 100vh;
-    padding: 4rem 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -44,6 +46,108 @@
     font-size: 1rem;
     color: #3e2723;
     margin: 0.4rem 0;
+  }
+  
+  .profile-sections-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .profile-section {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+  }
+  
+  .section-title {
+    color: #00796B;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #00796B;
+    padding-bottom: 0.5rem;
+  }
+  
+  .profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .profile-info p {
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .profile-info strong {
+    color: #00796B;
+    margin-right: 0.5rem;
+  }
+  
+  /* Appointments Section Styles */
+  .appointment-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filter-button {
+    background-color: #00796B;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .filter-button:hover {
+    background-color: #00695C;
+  }
+  
+  .filter-select {
+    padding: 0.5rem;
+    border: 1px solid #00796B;
+    border-radius: 5px;
+    background-color: white;
+    color: #00796B;
+  }
+  
+  .appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .appointment-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    border-left: 4px solid #00796B;
+  }
+  
+  .appointment-card p {
+    margin: 0.5rem 0;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1200px) {
+    .profile-sections-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .profile-sections-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .patient-profile-wrapper {
+      padding: 1rem;
+    }
   }
   
   

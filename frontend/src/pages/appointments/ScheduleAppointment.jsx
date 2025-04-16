@@ -7,9 +7,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 export default function ScheduleAppointment({ prevStep, patientId }) {
   const [appointments, setAppointments] = useState({});
-  const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', service1ID: '4' });
+  const [selected, setSelected] = useState({ date: '', time: '', doctorId: ''});
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedServiceType, setSelectedServiceType] = useState('');
   const [doctorSchedules, setDoctorSchedules] = useState([]);
 
   const [baseDate, setBaseDate] = useState(new Date());
@@ -71,6 +72,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   const fetchSchedules = async (locationID) => {
     const res = await fetch(`http://localhost:5001/api/schedule/location/${locationID}`);
     const data = await res.json();
+    console.log("Schedule Data:", data); // Debug log
     setDoctorSchedules(data);
   };
 
@@ -111,53 +113,66 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
   }, [selectedLocation]);
 
   // ---------------- ACTIONS ----------------
-  const handleSelect = (date, time, doctorId, service1ID) => {
-    setSelected({ date, time, doctorId, service1ID });
+  const handleSelect = (date, time, doctorId) => {
+    setSelected({ date, time, doctorId});
+  };
+
+  // Update the test function
+  const testBackendConnection = async () => {
+    try {
+      console.log("Testing backend connection...");
+      // Try to get appointments instead of using a test endpoint
+      const res = await fetch('http://localhost:5001/api/appointments');
+      if (res.ok || res.status === 400) { // 400 is okay because it means the endpoint exists
+        console.log("Backend is reachable");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Backend connection test failed:", error);
+      return false;
+    }
   };
 
   const handleConfirm = async () => {
-    const { date, time, doctorId, service1ID } = selected;
-    console.log("🟢 Confirming:", selected);
-
-   
-
-    if (!date || !time || !doctorId || !service1ID) {
-      console.warn("❌ Missing required fields");
-      console.log("d: " + date + " time: " + time + " doctorId: " + doctorId + " service1Id: " + service1ID);
+    const { date, time, doctorId} = selected;
+    if (!date || !time || !doctorId || !selectedLocation) {
+      console.log("Missing fields:", { ...selected, locationID: selectedLocation });
       return;
     }
-      
-
+  
     const time24 = convertTo24Hour(time);
-
-    console.log("🚀 Submitting appointment:", {
-      date,
-      patientId,
-      doctorId,
-      service1ID,
-      locationID: toInt(selectedLocation),
-    });
-
-    const res = await fetch('http://localhost:5001/api/appointments', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        date,
-        time: time24,
-        patientId,
-        doctorId,
-        service1ID: service1ID,
-        locationID: toInt(selectedLocation),
-      }),
-    });
-
-    if (res.ok) {
-      alert('Appointment scheduled!');
-      navigate(`/userProfile/${patientId}`);
-    } else {
-      alert('That time is no longer available.');
+    console.log("Submitting appointment:", { date, time: time24, doctorId, patientId, locationID: selectedLocation });
+  
+    try {
+      const res = await fetch('http://localhost:5001/api/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          date,
+          time: time24,
+          patientId,
+          doctorId,
+          service1ID: 4,
+          locationID: selectedLocation
+        }),
+      });
+  
+      const text = await res.text(); // Show raw response in console
+      console.log("Server response:", res.status, text);
+  
+      if (res.ok) {
+        alert('Appointment scheduled!');
+        navigate(`/userProfile/${patientId}`);
+      } else {
+        alert('That time is no longer available or server error.');
+      }
+    } catch (err) {
+      console.error("Fetch failed:", err);
+      alert("Something went wrong");
     }
   };
+  
 
   // ---------------- DISPLAY ----------------
   const scheduleMap = {};
@@ -177,7 +192,10 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
             <p>Select Location:</p>
             <select
               value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
+              onChange={(e) => {
+                setSelectedLocation(e.target.value);
+                setSelectedServiceType(''); // Reset service type when location changes
+              }}
             >
               <option value="">Select Location</option>
 
@@ -189,98 +207,116 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
             </select>
           </div>
 
-          <div className="calendar-picker-container"> 
-            <label>Select Week:</label>
-            <DatePicker
-              selected={baseDate}
-              onChange={(date) => setBaseDate(date)}
-              dateFormat="MMMM d, yyyy"
-              inline
-              showPopperArrow={false}
-              minDate={new Date()}
-            />
-          </div>
+          {/* SELECT SERVICE TYPE (only for Eye Clinic 1 and 2) */}
+          {(selectedLocation === '1' || selectedLocation === '2') && (
+            <div className="input-row">
+              <p>Select Service Type:</p>
+              <select
+                value={selectedServiceType}
+                onChange={(e) => setSelectedServiceType(e.target.value)}
+                required
+              >
+                <option value="">Select Service Type</option>
+                <option value="eyeExam">Eye Exam</option>
+                <option value="diseaseTreatment">Disease and Eye Treatment</option>
+              </select>
+            </div>
+          )}
 
           {/* TIME SLOT PICKER */}
           {selectedLocation && (
             <div className="appointment-grid" style={{ marginTop: '2rem' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, minmax(100px, 1fr))`, gap: '10px' }}>
-              
-              {(() => {
-  // const baseDate = new Date();
-  // baseDate.setHours(12); 
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${daysToShow}, 1fr)` }}>
+                {(() => {
+                  const baseDate = new Date();
+                  baseDate.setHours(12);
 
-  const startDate = new Date(baseDate);
-  startDate.setHours(12);
+                  return [...Array(daysToShow)].map((_, idx) => {
+                    const dateObj = new Date(baseDate);
+                    dateObj.setDate(baseDate.getDate() + idx);
 
-  
+                    const dateStr = dateObj.toISOString().split('T')[0];
+                    const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+                    const readableDate = dateObj.toDateString();
 
-  return [...Array(daysToShow)].map((_, idx) => {
-    const dateObj = new Date(startDate);
-    dateObj.setDate(startDate.getDate() + idx);
+                    const schedules = scheduleMap[dayName] || [];
 
-    const dateStr = dateObj.toISOString().split('T')[0];
-    const abbrevDay = dateObj.toLocaleDateString('en-US', { weekday: 'short' }); // e.g., "Mon"
-    const readableDate = dateObj.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }); // e.g., "Apr 15, 2025"
+                    return (
+                      <div key={dateStr}>
+                        <h4 style={{ fontWeight: 'bold', color: '#00796B' }}>
+                          {dayName}<br />
+                          {readableDate}
+                        </h4>
 
-    const schedules = scheduleMap[dateObj.toLocaleDateString('en-US', { weekday: 'long' })] || [];
+                        {schedules.map((sched) => {
+                          const slots = generateTimeSlots(sched.startTime, sched.endTime);
 
-    return (
-      <div key={dateStr} className="time-column">
-        <div className="day-header">
-          <span className="day-abbrev">{abbrevDay}</span>
-          <span className="day-date">{readableDate}</span>
-        </div>
+                          return (
+                            <div key={`${sched.doctorID}-${sched.scheduleID}`} style={{ marginBottom: '1rem' }}>
+                              <small style={{ color: '#444', fontStyle: 'italic' }}>
+                                {sched.doctorName}
+                              </small>
 
-        {schedules.map((sched) => {
-          const slots = generateTimeSlots(sched.startTime, sched.endTime);
-          return (
-            <div key={`${sched.doctorID}-${sched.scheduleID}`} className="slot-group">
-              {slots.map((hour) => {
-                const hour24 = convertTo24Hour(hour);
-                const isBooked = appointments[dateStr]?.has(hour24);
-                const isSelected =
-                  selected.date === dateStr &&
-                  convertTo24Hour(selected.time) === hour24 &&
-                  selected.doctorId === sched.doctorID;
+                              {slots.map((hour) => {
+                                const hour24 = convertTo24Hour(hour);
+                                const isBooked = appointments[dateStr]?.has(hour24);
+                                const isSelected =
+                                  selected.date === dateStr &&
+                                  convertTo24Hour(selected.time) === hour24 &&
+                                  selected.doctorId === sched.doctorID;
+                                const isDisabled = isBooked || 
+                                  ((selectedLocation === '1' || selectedLocation === '2') && !selectedServiceType);
 
-                return (
-                  <button
-                    key={hour}
-                    onClick={() => handleSelect(dateStr, hour, sched.doctorID, buffer)}
-                    disabled={isBooked}
-                    className={`time-slot ${isSelected ? 'selected' : ''} ${isBooked ? 'booked' : ''}`}
-                  >
-                    {hour}
-                  </button>
+                      return (
+                        <button
+                        key={hour}
+                        onClick={() =>
+                          handleSelect(dateStr, hour, sched.doctorID)
+                        }
+                        disabled={isBooked}
+                        style={{
+                          backgroundColor: isSelected
+                            ? '#28a745'
+                            : isBooked
+                            ? '#f0f0f0'
+                            : '#ffffff',
+                          color: isBooked ? '#aaa' : '#00796B',
+                          border: isSelected
+                            ? '2px solid #28a745'
+                            : '2px solid #00796B',
+                          margin: '4px',
+                          padding: '6px',
+                          width: '100%',
+                          borderRadius: '6px',
+                          cursor: isBooked ? 'not-allowed' : 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: 'bold',
+                          opacity: isBooked ? 0.5 : 1,
+                          transition: '0.2s ease',
+                        }}
+                      >
+                        {hour}
+                      </button>
+                      
+                      );
+                    })}
+                  </div>
                 );
               })}
             </div>
           );
-        })}
-      </div>
-    );
-  });
-})()}
+        });
+      })()}
 
     </div>
-  </div>
-)}
-
           {/* CONFIRM BUTTON */}
           <div className="nav-buttons" style={{ marginTop: '2rem' }}>
             <button onClick={prevStep}>Back</button>
-            <button
-              onClick={handleConfirm}
-              disabled={!selected.date || !selected.time || !selected.doctorId}
-            >
-              Confirm Appointment
-            </button>
+            <button type="button" onClick={handleConfirm}>Confirm Appointment</button>
           </div>
+  </div>
+)}
+
         </div>
       </div>
     </div>
