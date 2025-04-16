@@ -173,7 +173,8 @@ export default function RecAppEdit({ patientId, appointmentID, onAppointmentChan
         doctorId,
         service1ID: service1ID,
         appointmentID,
-        locationID: selectedLocation
+        locationID: selectedLocation,
+        status: 'Scheduled'
 
       }),
     });
@@ -199,7 +200,7 @@ export default function RecAppEdit({ patientId, appointmentID, onAppointmentChan
     <div className="rec-page">
       <div className="rec-container ">
         <div className="rec-box fex">
-          <h2 className="rec-title">Schedule Appointment</h2>
+          <h2 className="rec-title">Reschedule Appointment</h2>
           <p className="starter"> Appointment for:  {`${patientName}`}</p>
 
           {/* SELECT LOCATION */}
@@ -306,7 +307,7 @@ export default function RecAppEdit({ patientId, appointmentID, onAppointmentChan
 
           
           <div className="nav-buttons" style={{ marginTop: '2rem' }}>
-            <button onClick={handleCancel}>Cancel Original Appointment</button>
+            <button onClick={handleCancel}>Cancel Appointment Instead</button>
 
             {/* CONFIRM BUTTON */}
             <button

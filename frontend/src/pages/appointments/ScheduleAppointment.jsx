@@ -153,7 +153,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
           time: time24,
           patientId,
           doctorId,
-          service1ID: 4,
+          service1ID: selectedServiceType,
           locationID: selectedLocation
         }),
       });
@@ -165,6 +165,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
         alert('Appointment scheduled!');
         navigate(`/userProfile/${patientId}`);
       } else {
+        console.log(selectedServiceType);
         alert('That time is no longer available or server error.');
       }
     } catch (err) {
@@ -213,12 +214,12 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
               <p>Select Service Type:</p>
               <select
                 value={selectedServiceType}
-                onChange={(e) => setSelectedServiceType(e.target.value)}
+                onChange={(e) => {setSelectedServiceType(e.target.value); console.log(e.target.value)}}
                 required
               >
                 <option value="">Select Service Type</option>
-                <option value="eyeExam">Eye Exam</option>
-                <option value="diseaseTreatment">Disease and Eye Treatment</option>
+                <option value="4">Eye Exam</option>
+                <option value="5">Disease and Eye Treatment</option>
               </select>
             </div>
           )}

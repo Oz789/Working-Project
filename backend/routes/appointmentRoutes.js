@@ -85,7 +85,7 @@ router.post('/', async (req, res) => {
 
 //update given appt
 router.put('/', async (req, res) => {
-  const { date, time, patientId, doctorId, service1ID, appointmentID, locationID} = req.body;
+  const { date, time, patientId, doctorId, service1ID, appointmentID, status, locationID} = req.body;
 
   
 
@@ -94,7 +94,7 @@ router.put('/', async (req, res) => {
   }
 
   try {
-    // ✅ Check for conflict for the same doctor
+    //  Check for conflict for the same doctor
     const [existing] = await db.promise().query(
       'SELECT * FROM appointments WHERE appointmentDate = ? AND appointmentTime = ? AND doctorId = ? AND appointmentNumber != ?',
       [date, time, doctorId, appointmentID]
@@ -103,11 +103,11 @@ router.put('/', async (req, res) => {
       return res.status(409).json({ error: 'Time slot already booked for this doctor' });
     }
 
-    // ✅ Insert appointment
+    
     await db.promise().query(
-      `UPDATE appointments SET appointmentDate = ?, appointmentTime = ?, patientId = ?, doctorId = ?, service1ID = ?, locationID = ? 
+      `UPDATE appointments SET appointmentDate = ?, appointmentTime = ?, patientId = ?, doctorId = ?, service1ID = ?, locationID = ?, status = ? 
       WHERE appointmentNumber = ?`,
-      [date, time, patientId, doctorId, service1ID, locationID, appointmentID]
+      [date, time, patientId, doctorId, service1ID, locationID, status, appointmentID]
     );
 
     res.status(201).json({ message: 'Appointment updated successfully' });

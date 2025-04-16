@@ -27,6 +27,8 @@ const ReceptionistAppointments = () => {
   const [showTodayOnly, setShowTodayOnly] = useState(false);
   const [statusFilter, setStatusFilter] = useState('All');
 
+  const [viewMode, setViewMode] = useState(null);
+
 
   const locationID = localStorage.getItem("userLocation"); 
 
@@ -83,11 +85,18 @@ const ReceptionistAppointments = () => {
     }
   };
 
-  useEffect(() => {
+  const refreshAppointments = () => {
     const locationID = localStorage.getItem("userLocation");
-    if (!locationID) return;
+    if (!locationID) {
+      console.warn("No location ID found in localStorage.");
+      return;
+    }
   
     fetchClinicAppointments(locationID).then(setAppointments);
+  };
+
+  useEffect(() => {
+    refreshAppointments()
   }, []);
 
   const filtered = appointments.filter(appt =>
@@ -236,14 +245,14 @@ const ReceptionistAppointments = () => {
                   <button
                     className="appointment-button"
                     onClick={() => 
-                      { setSelectedPatientID(appt.patientID); console.log(appt.patientID + "Hello"); setSelectedAppointmentID(appt.appointmentID); setPatientName(appt.patientName); } }
+                      { setSelectedPatientID(appt.patientID); console.log(appt.patientID + "H"); setSelectedAppointmentID(appt.appointmentID); setPatientName(appt.patientName); setViewMode("edit"); } }
                   >
-                    Edit Form
+                    Edit Appt.
                   </button>
 
                   <button
                     className="appointment-button"
-                    onClick={() => { setSelectedPatientID(appt.patientID); console.log(appt.patientID); setSelectedAppointmentID(appt.appointmentID); setPatientName(appt.patientName); } }
+                    onClick={() => { setSelectedPatientID(appt.patientID); console.log(appt.patientID + "Hello"); setSelectedAppointmentID(appt.appointmentID); setPatientName(appt.patientName); setViewMode("view"); } }
                   >
                     View Form
                   </button>
@@ -255,14 +264,34 @@ const ReceptionistAppointments = () => {
       </div>
 
       <div className="appointment-right">
-        {selectedPatientID ? (
-          <RecAppEdit patientId={selectedPatientID} appointmentID={selectedAppointmentID} onAppointmentChange={fetchClinicAppointments} patientName={selectedPatientName} onClose={() => {
-            setSelectedPatientID(null);
-            setSelectedAppointmentID(null);
-          }}/> // <PatientFormViewer patientID={selectedPatientID} />
-        ) : (
-          <div className="mock-placeholder">Select an appointment to view the form</div>
-        )}
+{selectedPatientID ? (
+  viewMode === "edit" ? (
+    <RecAppEdit
+      patientId={selectedPatientID}
+      appointmentID={selectedAppointmentID}
+      onAppointmentChange={refreshAppointments}
+      patientName={selectedPatientName}
+      onClose={() => {
+        //setSelectedPatientID(null);
+        setSelectedAppointmentID(null);
+        setViewMode(null);
+      }}
+    />
+  ) : (
+    
+    <PatientFormViewer
+      patientID={selectedPatientID}
+      onClick={console.log(selectedPatientID)}
+      onClose={() => {
+        //setSelectedPatientID(null);
+        setSelectedAppointmentID(null);
+        setViewMode(null);
+      }}
+    />
+  )
+) : (
+  <div className="mock-placeholder">Select an appointment to view the form</div>
+)}
       </div>
       
     </div>

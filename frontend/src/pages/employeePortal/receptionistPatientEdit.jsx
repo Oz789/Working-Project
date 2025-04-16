@@ -14,6 +14,7 @@ const NPatientEdit = () => {
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [selectedPatientFirst, setPatientFirst] = useState('');
   const [selectedPatientLast,  setPatientLast] = useState('');
+  const [viewMode, setViewMode] = useState(null);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -64,14 +65,14 @@ const NPatientEdit = () => {
             </div>
             <button
               className="appointment-button"
-              onClick={() => {setSelectedPatientID(pat.patientID); setPatientFirst(pat.firstName);  setPatientLast(pat.lastName) } }
+              onClick={() => {setSelectedPatientID(pat.patientID); setPatientFirst(pat.firstName);  setPatientLast(pat.lastName); setViewMode("view")} }
             >
               View Form
             </button>
 
             <button
               className="appointment-button"
-              onClick={() => setSelectedPatientID(pat.patientID)}
+              onClick={() => {setSelectedPatientID(pat.patientID); setPatientFirst(pat.firstName);  setPatientLast(pat.lastName); setViewMode("edit");} }
             >
               Book Appointment
             </button>
@@ -83,8 +84,11 @@ const NPatientEdit = () => {
         className={`appointment-right `}
       >
         {selectedPatientID ? (
-          // <PatientFormViewer patientID={selectedPatientID} />
-          <RecApp patientId={selectedPatientID} patientFirst = {selectedPatientFirst} patientLast={selectedPatientLast} />
+          viewMode === "view" ? (
+          <PatientFormViewer patientID={selectedPatientID}  onClose={() => {setSelectedPatientID(null); setViewMode(null);}}/>
+          ) :
+          (<RecApp patientId={selectedPatientID} patientFirst = {selectedPatientFirst} patientLast={selectedPatientLast} onClose={() => {setSelectedPatientID(null); setViewMode(null);}}/>)
+          
         ) : (
           <div className="mock-placeholder">
             Select a patient to view their form

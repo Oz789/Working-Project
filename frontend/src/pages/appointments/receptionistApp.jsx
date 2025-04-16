@@ -7,10 +7,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 export default function RecApp({ patientId, patientFirst, patientLast }) {
   const [appointments, setAppointments] = useState({});
-  const [selected, setSelected] = useState({ date: '', time: '', doctorId: '', service1ID: '4' });
+  const [selected, setSelected] = useState({ date: '', time: '', doctorId: ''});
   const [locations, setLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [doctorSchedules, setDoctorSchedules] = useState([]);
+  const [selectedServiceType, setSelectedServiceType] = useState('');
 
   const [baseDate, setBaseDate] = useState(new Date());
   const navigate = useNavigate();
@@ -109,17 +110,17 @@ export default function RecApp({ patientId, patientFirst, patientLast }) {
   }, [selectedLocation]);
 
   // ---------------- ACTIONS ----------------
-  const handleSelect = (date, time, doctorId, service1ID) => {
-    setSelected({ date, time, doctorId, service1ID });
+  const handleSelect = (date, time, doctorId) => {
+    setSelected({ date, time, doctorId });
   };
 
   const handleConfirm = async () => {
-    const { date, time, doctorId, service1ID } = selected;
-    console.log("🟢 Confirming:", selected);
+    const { date, time, doctorId} = selected;
+    console.log(" Confirming:", selected);
 
-    if (!date || !time || !doctorId || !service1ID) {
-      console.warn("❌ Missing required fields");
-      console.log("d: " + date + " time: " + time + " doctorId: " + doctorId + " service1Id: " + service1ID);
+    if (!date || !time || !doctorId || !selectedLocation) {
+      console.warn(" Missing required fields");
+      //console.log("d: " + date + " time: " + time + " doctorId: " + doctorId + " service1Id: " + service1ID);
       return;
     }
       
@@ -134,7 +135,7 @@ export default function RecApp({ patientId, patientFirst, patientLast }) {
         time: time24,
         patientId,
         doctorId,
-        service1ID: service1ID,
+        service1ID: selectedServiceType,
         locationID: selectedLocation
 
       }),
@@ -142,9 +143,17 @@ export default function RecApp({ patientId, patientFirst, patientLast }) {
 
     if (res.ok) {
       alert('Appointment scheduled!');
+        fetchAppointments();
+        setSelected({ date: '', time: '', doctorId: '', service1ID: '4' });
       
     } else {
+      if(selectedServiceType === '')
+      {
+        alert('Please select a service');
+      }
+      else{
       alert('That time is no longer available.');
+      }
     }
   };
 
@@ -168,7 +177,7 @@ export default function RecApp({ patientId, patientFirst, patientLast }) {
             <p>Select Location:</p>
             <select
               value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
+              onChange={(e) => {setSelectedLocation(e.target.value); setSelectedServiceType('');}}
             >
               <option value="">Select Location</option>
 
@@ -179,6 +188,22 @@ export default function RecApp({ patientId, patientFirst, patientLast }) {
               ))}
             </select>
           </div>
+
+                    {/* SELECT SERVICE TYPE (only for Eye Clinic 1 and 2) */}
+                    {(selectedLocation === '1' || selectedLocation === '2') && (
+            <div className="input-row">
+              <p>Select Service Type:</p>
+              <select
+                value={selectedServiceType}
+                onChange={(e) => {setSelectedServiceType(e.target.value); console.log(e.target.value)}}
+                required
+              >
+                <option value="">Select Service Type</option>
+                <option value="4">Eye Exam</option>
+                <option value="5">Disease and Eye Treatment</option>
+              </select>
+            </div>
+          )}
 
         {selectedLocation && (
         <div>
