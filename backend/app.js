@@ -10,6 +10,7 @@ const createDoctorRoute = require('./routes/doctor/createDoctor');
 const getDoctorRoute = require('./routes/doctor/getDoctor');
 const patientRoutes = require('./routes/patientRoutes');
 const messageRoutes = require('./routes/message/getMessage');
+const insuranceRoutes = require('./routes/insuranceRoutes');
 //const formRoutes = require('./routes/patients/createContacts');
 const createFramesRoute = require('./routes/admin/createFrames');
 const getFramesRoute = require('./routes/admin/getFrames');
@@ -118,6 +119,7 @@ app.use('/api/appointments', updateStatus);
 app.use('/api/examReports', createExamReport);
 app.use('/api/referrals', createReferralRoute);
 app.use('/api/appointments', endAppointmentRoute);
+app.use('/api/insurance', insuranceRoutes);
 
 
 
