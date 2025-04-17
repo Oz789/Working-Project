@@ -5,6 +5,7 @@ import { Card, CardContent, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { Grid } from "@mui/material";
 import "./home.css";
+import NavBar from "../../components/navBar";
 
 
 const homeBackground = "./images/home3.jpg"; 
@@ -23,7 +24,7 @@ const Home = () => {
   return (
     <>
   
-      <HomeNavBar/>
+      <NavBar/>
     
 
       {/* HOME SECTION */}

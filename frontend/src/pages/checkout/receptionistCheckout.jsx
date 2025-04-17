@@ -4,9 +4,20 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import useCartStore from '../../components/cartStorage'; 
+import { useNavigate } from 'react-router-dom';
 
 
-const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
+const ReceptionistCheckout = (props) => {
+  const initialAppointmentNumber = props.appointmentNumber || localStorage.getItem("checkoutAppt");
+  const initialPatientID = props.patientID || localStorage.getItem("checkoutPatient");
+
+  const [appointmentNumber, setAppointmentNumber] = useState(initialAppointmentNumber);
+  const [patientID, setPatientID] = useState(initialPatientID);
+
+  console.log(" Initial props:", props);
+  console.log("Final appointmentNumber:", appointmentNumber);
+  console.log("Final patientID:", patientID);
+
   const [availableItems, setAvailableItems] = useState([]);
   const [itemType, setItemType] = useState("service");
   const [selectedItemID, setSelectedItemID] = useState("");
@@ -19,7 +30,16 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
     clearCart
   } = useCartStore();
 
-  // Fetch items for dropdowns
+  useEffect(() => {
+    if (props.appointmentNumber) {
+      localStorage.setItem("checkoutAppt", props.appointmentNumber);
+    }
+    if (props.patientID) {
+      localStorage.setItem("checkoutPatient", props.patientID);
+    }
+  }, [props.appointmentNumber, props.patientID]);
+
+  // Fetch items
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -35,34 +55,35 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
           ...contacts.data.map(item => ({ ...item, type: 'contact' }))
         ];
 
+        console.log("🛒 Combined items fetched:", combinedItems);
         setAvailableItems(combinedItems);
       } catch (err) {
-        console.error("Error fetching items:", err);
+        console.error("❌ Error fetching items:", err);
       }
     };
 
     fetchItems();
   }, []);
 
-  // Auto-add base service to cart if it exists
+  // Auto-add base service
   useEffect(() => {
     if (!appointmentNumber) {
-     
+      console.warn("⚠️ No appointmentNumber — cannot fetch base service.");
       return;
     }
-  
+
     console.log("📡 Fetching checkout info for:", appointmentNumber);
     axios.get(`http://localhost:5001/api/checkout/${appointmentNumber}`)
       .then(res => {
-        console.log("Appointment data received:", res.data);
+        console.log("📬 Appointment data received:", res.data);
         const data = res.data;
-  
+
         if (data.baseService) {
           const exists = cart.find(
             item => item.itemID === data.baseService.serviceID && item.type === 'service'
           );
           if (!exists) {
-            console.log("Adding base service to cart:", data.baseService);
+            console.log("✅ Adding base service to cart:", data.baseService);
             addToCart({
               itemID: data.baseService.serviceID,
               name: data.baseService.name,
@@ -74,28 +95,34 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
             console.log("⚠️ Base service already in cart.");
           }
         } else {
-          console.log("No base service found in response.");
+          console.log("ℹ️ No base service returned.");
         }
       })
       .catch(err => {
-        console.error("Failed to fetch appointment info:", err);
+        console.error("❌ Failed to fetch appointment info:", err);
       });
   }, [appointmentNumber]);
-  
 
   const handleAddItem = () => {
     const item = availableItems.find(i => i.itemID === selectedItemID);
-    if (!item) return;
+    if (!item) {
+      console.warn("⚠️ Tried to add item, but none selected.");
+      return;
+    }
 
     const exists = cart.find(i => i.itemID === item.itemID && i.type === item.type);
     if (exists) {
       updateQuantity(item.itemID, item.type, exists.quantity + 1);
+      console.log(`🔁 Increased quantity for ${item.name}`);
     } else {
       addToCart({ ...item, quantity: 1 });
+      console.log(`🆕 Added to cart:`, item);
     }
   };
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+
+  const navigate = useNavigate();
 
   const handleCheckout = async () => {
     try {
@@ -110,15 +137,33 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
         })),
         total: totalPrice
       };
-
-      await axios.post('http://localhost:5001/api/checkout', payload);
-      alert("Checkout successful!");
+  
+      console.log("🧾 Sending checkout payload:", payload);
+  
+      const res = await axios.post('http://localhost:5001/api/checkout', payload);
+      console.log("✅ Checkout response:", res.data);
+  
+      alert("✅ Sale complete and appointment marked as finished!");
+  
       clearCart();
+      localStorage.removeItem("cart-storage");
+  
+      setSelectedItemID("");
+      setAvailableItems([]);
+  
+      setTimeout(() => {
+        navigate("/employeeProfile"); // 👈 Use navigate instead of window.location.href
+      }, 750);
+  
     } catch (err) {
-      console.error("Checkout error:", err);
+      console.error("❌ Checkout error:", err);
       alert("Checkout failed.");
     }
   };
+  
+  
+  
+  
 
   return (
     <Card sx={{ p: 3 }}>
@@ -127,7 +172,6 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
           Receptionist Checkout
         </Typography>
 
-        {/* Item Selection */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={3}>
             <Select value={itemType} onChange={e => setItemType(e.target.value)} fullWidth>
@@ -160,7 +204,6 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
 
         <Divider sx={{ my: 2 }} />
 
-        {/* Cart Display */}
         <Typography variant="h6" gutterBottom>Cart</Typography>
         {cart.map((item, idx) => (
           <Grid container spacing={2} key={idx} alignItems="center">
@@ -201,4 +244,5 @@ const ReceptionistCheckout = ({ patientID, appointmentNumber }) => {
 };
 
 export default ReceptionistCheckout;
+
 

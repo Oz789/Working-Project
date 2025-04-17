@@ -27,6 +27,8 @@ import StaffAppointments from "./pages/staff/StaffAppointments";
 import StaffPatients from "./pages/staff/StaffPatients";
 import StaffSettings from "./pages/staff/StaffSettings";
 import NotFound from "./pages/NotFound";
+import ReferralBookingForm from "./pages/referral/referralApptForm";
+
 import "./App.css";
 
 function App() {
@@ -60,6 +62,8 @@ function App() {
         <Route path="/staff-appointments" element={<StaffAppointments />} />
         <Route path="/staff-patients" element={<StaffPatients />} />
         <Route path="/staff-settings" element={<StaffSettings />} />
+        <Route path="/referral-booking" element={<ReferralBookingForm />} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

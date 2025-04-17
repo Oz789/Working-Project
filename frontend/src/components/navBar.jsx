@@ -61,7 +61,9 @@ const NavBar = () => {
         <Typography className="divider">|</Typography>
           <Button component={Link} to="/home" className="nav-button">Home</Button>
           <Typography className="divider">|</Typography>
-          <Button component={Link} to={getPortalLink()} className="nav-button">Portal</Button>
+          <Button component={Link} to="/log-in" className="nav-button">Log-In Portal</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to={"/book-appointment"} className="nav-button">Book Appointment</Button>
           <Typography className="divider">|</Typography>
           <Button component={Link} to="/services" className="nav-button">Services</Button>
           <Typography className="divider">|</Typography>

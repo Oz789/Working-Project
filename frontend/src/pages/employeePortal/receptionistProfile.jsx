@@ -7,7 +7,7 @@ import NavBar from "../../components/receptionistNavBar";
 
 
 const EmployeeProfilePage = () => {
-  const { employeeID } = useParams(); // dynamically from route
+  const { employeeID } = useParams();
   const [activeTab, setActiveTab] = useState(0);
   const [employee, setEmployee] = useState(null);
 

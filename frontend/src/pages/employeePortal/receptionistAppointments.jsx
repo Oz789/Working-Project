@@ -60,7 +60,8 @@ const ReceptionistAppointments = () => {
           appointmentDate: rawDate,
           appointmentTime: cleanTime,
           status: appt.status,
-          isReferred: !!appt.isReferred
+          isReferred: appt.isReferred === 1 || appt.isReferred === "1"
+
         };
       });
     } catch (err) {
@@ -252,22 +253,23 @@ const ReceptionistAppointments = () => {
                     </button>
                   )}
 
-                  <button
-                    className="appt-btn refer"
-                    disabled={!appt.isReferred}
-                    style={{
-                      backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
-                      color: appt.isReferred ? "white" : "#666",
-                      marginLeft: "0.5rem",
-                    }}
-                    onClick={() => {
-                      if (appt.isReferred) {
-                        navigate(`/referral-booking/${appt.appointmentID}`);
-                      }
-                    }}
-                  >
-                    Book Referral
-                  </button>
+<button
+  className="appt-btn refer"
+  disabled={!appt.isReferred}
+  style={{
+    backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
+    color: appt.isReferred ? "white" : "#666",
+    marginLeft: "0.5rem",
+  }}
+  onClick={() => {
+    if (appt.isReferred) {
+      navigate(`/referral-booking`);
+    }
+  }}
+>
+  Book Referral
+</button>
+
                 </div>
               </div>
             ))}

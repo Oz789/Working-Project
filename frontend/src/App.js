@@ -37,7 +37,7 @@ import AdminReports from "./pages/admin/reports/adminReportsPage";
 import CheckoutPage from './components/checkoutPage';
 import UserCheckout from "./pages/checkout/userCheckout";
 import ReceptionistCheckout from "./pages/checkout/receptionistCheckout";
-import ReferralBookingForm from './pages/employeePortal/receptionistReferralForm';
+import ReferralBookingForm from './pages/referral/referralApptForm';
 
 
 
@@ -83,7 +83,7 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/userCheckout" element={<UserCheckout />} />
           <Route path="/apptCheckout" element={<ReceptionistCheckout/>} />
-          <Route path="/referral-booking/:referralID" element={<ReferralBookingForm />}
+          <Route path="/referral-booking" element={<ReferralBookingForm />}
 />
           
 
