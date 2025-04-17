@@ -7,7 +7,7 @@ import { Grid } from "@mui/material";
 import "./home.css";
 
 
-const homeBackground = "./images/home.jpg"; 
+const homeBackground = "./images/home3.jpg"; 
 
 
 const services = [
