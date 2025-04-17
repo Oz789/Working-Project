@@ -13,6 +13,7 @@ router.patch('/checkin/:id', async (req, res) => {
 
   try {
     await db.promise().query(sql, [id]);
+    
     res.status(200).json({ message: "Patient checked in" });
   } catch (err) {
     console.error("Check-in error:", err);

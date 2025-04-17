@@ -94,8 +94,13 @@ const Login = () => {
             <button className="login-button" onClick={handleLogin}>Log In</button>
 
             <p className="forgot-password">
-              <a href="#">Forgot Password?</a>
-            </p>
+  <a href="#">Forgot Password</a>
+</p>
+
+<p className="register-link">
+  New user? <a href="/register">Register here</a>
+</p>
+
           </div>
         </div>
       </div>

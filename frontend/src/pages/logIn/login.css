@@ -91,4 +91,20 @@
     text-decoration: underline;
   }
   
-
+  .register-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 1.0rem;
+    font-family: 'Bell MT', serif;
+  }
+  
+  .register-link a {
+    color: #00796B;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+  

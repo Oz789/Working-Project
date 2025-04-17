@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import DoctorHeader from "./doctorHeader";
 import DoctorTabs from "./doctorTabs";
 import DoctorTabContent from "./doctorTabContent";
+import NavBar from "../../components/navBar";
 
 const DoctorProfilePage = () => {
   const { doctorID } = useParams();
@@ -36,6 +37,8 @@ const DoctorProfilePage = () => {
   };
 
   return (
+    <>
+    <NavBar/>
     <div>
       <DoctorHeader name={doctorInfo.name} role={doctorInfo.role} avatar={doctorInfo.avatar} />
       <DoctorTabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -46,6 +49,7 @@ const DoctorProfilePage = () => {
         patients={patients}
       />
     </div>
+    </>
   );
 };
 

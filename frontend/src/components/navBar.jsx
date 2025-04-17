@@ -1,55 +1,93 @@
-// components/NavBarBasic.jsx
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Box, Button, Typography, Badge, IconButton } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ProfileDropdown from "./profileDropdown";
+import useCartStore from "../components/cartStorage";
+import './navBar.css';
 
 const NavBar = () => {
+  const [scrolled, setScrolled] = useState(false);
+  const { cart } = useCartStore();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const navigate = useNavigate();
+  const role = localStorage.getItem("userRole");
+
+  const getPortalLink = () => {
+    const role = localStorage.getItem("userRole");
+    const id = localStorage.getItem("userID");
+    const doctorID = localStorage.getItem("doctorID");
+
+    if (!role || !id) return "/log-in";
+
+    switch (role.toLowerCase()) {
+      case "admin":
+        return `/adminProfile/${id}`;
+      case "doctor":
+        return `/doctorProfile/${doctorID}`;
+      case "receptionist":
+        return `/employeeProfile/${id}`;
+      case "nurse":
+        return `/nurseProfile/${id}`;
+      case "patient":
+        return `/userProfile/${id}`;
+      default:
+        return "/log-in";
+    }
+  };
+  const handleCartClick = () => {
+    if (role === "Receptionist" || role === "employee") {
+      navigate("/checkout");
+    } else if (role === "patient") {
+      navigate("/userCheckout");
+    } else {
+      alert("Cart access denied for this role.");
+    }
+  };
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      setScrolled(offset > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="sticky"
-        elevation={0}
-        sx={{
-          backgroundColor: "white",
-          borderBottom: "1px solid #dcdcdc",
-          height: "60px",
-          justifyContent: "center",
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "30px",
-            fontFamily: "'Bell MT', serif",
-          }}
-        >
-          <Button component={Link} to="/home" sx={{ color: "#3E2723"}}>
-            Home
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/log-in" sx={{ color: "#3E2723",}}>
-            Patient's Center
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/services" sx={{ color: "#3E2723",}}>
-            Services
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/frames" sx={{ color: "#3E2723", }}>
-            Contacts & Frames
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/about" sx={{ color: "#3E2723",}}>
-            About
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/contact" sx={{ color: "#3E2723",}}>
-            Contact Us
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <>
+      <Box className="navbar">
+        <Box className="nav-links">
+        <Typography className="divider">|</Typography>
+          <Button component={Link} to="/home" className="nav-button">Home</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to={getPortalLink()} className="nav-button">Portal</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/services" className="nav-button">Services</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/frames" className="nav-button">Contacts & Frames</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/about" className="nav-button">About</Button>
+          <Typography className="divider">|</Typography>
+        </Box>
+
+        <Box className="nav-right">
+        <IconButton onClick={handleCartClick}>
+  <Badge badgeContent={totalItems} color="secondary">
+    <ShoppingCartIcon />
+  </Badge>
+</IconButton>
+
+
+          <ProfileDropdown />
+        </Box>
+      </Box>
+    </>
   );
 };
 
 export default NavBar;
+
+
+
+

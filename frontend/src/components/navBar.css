@@ -1,0 +1,66 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    background-color: white ;
+    z-index: 1000;
+    border-bottom: 1px solid #dcdcdc;
+    height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 2rem;
+  }
+  
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-family: 'Bell MT', serif;
+    font-weight: bold;
+    align-items: center;
+  }
+  
+  .nav-button {
+    color: #3E2723 !important;
+    text-transform: none;
+    font-size: 1rem;
+    position: relative;
+    transition: all 0.2s ease;
+    background-color: transparent;
+  }
+
+  
+  .nav-button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 2px;
+    background-color: #029449; /* subtle gold */
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.3s ease;
+  }
+  
+  .nav-button:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+  }
+  
+
+  
+  .divider {
+    font-size: 1.2rem;
+    color: #ccc;
+  }
+  
+  .nav-right {
+    position: absolute;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  
+  

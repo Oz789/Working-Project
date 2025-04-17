@@ -10,7 +10,7 @@ const createDoctorRoute = require('./routes/doctor/createDoctor');
 const getDoctorRoute = require('./routes/doctor/getDoctor');
 const patientRoutes = require('./routes/patientRoutes');
 const messageRoutes = require('./routes/message/getMessage');
-//const formRoutes = require('./routes/patients/createContacts');
+
 const createFramesRoute = require('./routes/admin/createFrames');
 const getFramesRoute = require('./routes/admin/getFrames');
 const deleteFrameRoute = require('./routes/admin/deleteFrames');
@@ -42,17 +42,17 @@ const updateMedicalForm = require('./routes/nurse/updateNurseForm');
 const createExamReport = require('./routes/doctor/updateEyeExamForm');
 const createReferralRoute = require('./routes/doctor/referral');
 const endAppointmentRoute = require('./routes/doctor/endAppointment');
+const getNotifications = require('./routes/notifications/getNotification');
+const markReadNotification = require('./routes/notifications/readNotification');
+const checkinRoute = require('./routes/receptionist/checkedin'); 
 
 
 
 
-
-
-
-
-
-
-
+const checkoutReceptionistRoute = require('./routes/receptionist/checkoutRoute');
+const checkoutReceptionistItemsRoute = require('./routes/receptionist/checkoutServices');
+const checkoutUser= require('./routes/cart/userCheckout');
+const referralAppointmentRoutes = require('./routes/receptionist/referral');
 
 
 
@@ -98,6 +98,7 @@ app.use('/api', getContactsRoute);
 app.use('/api', updateContactsRoute);
 app.use('/api', deleteContactsRoute);
 app.use('/api', createServiceRoute);
+app.use('/api', referralAppointmentRoutes);
 app.use("/api/nursePatient", getNursePatient);
 app.use('/api', getServicesRoute);
 app.use('/api', deleteServiceRoute);
@@ -118,9 +119,14 @@ app.use('/api/appointments', updateStatus);
 app.use('/api/examReports', createExamReport);
 app.use('/api/referrals', createReferralRoute);
 app.use('/api/appointments', endAppointmentRoute);
+app.use('/api/notifications', getNotifications);
+app.use('/api/notifications/mark-read', markReadNotification);
+app.use('/api/appointments', checkinRoute);
 
 
-
+app.use('/api/checkout', checkoutReceptionistItemsRoute);
+app.use('/api/checkout', checkoutReceptionistRoute);
+app.use('/api', checkoutUser);
 
 
 

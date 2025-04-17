@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import ReceptionistHeader from "./receptionistHeader";
 import ReceptionistTabs from "./receptionistTabs";
 import ReceptionistTabContent from "./receptionistTabContent";
+import NavBar from "../../components/receptionistNavBar";
+
 
 const EmployeeProfilePage = () => {
   const { employeeID } = useParams(); // dynamically from route
@@ -25,11 +27,14 @@ const EmployeeProfilePage = () => {
   };
 
   return (
+    <>
+    <NavBar/>
     <div>
       <ReceptionistHeader name={user.name} role={user.role} avatar={user.avatar} />
       <ReceptionistTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <ReceptionistTabContent activeTab={activeTab} employee={employee} />
     </div>
+    </>
   );
 };
 

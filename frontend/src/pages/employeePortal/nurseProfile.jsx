@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import ReceptionistHeader from "./receptionistHeader";
 import NurseTabs from "./nurseTabs";
 import NurseTabContent from "./nurseTabContent";
+import NavBar from "../../components/navBar";
 
 
  
@@ -30,11 +31,14 @@ const NurseProfilePage = () => {
   };
 
   return (
+    <>
+    <NavBar/>
     <div>
       <ReceptionistHeader name={user.name} role={user.role} avatar={user.avatar} />
       <NurseTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <NurseTabContent activeTab={activeTab} employee={employee} />
     </div>
+    </>
   );
 };
 

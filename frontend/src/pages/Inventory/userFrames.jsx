@@ -1,29 +1,33 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./frames.css"; 
+import "./frames.css";
 import UsernavBar from "../../components/navBar";
-import UserFramesModal from "./userFramesModal"; 
+import UserFramesModal from "./userFramesModal";
+import UserContactsModal from "./contactsModal";
 
 const UserFrames = () => {
   const [frames, setFrames] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [viewModal, setViewModal] = useState(false);
-  const [selectedFrame, setSelectedFrame] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
-    const fetchFrames = async () => {
+    const fetchAll = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/frames");
-        setFrames(res.data);
+        const frameRes = await axios.get("http://localhost:5001/api/frames");
+        const contactRes = await axios.get("http://localhost:5001/api/eyecontacts");
+
+        setFrames(frameRes.data);
+        setContacts(contactRes.data);
       } catch (error) {
-        console.error("Failed to fetch frames", error);
+        console.error("Failed to fetch products", error);
       }
     };
-
-    fetchFrames();
+    fetchAll();
   }, []);
 
-  const handleFrameClick = (frame) => {
-    setSelectedFrame(frame);
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
     setViewModal(true);
   };
 
@@ -31,6 +35,7 @@ const UserFrames = () => {
     <>
       <UsernavBar />
       <div className="frames-container">
+        {/* FRAMES */}
         <h2 className="frames-title">Eyeglass Frames</h2>
         <p className="frames-count">Showing {frames.length} Products</p>
 
@@ -39,7 +44,7 @@ const UserFrames = () => {
             <div
               className="frame-card"
               key={frame.id}
-              onClick={() => handleFrameClick(frame)}
+              onClick={() => handleItemClick(frame)}
             >
               <img
                 src={frame.image || "/Images/brevik.webp"}
@@ -47,24 +52,53 @@ const UserFrames = () => {
                 className="frame-image"
               />
               <div className="frame-info">
-                <span className="brand">Cartier</span>
+                <span className="brand">{frame.brand}</span>
                 <span className="model">{frame.name}</span>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Divider */}
+       
+        <div className="contact-section">
+<h2 className="frames-title">Eye Contacts</h2>
+<p className="frames-count">Showing {contacts.length} Products</p>
+
+        {/* CONTACTS */}
+        <div className="frames-grid">
+          {contacts.map((contact) => (
+            <div
+              className="frame-card"
+              key={contact.id}
+              onClick={() => handleItemClick(contact)}
+            >
+              <img
+                src={contact.image || "/Images/contact-placeholder.webp"}
+                alt={contact.name}
+                className="frame-image"
+              />
+              <div className="frame-info">
+                <span className="brand">{contact.brand}</span>
+                <span className="model">{contact.name}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        </div>
       </div>
 
-         
-         {viewModal && selectedFrame && (
-        <UserFramesModal
-          data={selectedFrame}
-          onClose={() => setViewModal(false)}
-        />
-      )}
+      {viewModal && selectedItem && (
+  selectedItem.lensWidth ? (
+    <UserFramesModal data={selectedItem} onClose={() => setViewModal(false)} />
+  ) : (
+    <UserContactsModal data={selectedItem} onClose={() => setViewModal(false)} />
+  )
+)}
     </>
   );
 };
 
 export default UserFrames;
+
 

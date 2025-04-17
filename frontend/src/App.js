@@ -30,6 +30,12 @@ import NurseProfilePage from "./pages/employeePortal/nurseProfile";
 import NurseExamPage from "./pages/employeePortal/nurseExamPage";
 import DoctorExamForm from './pages/doctor/doctorExamForm';
 //import ReferralForm from "./pages/doctor/referral";
+import CheckoutPage from './components/checkoutPage';
+import UserCheckout from "./pages/checkout/userCheckout";
+import ReceptionistCheckout from "./pages/checkout/receptionistCheckout";
+import ReferralBookingForm from './pages/employeePortal/receptionistReferralForm';
+
+
 
 
 
@@ -59,13 +65,18 @@ function App() {
           <Route path="/inventory-report" element={<InventoryReport />} />
           <Route path="/payment" element={<PaymentForm />} />
           <Route path="/cart" element={<CartPage />} />
-          <Route path="/checkout" element={<Checkout />} />
+          
           <Route path="/patientViewer/:id" element={<PatientFormViewer />} />
           <Route path="/register" element={<RegisterPatient/>}/>
           <Route path="/appt" element={<ScheduleAppointment/>}/>
           <Route path="/nurseProfile/:id" element={<NurseProfilePage />} />
           <Route path="/nurseExamPage/:id" element={<NurseExamPage />} />
           <Route path="/doctorexamform/:appointmentID/:patientID" element={<DoctorExamForm />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/userCheckout" element={<UserCheckout />} />
+          <Route path="/apptCheckout" element={<ReceptionistCheckout/>} />
+          <Route path="/referral-booking/:referralID" element={<ReferralBookingForm />}
+/>
           
 
 

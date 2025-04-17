@@ -1,28 +1,31 @@
-import React, {useState, useEffect}from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import ProfileDropdown from "./profileDropdown";
+import useCartStore from "../components/cartStorage";
+import './navBar.css';
 
-const HomeNavBar = () => {
-
+const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const { cart } = useCartStore();
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY;
-      setScrolled(offset > 100); // change at 100px scroll (adjust if needed)
+      setScrolled(offset > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
   return (
     <>
-      {/* Black top bar (scrolls away) */}
-      <Box
+    <Box
         sx={{
           backgroundColor: "black",
-          height: "80px",
+          height: "70px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -30,61 +33,28 @@ const HomeNavBar = () => {
       >
         <img src={"/images/logo"} alt="logo" style={{ height: "150px" }} />
       </Box>
-
-      {/* White nav bar (sticky!) */}
-      <Box
-        sx={{
-          position: "sticky",
-          top: 0,
-          backgroundColor: "white",
-          zIndex: 1000,
-          borderBottom: "1px solid #dcdcdc",
-          height: "65px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            gap: "30px",
-            fontFamily: "'Bell MT'",
-            fontWeight: "bold",
-          }}
-        >
-          <Button component={Link} to="/home" sx={{ color: "#3E2723" }}>
-            Home
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/log-in" sx={{ color: "#3E2723" }}>
-            Patient's Center
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/services" sx={{ color: "#3E2723" }}>
-            Services
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/frames" sx={{ color: "#3E2723" }}>
-            Contacts & Frames
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/about" sx={{ color: "#3E2723" }}>
-            About
-          </Button>
-          <Typography>|</Typography>
-          <Button component={Link} to="/cart" sx={{ color: "#3E2723" }}>
-            Contact Us
-          </Button>
+      <Box className="navbar">
+        <Box className="nav-links">
+        <Typography className="divider">|</Typography>
+          <Button component={Link} to="/home" className="nav-button">Home</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/log-in" className="nav-button">Patient's Center</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/services" className="nav-button">Services</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/frames" className="nav-button">Contacts & Frames</Button>
+          <Typography className="divider">|</Typography>
+          <Button component={Link} to="/about" className="nav-button">About</Button>
+          <Typography className="divider">|</Typography>
+      
         </Box>
-        {/* Right side - icons */}
-  <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-    <ProfileDropdown />
-  </Box>
-</Box>
 
+        <Box className="nav-right">
+          <ProfileDropdown />
+        </Box>
+      </Box>
     </>
   );
 };
 
-export default HomeNavBar;
+export default NavBar;

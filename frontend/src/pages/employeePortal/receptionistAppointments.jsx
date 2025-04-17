@@ -1,6 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import '../doctor/doctorAppointments.css';
 import PatientFormViewer from '../patientPortal/patientFormViewer';
+import ReceptionistCheckout from '../checkout/receptionistCheckout';
+import useBillingSessionStore from '../billing/appointmentBilling';
+import useCartStore from '../../components/cartStorage';
+import { useNavigate } from 'react-router-dom';
+import './receptionistCards.css';
+import ReferralBookingForm from './receptionistReferralForm';
+
+
+
+
 
 const groupByDate = (appointments) => {
   return appointments.reduce((acc, appt) => {
@@ -22,6 +32,12 @@ const ReceptionistAppointments = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showTodayOnly, setShowTodayOnly] = useState(false);
   const [statusFilter, setStatusFilter] = useState('All');
+  const [selectedApptForBilling, setSelectedApptForBilling] = useState(null);
+  const { setBillingSession } = useBillingSessionStore();
+  const { clearCart } = useCartStore();
+  const navigate = useNavigate();
+  const [selectedReferral, setSelectedReferral] = useState(null);
+
 
 
   const locationID = localStorage.getItem("userLocation"); 
@@ -67,11 +83,13 @@ const ReceptionistAppointments = () => {
           return {
             appointmentID: appt.appointmentNumber,
             patientID: appt.patientID,
+            doctorID: appt.doctorID,
             patientName: `${appt.patientFirstName} ${appt.patientLastName}`.trim(),
             doctorName: `${appt.doctorFirstName} ${appt.doctorLastName}`,
             appointmentDate: rawDate,
             appointmentTime: cleanTime,
-            status: appt.status
+            status: appt.status,
+            isReferred: !!appt.isReferred
           };
         });
 
@@ -179,59 +197,78 @@ const ReceptionistAppointments = () => {
               const day = dt.getDate();
 
               return (
-                <div className="appointment-card" key={appt.appointmentID}>
-                  <div className="appointment-date-box">
-                    <div className="appointment-month">{monthShort}</div>
-                    <div className="appointment-day">{day}</div>
-                  </div>
+<div className="appt-card" key={appt.appointmentID}>
+  <div className="appt-header">
+    <img
+      className="appt-avatar"
+      src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+      alt="Avatar"
+    />
+    <div className="appt-details">
+      <h3 className="appt-name">{appt.patientName}</h3>
+      <div className="appt-meta">
+        <span className="appt-label">Status:</span> {appt.status}
+      </div>
+      <div className="appt-meta">
+        <span className="appt-label">Doctor:</span> {appt.doctorName}
+      </div>
+      <div className="appt-meta">
+        <span className="appt-label">Time:</span> {appt.appointmentTime}
+      </div>
+    </div>
+  </div>
 
-                  <div className="appointment-info">
-                    <div className="appointment-name">
-                      {appt.patientName} - <span className="appointment-status">{appt.status}</span>
-                    </div>
-                    <div className="appointment-time">{timeStr}</div>
-                    <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
-                  </div>
-                  {appt.status === "Scheduled" && (
-  <button
-    className="appointment-button"
-    style={{ backgroundColor: "#00796B" }}
-    onClick={async () => {
-      try {
-        const res = await fetch(`http://localhost:5001/api/appointments/update-status/${appt.appointmentID}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: "Checked In" }),
-        });
+  <div className="appt-buttons">
+    {appt.status === "Scheduled" && (
+      <button
+        onClick={() => handleCheckIn(appt.appointmentID)}
+        className="appt-btn checkin"
+      >
+        Check In
+      </button>
+    )}
 
-        if (res.ok) {
-          setAppointments(prev =>
-            prev.map(a =>
-              a.appointmentID === appt.appointmentID
-                ? { ...a, status: "Checked In" }
-                : a
-            )
-          );
-        } else {
-          alert("Failed to update status");
-        }
-      } catch (err) {
-        console.error("Update error:", err);
-        alert("Something went wrong");
-      }
-    }}
-  >
-    Check In
-  </button>
-)}
+    <button
+      onClick={() => setSelectedPatientID(appt.patientID)}
+      className="appt-btn view"
+    >
+      View Form
+    </button>
 
-                  <button
-                    className="appointment-button"
-                    onClick={() => setSelectedPatientID(appt.patientID)}
-                  >
-                    View Form
-                  </button>
-                </div>
+    {(appt.status === "Completed" || appt.status === "Ended") && (
+      <button
+        className="appt-btn bill"
+        onClick={() => {
+          clearCart();
+          setBillingSession(appt.appointmentID, appt.patientID);
+          navigate("/checkout");
+        }}
+      >
+        Bill Now
+      </button>
+    )}
+
+    {/* 🆕 Book Referral Button */}
+    <button
+  className="appt-btn refer"
+  disabled={!appt.isReferred}
+  style={{
+    backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
+    color: appt.isReferred ? "white" : "#666",
+    marginLeft: "0.5rem",
+  }}
+  onClick={() => {
+    if (appt.isReferred) {
+      navigate(`/referral-booking/${appt.appointmentID}`);
+    }
+  }}
+>
+  Book Referral
+</button>
+  </div>
+</div>
+
+
               );
             })}
           </div>
@@ -245,7 +282,25 @@ const ReceptionistAppointments = () => {
           <div className="mock-placeholder">Select an appointment to view the form</div>
         )}
       </div>
-      
+      {selectedApptForBilling && (
+  <ReceptionistCheckout
+    appointmentNumber={selectedApptForBilling.appointmentID}
+    patientID={selectedApptForBilling.patientID}
+  />
+)}
+{selectedApptForBilling && (
+  <ReceptionistCheckout
+    appointmentNumber={selectedApptForBilling.appointmentID}
+    patientID={selectedApptForBilling.patientID}
+  />
+)}
+
+{selectedReferral && (
+  <ReferralBookingForm
+    referralData={selectedReferral}
+    onClose={() => setSelectedReferral(null)}
+  />
+)}
     </div>
   );
 };
