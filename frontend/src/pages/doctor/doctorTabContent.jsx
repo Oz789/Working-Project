@@ -29,7 +29,7 @@ const DoctorTabContent = ({ activeTab,doctor }) => {
           case 1:
             return (
               <div className="w-full flex flex-row justify-center">
-                <DoctorAppointments />
+                {/* <DoctorActiveAppointments /> */}
               </div>
             );
     case 2:

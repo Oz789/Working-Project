@@ -8,9 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import './receptionistCards.css';
 import ReferralBookingForm from './receptionistReferralForm';
 
-
-
-
+import RecAppEdit from '../appointments/recEditApp';
 
 const groupByDate = (appointments) => {
   return appointments.reduce((acc, appt) => {
@@ -29,7 +27,9 @@ const groupByDate = (appointments) => {
 const ReceptionistAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [selectedPatientID, setSelectedPatientID] = useState(null);
+  const [selectedAppointmentID, setSelectedAppointmentID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPatientName, setPatientName] = useState('');
   const [showTodayOnly, setShowTodayOnly] = useState(false);
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedApptForBilling, setSelectedApptForBilling] = useState(null);
@@ -38,6 +38,9 @@ const ReceptionistAppointments = () => {
   const navigate = useNavigate();
   const [selectedReferral, setSelectedReferral] = useState(null);
 
+
+
+  const [viewMode, setViewMode] = useState(null);
 
 
   const locationID = localStorage.getItem("userLocation"); 
@@ -276,11 +279,34 @@ const ReceptionistAppointments = () => {
       </div>
 
       <div className="appointment-right">
-        {selectedPatientID ? (
-          <PatientFormViewer patientID={selectedPatientID} />
-        ) : (
-          <div className="mock-placeholder">Select an appointment to view the form</div>
-        )}
+{selectedPatientID ? (
+  viewMode === "edit" ? (
+    <RecAppEdit
+      patientId={selectedPatientID}
+      appointmentID={selectedAppointmentID}
+      onAppointmentChange={refreshAppointments}
+      patientName={selectedPatientName}
+      onClose={() => {
+        //setSelectedPatientID(null);
+        setSelectedAppointmentID(null);
+        setViewMode(null);
+      }}
+    />
+  ) : (
+    
+    <PatientFormViewer
+      patientID={selectedPatientID}
+      onClick={console.log(selectedPatientID)}
+      onClose={() => {
+        //setSelectedPatientID(null);
+        setSelectedAppointmentID(null);
+        setViewMode(null);
+      }}
+    />
+  )
+) : (
+  <div className="mock-placeholder">Select an appointment to view the form</div>
+)}
       </div>
       {selectedApptForBilling && (
   <ReceptionistCheckout
