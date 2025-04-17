@@ -15,12 +15,8 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
   const [baseDate, setBaseDate] = useState(new Date());
   const navigate = useNavigate();
-<<<<<<< HEAD
-  const daysToShow = 5;
-=======
   const daysToShow = 7;
   const buffer = 4;
->>>>>>> 31a80099bf4773caaa1c26fbc537d2fb7ccc65e7
 
   useEffect(() => {
     console.log("Appointments state changed:", appointments);

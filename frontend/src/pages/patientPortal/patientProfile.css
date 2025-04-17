@@ -1,5 +1,5 @@
 .patient-profile-wrapper {
-    background: linear-gradient(to bottom, #ecfffb 10%, #edfffc 20%, #ffffff 60%);
+    background: #c8ede0;
     min-height: 100vh;
     padding: 2rem;
     max-width: 1400px;
@@ -267,71 +267,107 @@
     background: #ffffff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-    overflow: hidden;
+    padding: 1.5rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .billing-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
   
   .billing-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    background-color: #f8f9fa;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .billing-header:hover {
-    background-color: #e9ecef;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
   }
   
   .billing-header h3 {
     margin: 0;
-    font-size: 1.1rem;
     color: #333;
+    font-size: 1.25rem;
   }
   
   .sale-date {
-    margin: 0;
     color: #666;
-  }
-  
-  .expand-icon {
-    font-size: 1.2rem;
-    color: #666;
-    transition: transform 0.2s;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
   }
   
   .billing-details {
-    padding: 15px;
-    border-top: 1px solid #eee;
+    margin-bottom: 1.5rem;
+  }
+  
+  .billing-details p {
+    margin: 0.5rem 0;
+    color: #444;
   }
   
   .sale-items {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px dashed #eee;
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
   }
   
   .sale-items h4 {
-    margin: 0 0 10px 0;
+    margin: 0 0 1rem 0;
     color: #333;
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   
   .sale-items ul {
+    list-style: none;
+    padding: 0;
     margin: 0;
-    padding-left: 20px;
   }
   
   .sale-items li {
-    margin-bottom: 5px;
-    color: #666;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .sale-items li:last-child {
+    border-bottom: none;
+  }
+  
+  .item-quantity {
+    font-weight: 500;
+    color: #00796B;
+    min-width: 3rem;
+  }
+  
+  .item-name {
+    flex: 1;
+    margin: 0 1rem;
+    color: #333;
+  }
+  
+  .item-price {
+    font-weight: 500;
+    color: #00796B;
+    min-width: 5rem;
+    text-align: right;
   }
   
   @media (max-width: 768px) {
     .billing-item {
       padding: 1rem;
+    }
+    
+    .sale-items li {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    
+    .item-quantity,
+    .item-name,
+    .item-price {
+      width: 100%;
     }
   }
   

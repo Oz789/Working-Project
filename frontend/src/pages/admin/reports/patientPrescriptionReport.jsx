@@ -236,8 +236,8 @@ const PatientPrescriptionReport = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("http://localhost:5001/api/patientReport");
-      const data = res.data;
+      const response = await axios.get("http://localhost:5001/api/patientReport/");
+      const data = response.data;
       
       if (data.length === 0) {
         setError("No patient data available");
@@ -551,7 +551,6 @@ const PatientPrescriptionReport = () => {
               <TableCell><b>Location</b></TableCell>
               <TableCell><b>Doctor</b></TableCell>
               <TableCell><b>Health Concerns</b></TableCell>
-              <TableCell><b>Prescription Details</b></TableCell>
               <TableCell><b>Lenses</b></TableCell>
               <TableCell><b>Contacts</b></TableCell>
             </TableRow>
@@ -564,7 +563,6 @@ const PatientPrescriptionReport = () => {
                 <TableCell>{patient.locationName}</TableCell>
                 <TableCell>{patient.doctorName}</TableCell>
                 <TableCell>{patient.healthConcerns?.join(', ') || 'None'}</TableCell>
-                <TableCell>{patient.prescriptionDetails || 'None'}</TableCell>
                 <TableCell>{patient.usesCorrectiveLenses === '1' || patient.usesCorrectiveLenses === 1 ? 'Yes' : 'No'}</TableCell>
                 <TableCell>{patient.usesContacts === '1' || patient.usesContacts === 1 ? 'Yes' : 'No'}</TableCell>
               </TableRow>

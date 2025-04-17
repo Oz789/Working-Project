@@ -165,29 +165,30 @@ const PatientProfile = () => {
               {billingHistory.length > 0 ? (
                 billingHistory.map((sale) => (
                   <div key={sale.saleID} className="billing-item">
-                    <div className="billing-header" onClick={() => toggleBillingDetails(sale.saleID)}>
+                    <div className="billing-header">
                       <h3>Sale #{sale.saleID}</h3>
                       <p className="sale-date">Date: {new Date(sale.saleDate).toLocaleDateString()}</p>
-                      <span className="expand-icon">
-                        {expandedBilling[sale.saleID] ? '▼' : '▶'}
-                      </span>
                     </div>
-                    {expandedBilling[sale.saleID] && (
-                      <div className="billing-details">
-                        <p><strong>Appointment Number:</strong> {sale.appointmentNumber}</p>
-                        <p><strong>Total Amount:</strong> ${sale.totalAmount.toFixed(2)}</p>
-                        <div className="sale-items">
-                          <h4>Items Purchased:</h4>
-                          <ul>
-                            {sale.items.map((item) => (
+                    <div className="billing-details">
+                      <p><strong>Appointment Number:</strong> {sale.appointmentNumber}</p>
+                      <p><strong>Total Amount:</strong> ${sale.totalAmount.toFixed(2)}</p>
+                      <div className="sale-items">
+                        <h4>Items Purchased:</h4>
+                        <ul>
+                          {sale.items && sale.items.length > 0 ? (
+                            sale.items.map((item) => (
                               <li key={item.saleItemID}>
-                                {item.quantity}x {item.itemType} - ${(item.price * item.quantity).toFixed(2)}
+                                <span className="item-quantity">{item.quantity}x</span>
+                                <span className="item-name">{item.itemType}</span>
+                                <span className="item-price">${(item.price * item.quantity).toFixed(2)}</span>
                               </li>
-                            ))}
-                          </ul>
-                        </div>
+                            ))
+                          ) : (
+                            <li>No items found for this sale</li>
+                          )}
+                        </ul>
                       </div>
-                    )}
+                    </div>
                   </div>
                 ))
               ) : (

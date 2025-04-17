@@ -9,7 +9,7 @@ const db = mysql.createPool({
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
   ssl: {
-    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === "true",
+    rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === 'true'
   },
   waitForConnections: true,
   queueLimit: 0,
@@ -32,6 +32,7 @@ db.getConnection()
     console.error("Error code:", err.code);
     console.error("Error state:", err.sqlState);
     console.error("Error message:", err.message);
+    console.error("Error stack:", err.stack);
   });
 
 // Add error handler for the pool
@@ -40,6 +41,7 @@ db.on('error', (err) => {
   console.error('Error code:', err.code);
   console.error('Error state:', err.sqlState);
   console.error('Error message:', err.message);
+  console.error('Error stack:', err.stack);
 });
 
 module.exports = db;

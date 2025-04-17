@@ -311,8 +311,8 @@ const PatientDemographicsReport = () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await axios.get("http://localhost:5001/api/patientReport");
-      const data = res.data;
+      const response = await axios.get("http://localhost:5001/api/patientReport/");
+      const data = response.data;
       
       if (data.length === 0) {
         setError("No patient data available");
@@ -594,13 +594,13 @@ const PatientDemographicsReport = () => {
               </Paper>
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12}>
               <Paper className="chart-paper">
-                <Typography variant="h6" gutterBottom>Insurance Distribution by Location</Typography>
-                {processInsuranceStats(filteredPatients).byLocation.length > 0 ? (
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={8}>
-                      <BarChart width={600} height={400} data={processInsuranceStats(filteredPatients).byLocation}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={8}>
+                    <Typography variant="h6" gutterBottom>Insurance Distribution by Location</Typography>
+                    <Box sx={{ width: '100%', overflowX: 'auto' }}>
+                      <BarChart width={800} height={400} data={processInsuranceStats(filteredPatients).byLocation}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="location" />
                         <YAxis />
@@ -610,34 +610,32 @@ const PatientDemographicsReport = () => {
                           <Bar key={provider} dataKey={provider} stackId="a" fill={COLORS[index % COLORS.length]} />
                         ))}
                       </BarChart>
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                      <Typography variant="h6" gutterBottom>Breakdown by Location</Typography>
-                      {processInsuranceStats(filteredPatients).byLocation.map((location) => {
-                        const total = Object.entries(location)
-                          .filter(([key]) => key !== 'location')
-                          .reduce((sum, [_, count]) => sum + count, 0);
-                        
-                        return (
-                          <Box key={location.location} mb={3}>
-                            <Typography variant="h6" gutterBottom>
-                              <strong>{location.location}</strong>
-                            </Typography>
-                            {Object.entries(location)
-                              .filter(([key]) => key !== 'location')
-                              .map(([provider, count]) => (
-                                <Typography key={provider} variant="body1" style={{ fontSize: '1.1rem' }}>
-                                  {provider}: {count} patients ({calculatePercentage(count, total)}%)
-                                </Typography>
-                            ))}
-                          </Box>
-                        );
-                      })}
-                    </Grid>
+                    </Box>
                   </Grid>
-                ) : (
-                  <Typography>No insurance data available</Typography>
-                )}
+                  <Grid item xs={12} md={4}>
+                    <Typography variant="h6" gutterBottom>Breakdown by Location</Typography>
+                    {processInsuranceStats(filteredPatients).byLocation.map((location) => {
+                      const total = Object.entries(location)
+                        .filter(([key]) => key !== 'location')
+                        .reduce((sum, [_, count]) => sum + count, 0);
+                      
+                      return (
+                        <Box key={location.location} mb={3}>
+                          <Typography variant="h6" gutterBottom>
+                            <strong>{location.location}</strong>
+                          </Typography>
+                          {Object.entries(location)
+                            .filter(([key]) => key !== 'location')
+                            .map(([provider, count]) => (
+                              <Typography key={provider} variant="body1" style={{ fontSize: '1.1rem' }}>
+                                {provider}: {count} patients ({calculatePercentage(count, total)}%)
+                              </Typography>
+                          ))}
+                        </Box>
+                      );
+                    })}
+                  </Grid>
+                </Grid>
               </Paper>
             </Grid>
 

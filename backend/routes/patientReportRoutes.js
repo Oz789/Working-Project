@@ -3,45 +3,44 @@ const router = express.Router();
 const db = require('../db');
 
 // Get patient report data
-router.get('/', (req, res) => {
-  const query = `
-    SELECT 
-      p.patientID,
-      p.firstName,
-      p.lastName,
-      p.DOB,
-      i.insuranceProvider,
-      a.paymentStatus,
-      pf.usesCorrectiveLenses,
-      pf.usesContacts,
-      pf.healthConcerns,
-      pf.conditions,
-      pf.surgeries,
-      a.appointmentDate,
-      l.Name as locationName,
-      l.address as locationAddress,
-      CONCAT(e.firstName, ' ', e.lastName) as doctorName
-    FROM patient p
-    LEFT JOIN patientForm pf ON p.patientID = pf.patientID
-    LEFT JOIN insurance i ON pf.insuranceID = i.insuranceID
-    LEFT JOIN appointments a ON p.patientID = a.patientID
-    LEFT JOIN location l ON a.locationID = l.locationID
-    LEFT JOIN doctors d ON a.doctorID = d.doctorID
-    LEFT JOIN employee e ON d.employeeID = e.employeeID
-    ORDER BY a.appointmentDate DESC
-  `;
+router.get('/', async (req, res) => {
+  try {
+    console.log('Starting patient report query...');
+    const query = `
+      SELECT 
+        p.patientID,
+        p.firstName,
+        p.lastName,
+        p.DOB,
+        i.insuranceProvider,
+        a.paymentStatus,
+        pf.usesCorrectiveLenses,
+        pf.usesContacts,
+        pf.healthConcerns,
+        pf.conditions,
+        pf.surgeries,
+        a.appointmentDate,
+        l.Name as locationName,
+        l.address as locationAddress,
+        CONCAT(e.firstName, ' ', e.lastName) as doctorName
+      FROM patient p
+      LEFT JOIN patientForm pf ON p.patientID = pf.patientID
+      LEFT JOIN insurance i ON pf.insuranceID = i.insuranceID
+      LEFT JOIN appointments a ON p.patientID = a.patientID
+      LEFT JOIN location l ON a.locationID = l.locationID
+      LEFT JOIN doctors d ON a.doctorID = d.doctorID
+      LEFT JOIN employee e ON d.employeeID = e.employeeID
+      ORDER BY a.appointmentDate DESC
+    `;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error fetching patient report:', err);
-      return res.status(500).json({ error: 'Failed to fetch patient report' });
-    }
+    console.log('Executing query:', query);
+    const [results] = await db.query(query);
+    console.log('Query successful, processing results...');
+    console.log('Number of results:', results.length);
 
     const processedResults = results.map(row => {
       try {
-        console.log('Raw healthConcerns:', row.healthConcerns);
-        console.log('Raw conditions:', row.conditions);
-        console.log('Raw surgeries:', row.surgeries);
+        console.log('Processing row:', row.patientID);
 
         let healthConcerns = [];
         let conditions = [];
@@ -53,7 +52,6 @@ router.get('/', (req, res) => {
             healthConcerns = Array.isArray(parsed) ? parsed : [];
           } catch (e) {
             console.error('Error parsing healthConcerns:', e);
-            // If it's not valid JSON, try to split by comma
             healthConcerns = row.healthConcerns.split(',').map(item => item.trim());
           }
         }
@@ -78,10 +76,6 @@ router.get('/', (req, res) => {
           }
         }
 
-        console.log('Processed healthConcerns:', healthConcerns);
-        console.log('Processed conditions:', conditions);
-        console.log('Processed surgeries:', surgeries);
-
         return {
           ...row,
           healthConcerns: healthConcerns,
@@ -95,6 +89,7 @@ router.get('/', (req, res) => {
         };
       } catch (error) {
         console.error('Error processing row:', error);
+        console.error('Row data:', row);
         return {
           ...row,
           healthConcerns: [],
@@ -109,8 +104,17 @@ router.get('/', (req, res) => {
       }
     });
 
+    console.log('Sending response with processed results');
     res.json(processedResults);
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    console.error('Error stack:', err.stack);
+    res.status(500).json({ 
+      error: 'Failed to fetch patient report',
+      details: err.message,
+      stack: err.stack
+    });
+  }
 });
 
 module.exports = router; 
