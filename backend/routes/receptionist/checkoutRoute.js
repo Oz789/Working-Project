@@ -3,6 +3,7 @@ const router = express.Router();
 const db = require('../../db');
 
 // GET appointment + base service info
+// GET appointment + base service info
 router.get('/:appointmentNumber', async (req, res) => {
   const { appointmentNumber } = req.params;
 
@@ -19,7 +20,7 @@ router.get('/:appointmentNumber', async (req, res) => {
   `;
 
   try {
-    const [apptRows] = await db.promise().query(apptSQL, [appointmentNumber]);
+    const [apptRows] = await db.query(apptSQL, [appointmentNumber]);
 
     if (apptRows.length === 0) {
       return res.status(404).json({ error: 'Appointment not found' });
@@ -27,9 +28,8 @@ router.get('/:appointmentNumber', async (req, res) => {
 
     const appointment = apptRows[0];
 
-    // Assume base service is "Comprehensive Eye Exams"
     const serviceSQL = `SELECT * FROM services WHERE serviceName = 'Comprehensive Eye Exams' LIMIT 1`;
-    const [serviceRows] = await db.promise().query(serviceSQL);
+    const [serviceRows] = await db.query(serviceSQL);
 
     const baseService = serviceRows.length > 0
       ? {
@@ -55,6 +55,7 @@ router.get('/:appointmentNumber', async (req, res) => {
     res.status(500).json({ error: "Failed to fetch appointment details" });
   }
 });
+
 
 // POST checkout for receptionist + appointment
 router.post("/", (req, res) => {

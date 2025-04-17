@@ -5,7 +5,7 @@ const db = require('../../db');
 // Services (name, price, id)
 router.get('/services', async (req, res) => {
   try {
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
       'SELECT serviceID AS itemID, serviceName AS name, price FROM services'
     );
     res.json(rows);
@@ -18,7 +18,7 @@ router.get('/services', async (req, res) => {
 // Frames
 router.get('/frames', async (req, res) => {
   try {
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
       'SELECT frameID AS itemID, name, price FROM frames'
     );
     res.json(rows);

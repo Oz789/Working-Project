@@ -51,6 +51,11 @@ const checkinRoute = require('./routes/receptionist/checkedin');
 const patientReportRoutes = require('./routes/patientReportRoutes');
 const billingRoutes = require('./routes/billing');
 const contactRoutes = require('./routes/contact');
+const referrPatientRoute = require('./routes/receptionist/referral')
+const referralAppointments = require('./routes/receptionist/referralAppts');
+
+
+
 
 
 
@@ -66,8 +71,7 @@ const updatePatientInfo = require('./routes/receptionist/getPatientInfo');
 const checkoutReceptionistRoute = require('./routes/receptionist/checkoutRoute');
 const checkoutReceptionistItemsRoute = require('./routes/receptionist/checkoutServices');
 const checkoutUser= require('./routes/cart/userCheckout');
-const referralAppointmentRoutes = require('./routes/receptionist/referral');
-
+const referralAppointmentRoutes = require('./routes/receptionist/referralAppts');
 
 
 
@@ -80,6 +84,7 @@ app.use(cors());
 
 app.get("/api/protected", authenticateToken, (req, res) => {
     res.json({
+        
         message: "Access granted to protected route ",
         user: req.user
     });
@@ -137,7 +142,7 @@ app.use('/api/appointments', endAppointmentRoute);
 app.use('/api/notifications', getNotifications);
 app.use('/api/notifications/mark-read', markReadNotification);
 app.use('/api/appointments', checkinRoute);
-
+app.use('/api/referralAppointments', referralAppointments);
 
 app.use('/api/checkout', checkoutReceptionistItemsRoute);
 app.use('/api/checkout', checkoutReceptionistRoute);
@@ -146,7 +151,7 @@ app.use('/api/insurance', insuranceRoutes);
 app.use('/api/patientReport', patientReportRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/contacts', contactRoutes);
-
+app.use('/api/referrals', referralAppointmentRoutes);
 app.use('/api/allPatients', updatePatientInfo);
 
 
