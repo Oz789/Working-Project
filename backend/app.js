@@ -45,6 +45,9 @@ const updateMedicalForm = require('./routes/nurse/updateNurseForm');
 const createExamReport = require('./routes/doctor/updateEyeExamForm');
 const createReferralRoute = require('./routes/doctor/referral');
 const endAppointmentRoute = require('./routes/doctor/endAppointment');
+const patientReportRoutes = require('./routes/patientReportRoutes');
+const billingRoutes = require('./routes/billing');
+const contactRoutes = require('./routes/contact');
 
 
 
@@ -124,6 +127,9 @@ app.use('/api/examReports', createExamReport);
 app.use('/api/referrals', createReferralRoute);
 app.use('/api/appointments', endAppointmentRoute);
 app.use('/api/insurance', insuranceRoutes);
+app.use('/api/patientReport', patientReportRoutes);
+app.use('/api/billing', billingRoutes);
+app.use('/api/contacts', contactRoutes);
 
 app.use('/api/allPatients', updatePatientInfo);
 
