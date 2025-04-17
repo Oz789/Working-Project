@@ -28,6 +28,8 @@ const updateContactsRoute = require('./routes/admin/updateContacts');
 const updateServicesRoute = require('./routes/admin/updateServices');
 const getInventoryRoute = require('./routes/reports/getInventory');
 const appointmentRoutes = require('./routes/getAppointments');
+
+const schRoute = require('./routes/employee/schManager');
 const checkoutRoutes = require('./routes/checkoutRoutes');
 const authenticateToken = require('./middleware/auth');
 const updateEmployee = require('./routes/employee/updateEmployee');
@@ -50,6 +52,7 @@ const endAppointmentRoute = require('./routes/doctor/endAppointment');
 
 
 
+const updatePatientInfo = require('./routes/receptionist/getPatientInfo');
 
 
 
@@ -89,7 +92,8 @@ app.use('/api/patients', patientRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/patients', updateMedicalForm);
 //app.use('/api/submit-form', formRoutes);
-app.use('/api/contact', createContacts);
+app.use('/api/schedule', schRoute);
+app.use('/', createContacts);
 app.use('/api', createFramesRoute);
 app.use('/api', getFramesRoute);
 app.use('/api', deleteFrameRoute);
@@ -120,6 +124,8 @@ app.use('/api/examReports', createExamReport);
 app.use('/api/referrals', createReferralRoute);
 app.use('/api/appointments', endAppointmentRoute);
 app.use('/api/insurance', insuranceRoutes);
+
+app.use('/api/allPatients', updatePatientInfo);
 
 
 
