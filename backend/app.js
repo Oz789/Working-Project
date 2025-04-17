@@ -48,6 +48,17 @@ const endAppointmentRoute = require('./routes/doctor/endAppointment');
 const getNotifications = require('./routes/notifications/getNotification');
 const markReadNotification = require('./routes/notifications/readNotification');
 const checkinRoute = require('./routes/receptionist/checkedin'); 
+const patientReportRoutes = require('./routes/patientReportRoutes');
+const billingRoutes = require('./routes/billing');
+const contactRoutes = require('./routes/contact');
+
+
+
+
+
+
+
+
 const updatePatientInfo = require('./routes/receptionist/getPatientInfo');
 
 
@@ -132,6 +143,9 @@ app.use('/api/checkout', checkoutReceptionistItemsRoute);
 app.use('/api/checkout', checkoutReceptionistRoute);
 app.use('/api', checkoutUser);
 app.use('/api/insurance', insuranceRoutes);
+app.use('/api/patientReport', patientReportRoutes);
+app.use('/api/billing', billingRoutes);
+app.use('/api/contacts', contactRoutes);
 
 app.use('/api/allPatients', updatePatientInfo);
 

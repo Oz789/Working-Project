@@ -7,30 +7,28 @@ const db = require('../db');
 router.get('/:id', async (req, res) => {
   try {
     const patientId = req.params.id;
+    console.log('Fetching patient with ID:', patientId);
 
     // Get patient basic information
-    const [patientResult] = await db.promise().query(
+    const [patientResult] = await db.query(
       'SELECT * FROM patient WHERE patientID = ?',
       [patientId]
     );
 
-    if (patientResult.length === 0) {
+    console.log('Patient query result:', patientResult);
+
+    if (!patientResult || patientResult.length === 0) {
+      console.log('No patient found with ID:', patientId);
       return res.status(404).json({ error: 'Patient not found' });
     }
-
-    // Get medical form information
-    const [medicalFormResult] = await db.promise().query(
-      'SELECT pf.*, i.insuranceProvider, i.policyNumber FROM patientform pf LEFT JOIN insurance i ON pf.insuranceID = i.insuranceID WHERE pf.patientID = ? ORDER BY visitDate DESC LIMIT 1',
-      [patientId]
-    );
 
     // Get appointments with filtering options
     const { showPast, serviceType } = req.query;
     let appointmentsQuery = `
       SELECT 
         a.appointmentNumber,
-        a.appointmentDate,
-        TIME_FORMAT(a.appointmentTime, '%H:%i') AS appointmentTime,
+        DATE_FORMAT(a.appointmentDate, '%M %d, %Y') AS appointmentDate,
+        TIME_FORMAT(a.appointmentTime, '%h:%i %p') AS appointmentTime,
         e.firstName AS doctorFirstName,
         e.lastName AS doctorLastName,
         s.serviceName,
@@ -48,32 +46,40 @@ router.get('/:id', async (req, res) => {
 
     // Add date filter
     if (showPast === 'false') {
-      appointmentsQuery += ' AND (a.appointmentDate > CURDATE() OR (a.appointmentDate = CURDATE() AND a.appointmentTime > CURTIME()))';
+      appointmentsQuery += ' AND a.appointmentDate >= CURDATE()';
     }
 
     // Add service type filter
     if (serviceType) {
-      appointmentsQuery += ' AND s.serviceID = ?';
+      appointmentsQuery += ' AND a.service1ID = ?';
       queryParams.push(serviceType);
     }
 
     appointmentsQuery += ' ORDER BY a.appointmentDate, a.appointmentTime';
 
-    const [appointmentsResult] = await db.promise().query(appointmentsQuery, queryParams);
+    console.log('Appointments query:', appointmentsQuery);
+    console.log('Query params:', queryParams);
 
-    const patientData = {
+    const [appointmentsResult] = await db.query(appointmentsQuery, queryParams);
+    console.log('Appointments result:', appointmentsResult);
+
+    // Combine all results
+    const response = {
       generalInfo: {
         ...patientResult[0],
         password: undefined // Don't send password
       },
-      medicalInfo: medicalFormResult[0] || {},
       appointments: appointmentsResult || []
     };
 
-    res.json(patientData);
+    console.log('Final response:', response);
+    res.json(response);
   } catch (error) {
-    console.error('Error fetching patient data:', error);
-    res.status(500).json({ error: 'Failed to fetch patient data' });
+    console.error('Error in patient route:', error);
+    res.status(500).json({ 
+      error: 'Server error', 
+      details: error.message
+    });
   }
 });
 
