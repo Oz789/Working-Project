@@ -136,6 +136,40 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
     handleChange(newData);
   };
 
+  const formatPhoneNumber = (value) => {
+    // Remove all non-digit characters
+    const cleaned = value.replace(/\D/g, '');
+    
+    // Format the phone number
+    if (cleaned.length <= 3) {
+      return cleaned;
+    } else if (cleaned.length <= 6) {
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3)}`;
+    } else {
+      return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6, 10)}`;
+    }
+  };
+
+  const handlePhoneChange = (e) => {
+    const formattedValue = formatPhoneNumber(e.target.value);
+    handleInputChange('phoneNumber', formattedValue);
+  };
+
+  const handleEmergencyPhoneChange = (index, value) => {
+    const formattedValue = formatPhoneNumber(value);
+    handleEmergencyContactChange(index, 'phone', formattedValue);
+  };
+
+  const formatEmail = (value) => {
+    // Convert to lowercase and remove any spaces
+    return value.toLowerCase().trim();
+  };
+
+  const handleEmailChange = (e) => {
+    const formattedValue = formatEmail(e.target.value);
+    handleInputChange('email', formattedValue);
+  };
+
   const handleNext = () => {
     console.log('Form data before next step:', formData);
     if (validateForm()) {
@@ -177,18 +211,16 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
       </div>
 
       <div className="form-group">
-      <select
-        value={formData.sex}
-        onChange={(e) => handleInputChange('sex', e.target.value)}
-        className={errors.sex ? 'error' : ''}
-      >
-        <option value="">Select Sex</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Other">Other</option>
-      </select>
-
-
+        <select
+          value={formData.sex}
+          onChange={(e) => handleInputChange('sex', e.target.value)}
+          className={errors.sex ? 'error' : ''}
+        >
+          <option value="">Select Sex</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
         {errors.sex && <span className="error-message">{errors.sex}</span>}
       </div>
 
@@ -206,9 +238,9 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
       <div className="form-group">
         <input
           type="email"
-          placeholder="Email"
+          placeholder="example@email.com"
           value={formData.email}
-          onChange={(e) => handleInputChange('email', e.target.value)}
+          onChange={handleEmailChange}
           className={errors.email ? 'error' : ''}
         />
         {errors.email && <span className="error-message">{errors.email}</span>}
@@ -217,9 +249,10 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
       <div className="form-group">
         <input
           type="tel"
-          placeholder="Phone Number"
+          placeholder="(123) 456-7890"
           value={formData.phoneNumber}
-          onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+          onChange={handlePhoneChange}
+          maxLength="14"
           className={errors.phoneNumber ? 'error' : ''}
         />
         {errors.phoneNumber && <span className="error-message">{errors.phoneNumber}</span>}
@@ -265,14 +298,11 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
           className={errors.insuranceID ? 'error' : ''}
         >
           <option value="">Select Insurance Provider</option>
-          {insuranceOptions.map((insurance) => {
-            console.log('Rendering insurance option:', insurance);
-            return (
-              <option key={insurance.insuranceID} value={insurance.insuranceID}>
-                {insurance.insuranceProvider}
-              </option>
-            );
-          })}
+          {insuranceOptions.map((insurance) => (
+            <option key={insurance.insuranceID} value={insurance.insuranceID}>
+              {insurance.insuranceProvider}
+            </option>
+          ))}
         </select>
         {errors.insuranceID && <span className="error-message">{errors.insuranceID}</span>}
       </div>
@@ -291,9 +321,10 @@ export default function GeneralInfoForm({ nextStep, handleChange, values }) {
           <div className="form-group">
             <input
               type="tel"
-              placeholder="Contact Phone"
+              placeholder="(123) 456-7890"
               value={contact.phone}
-              onChange={(e) => handleEmergencyContactChange(idx, 'phone', e.target.value)}
+              onChange={(e) => handleEmergencyPhoneChange(idx, e.target.value)}
+              maxLength="14"
             />
           </div>
         </div>

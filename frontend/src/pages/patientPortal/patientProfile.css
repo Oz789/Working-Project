@@ -53,6 +53,7 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     margin-top: 2rem;
+    align-items: start;
   }
   
   .profile-section {
@@ -60,7 +61,9 @@
     border-radius: 10px;
     padding: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    height: fit-content;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   
   .section-title {
@@ -69,6 +72,42 @@
     font-size: 1.5rem;
     border-bottom: 2px solid #00796B;
     padding-bottom: 0.5rem;
+  }
+  
+  .profile-info,
+  .billing-history,
+  .appointments-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 500px;
+    padding-right: 10px;
+  }
+  
+  /* Scrollbar styling */
+  .profile-info::-webkit-scrollbar,
+  .billing-history::-webkit-scrollbar,
+  .appointments-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .profile-info::-webkit-scrollbar-track,
+  .billing-history::-webkit-scrollbar-track,
+  .appointments-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .profile-info::-webkit-scrollbar-thumb,
+  .billing-history::-webkit-scrollbar-thumb,
+  .appointments-list::-webkit-scrollbar-thumb {
+    background: #00796B;
+    border-radius: 4px;
+  }
+  
+  .profile-info::-webkit-scrollbar-thumb:hover,
+  .billing-history::-webkit-scrollbar-thumb:hover,
+  .appointments-list::-webkit-scrollbar-thumb:hover {
+    background: #00695C;
   }
   
   .profile-info {
@@ -90,47 +129,115 @@
   /* Appointments Section Styles */
   .appointment-filters {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
   }
   
-  .filter-button {
-    background-color: #00796B;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   
-  .filter-button:hover {
-    background-color: #00695C;
+  .filter-group label {
+    font-weight: 500;
+    color: #333;
   }
   
   .filter-select {
-    padding: 0.5rem;
-    border: 1px solid #00796B;
-    border-radius: 5px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     background-color: white;
-    color: #00796B;
+    font-size: 0.9rem;
+    min-width: 200px;
+  }
+  
+  .filter-select:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+  }
+  
+  .appointment-card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: transform 0.2s ease;
+  }
+  
+  .appointment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .appointment-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+  }
+  
+  .appointment-header h3 {
+    color: #333;
+    font-size: 1.2rem;
+    margin: 0;
+  }
+  
+  .appointment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .detail-label {
+    color: #666;
+    font-weight: 500;
+    min-width: 80px;
+  }
+  
+  .detail-value {
+    color: #333;
+    font-weight: 400;
+  }
+  
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .status-badge.scheduled {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+  
+  .status-badge.completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .status-badge.cancelled {
+    background-color: #ffebee;
+    color: #c62828;
   }
   
   .appointments-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .appointment-card {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 1rem;
-    border-left: 4px solid #00796B;
-  }
-  
-  .appointment-card p {
-    margin: 0.5rem 0;
+    gap: 15px;
+    margin-top: 20px;
   }
   
   /* Responsive Design */
@@ -148,6 +255,171 @@
     .patient-profile-wrapper {
       padding: 1rem;
     }
+  }
+  
+  .billing-history {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .billing-item {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    overflow: hidden;
+  }
+  
+  .billing-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .billing-header:hover {
+    background-color: #e9ecef;
+  }
+  
+  .billing-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+  
+  .sale-date {
+    margin: 0;
+    color: #666;
+  }
+  
+  .expand-icon {
+    font-size: 1.2rem;
+    color: #666;
+    transition: transform 0.2s;
+  }
+  
+  .billing-details {
+    padding: 15px;
+    border-top: 1px solid #eee;
+  }
+  
+  .sale-items {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee;
+  }
+  
+  .sale-items h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1rem;
+  }
+  
+  .sale-items ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .sale-items li {
+    margin-bottom: 5px;
+    color: #666;
+  }
+  
+  @media (max-width: 768px) {
+    .billing-item {
+      padding: 1rem;
+    }
+  }
+  
+  .contact-section {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+    grid-column: 1 / -1;
+  }
+  
+  .contact-form {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .contact-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .contact-form label {
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .contact-form input,
+  .contact-form textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+  }
+  
+  .contact-form input:read-only {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+  }
+  
+  .contact-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+  }
+  
+  .submit-button {
+    background-color: #00796B;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    justify-self: start;
+  }
+  
+  .submit-button:hover {
+    background-color: #00695C;
+  }
+  
+  .status-message {
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .status-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+  
+  .status-message.error {
+    background-color: #ffebee;
+    color: #c62828;
   }
   
   

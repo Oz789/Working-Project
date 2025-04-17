@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 require('dotenv').config();
 
 const db = mysql.createPool({
@@ -11,23 +11,35 @@ const db = mysql.createPool({
   ssl: {
     rejectUnauthorized: process.env.DB_SSL_REJECT_UNAUTHORIZED === "true",
   },
+  waitForConnections: true,
+  queueLimit: 0,
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0
 });
 
-db.getConnection((err, connection) => {
-  if (err) {
-    console.error("Error connecting to database: " + err.message);
-    return;
-  }
-  console.log("Connected to Azure MySQL Database");
-
-  connection.query('SELECT DATABASE() AS name', (err, result) => {
-    connection.release();
-    if (err) {
-      console.error("Could not fetch DB name:", err.message);
-    } else {
-      console.log("Connected to DB:", result[0].name);
-    }
+// Test the connection
+db.getConnection()
+  .then(connection => {
+    console.log("Connected to Azure MySQL Database");
+    return connection.query('SELECT DATABASE() AS name')
+      .then(([result]) => {
+        console.log("Connected to DB:", result[0].name);
+        connection.release();
+      });
+  })
+  .catch(err => {
+    console.error("Error connecting to database:", err);
+    console.error("Error code:", err.code);
+    console.error("Error state:", err.sqlState);
+    console.error("Error message:", err.message);
   });
+
+// Add error handler for the pool
+db.on('error', (err) => {
+  console.error('Database pool error:', err);
+  console.error('Error code:', err.code);
+  console.error('Error state:', err.sqlState);
+  console.error('Error message:', err.message);
 });
 
 module.exports = db;
