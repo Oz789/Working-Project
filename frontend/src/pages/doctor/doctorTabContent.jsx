@@ -34,7 +34,7 @@ const DoctorTabContent = ({ activeTab, doctor }) => {
               </div>
             );
     case 2:
-      return <DocActiveAppointments/>;
+      return <CheckedInAppointments/>;
 
     case 3:
       return <ReceptionistAppointments/>;
