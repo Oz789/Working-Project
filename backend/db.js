@@ -1,4 +1,4 @@
-const mysql = require("mysql2"); 
+const mysql = require("mysql2/promise");
 require("dotenv").config();
 
 const db = mysql.createPool({
@@ -17,21 +17,21 @@ const db = mysql.createPool({
   keepAliveInitialDelay: 0
 });
 
-// ✅ Test connection
+
 (async () => {
   try {
     const connection = await db.getConnection();
     console.log("✅ Connected to Azure MySQL Database");
-    const [result] = await connection.query("SELECT DATABASE() AS name");
-    console.log("✅ Connected to DB:", result[0].name);
+
+    const [result] = await connection.query("SELECT 1");
+    console.log("✅ Test query result:", result);
+
     connection.release();
   } catch (err) {
-    console.error("❌ Error connecting to database:", err.message);
-    console.error("Code:", err.code);
-    console.error("SQL State:", err.sqlState);
-    console.error("Stack:", err.stack);
+    console.error("❌ Error connecting to DB:", err);
   }
 })();
+
 
 module.exports = db;
 

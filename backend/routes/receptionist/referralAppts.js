@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../../db'); // this is the pool from above
 
 router.post('/', (req, res) => {
-  console.log("✅ [Referral POST] Route hit");
+  console.log("[Referral POST] Route hit");
 
   const {
     firstName,
@@ -15,7 +15,7 @@ router.post('/', (req, res) => {
     appointmentTime
   } = req.body;
 
-  console.log("📦 Incoming data:", req.body);
+  console.log("Incoming data:", req.body);
 
   const sql = `
     INSERT INTO referralappointment
@@ -44,7 +44,7 @@ router.post('/', (req, res) => {
       });
     }
 
-    console.log("✅ [Referral POST] Insert successful:", result);
+    console.log("[Referral POST] Insert successful:", result);
     res.status(201).json({ message: 'Referral appointment submitted!' });
   });
 });

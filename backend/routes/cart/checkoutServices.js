@@ -31,7 +31,7 @@ router.get('/frames', async (req, res) => {
 // Eye Contacts
 router.get('/contacts', async (req, res) => {
   try {
-    const [rows] = await db.promise().query(
+    const [rows] = await db.query(
       'SELECT contactID AS itemID, name, price FROM eyecontacts'
     );
     res.json(rows);

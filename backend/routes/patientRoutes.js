@@ -157,7 +157,7 @@ router.post('/submit', async (req, res) => {
       firstName, lastName, DOB, sex, occupation, address, phoneNumber, email, hashedPassword
     ];
 
-    const [result] = await db.promise().query(patientQuery, patientValues);
+    const [result] = await db.query(patientQuery, patientValues);
     const patientId = result.insertId;
 
     // Insert medical form data
@@ -192,7 +192,7 @@ router.post('/submit', async (req, res) => {
       insuranceID
     ];
 
-    await db.promise().query(medicalFormQuery, medicalFormValues);
+    await db.query(medicalFormQuery, medicalFormValues);
 
     // Insert emergency contacts
     /*if (emergencyContacts && emergencyContacts.length > 0) {

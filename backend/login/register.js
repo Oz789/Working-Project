@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
 
   try {
     // Check if email or phone already exists
-    const [existing] = await db.promise().query(
+    const [existing] = await db.query(
       'SELECT * FROM patient WHERE email = ? OR phoneNumber = ?',
       [email, phoneNumber]
     );
@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new patient
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       `INSERT INTO patient 
         (firstName, lastName, DOB, sex, occupation, address, phoneNumber, email, password)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,

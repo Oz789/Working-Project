@@ -11,7 +11,7 @@ import AdminDashboard from "./pages/admin/adminDashboard";
 import DoctorProfilePage from "./pages/doctor/doctorProfilePage";
 import ContactP from "./pages/contact/contactUs";
 import AboutP from "./pages/about/aboutPage";
-import EmployeeProfilePage from "./pages/employeePortal/receptionistProfile";
+import EmployeeProfilePage from "./pages/employeePortal/receptionist/receptionistProfile";
 import EmployeeForm from "./pages/employeePortal/employeeForm";
 import ScheduleAppointment from "./pages/appointments/ScheduleAppointment";
 import AdminFrames from "./pages/admin/frames/adminFrames";
@@ -26,8 +26,8 @@ import CartPage from "./pages/CartPage";  // Import CartPage component
 import Checkout from "./pages/billing/paymentForm";
 import PatientFormViewer from "./pages/doctor/doctorsPatientView";
 import RegisterPatient from "./pages/logIn/register";
-import NurseProfilePage from "./pages/employeePortal/nurseProfile";
-import NurseExamPage from "./pages/employeePortal/nurseExamPage";
+import NurseProfilePage from "./pages/employeePortal/nurse/nurseProfile";
+import NurseExamPage from "./pages/employeePortal/nurse/nurseExamPage";
 import DoctorExamForm from './pages/doctor/doctorExamForm';
 import PatientReport from "./pages/admin/reports/patientReport";
 import PatientDemographicsReport from "./pages/admin/reports/patientDemographicsReport";
@@ -38,6 +38,8 @@ import CheckoutPage from './components/checkoutPage';
 import UserCheckout from "./pages/checkout/userCheckout";
 import ReceptionistCheckout from "./pages/checkout/receptionistCheckout";
 import ReferralBookingForm from './pages/referral/referralApptForm';
+import SchManager from "./components/employee/schManager";
+import NursePrepForm from "./pages/employeePortal/nurse/nursePrepForm";
 
 
 
@@ -83,8 +85,9 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/userCheckout" element={<UserCheckout />} />
           <Route path="/apptCheckout" element={<ReceptionistCheckout/>} />
-          <Route path="/referral-booking" element={<ReferralBookingForm />}
-/>
+          <Route path="/referral-booking" element={<ReferralBookingForm />} />
+          <Route path="/appt2" element={<SchManager />} />
+          <Route path="/nurseForm/:patientID" element={<NursePrepForm />} />
           
 
 

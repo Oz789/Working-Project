@@ -44,9 +44,9 @@ const ReceptionistCheckout = (props) => {
     const fetchItems = async () => {
       try {
         const [services, frames, contacts] = await Promise.all([
-          axios.get('http://localhost:5001/api/checkout/services'),
-          axios.get('http://localhost:5001/api/checkout/frames'),
-          axios.get('http://localhost:5001/api/checkout/contacts')
+          axios.get('http://localhost:5001/api/checkout/items/services'),
+          axios.get('http://localhost:5001/api/checkout/items/frames'),
+          axios.get('http://localhost:5001/api/checkout/items/contacts')
         ]);
 
         const combinedItems = [
@@ -103,6 +103,8 @@ const ReceptionistCheckout = (props) => {
       });
   }, [appointmentNumber]);
 
+
+
   const handleAddItem = () => {
     const item = availableItems.find(i => i.itemID === selectedItemID);
     if (!item) {
@@ -119,10 +121,11 @@ const ReceptionistCheckout = (props) => {
       console.log(`🆕 Added to cart:`, item);
     }
   };
-
+  
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-
+  
   const navigate = useNavigate();
+  const receptionistID = localStorage.getItem("userID");
 
   const handleCheckout = async () => {
     try {
@@ -140,26 +143,36 @@ const ReceptionistCheckout = (props) => {
   
       console.log("🧾 Sending checkout payload:", payload);
   
-      const res = await axios.post('http://localhost:5001/api/checkout', payload);
-      console.log("✅ Checkout response:", res.data);
+      const res = await axios.post('http://localhost:5001/api/finalize-checkout', payload);
+
   
+      console.log("✅ SUCCESS:", res.data);
+  
+      // These should now execute only if the above line truly resolves
       alert("✅ Sale complete and appointment marked as finished!");
   
+      console.log("🧹 Clearing cart...");
       clearCart();
+  
+      console.log("🗑 Removing from localStorage...");
       localStorage.removeItem("cart-storage");
   
+      console.log("🎯 Resetting state...");
       setSelectedItemID("");
       setAvailableItems([]);
   
-      setTimeout(() => {
-        navigate("/employeeProfile"); // 👈 Use navigate instead of window.location.href
-      }, 750);
+      console.log("🧭 Navigating to /employeeProfile...");
+      navigate(`/employeeProfile/${receptionistID}`);
   
     } catch (err) {
-      console.error("❌ Checkout error:", err);
+      console.error("❌ Final checkout error:", err.message);
       alert("Checkout failed.");
     }
   };
+  
+
+  
+  
   
   
   

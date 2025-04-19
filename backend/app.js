@@ -54,27 +54,15 @@ const contactRoutes = require('./routes/contact');
 const referrPatientRoute = require('./routes/receptionist/referral')
 const referralAppointments = require('./routes/receptionist/referralAppts');
 
-
-
-
-
-
-
-
-
-
-
 const updatePatientInfo = require('./routes/receptionist/getPatientInfo');
 
-
-
-const checkoutReceptionistRoute = require('./routes/receptionist/checkoutRoute');
-const checkoutReceptionistItemsRoute = require('./routes/receptionist/checkoutServices');
+const checkoutReceptionistRoute = require('./routes/cart/checkoutRoute');
+const checkoutReceptionistItemsRoute = require('./routes/cart/checkoutServices');
 const checkoutUser= require('./routes/cart/userCheckout');
 const referralAppointmentRoutes = require('./routes/receptionist/referralAppts');
+const finalizeCheckoutRoute = require('./routes/cart/receptionistCheckout');
 
-
-
+const updateFormRoutes = require('./routes/nurse/updateNurseForm');
 
 
 
@@ -143,9 +131,8 @@ app.use('/api/notifications', getNotifications);
 app.use('/api/notifications/mark-read', markReadNotification);
 app.use('/api/appointments', checkinRoute);
 app.use('/api/referralAppointments', referralAppointments);
-
-app.use('/api/checkout', checkoutReceptionistItemsRoute);
 app.use('/api/checkout', checkoutReceptionistRoute);
+app.use('/api/checkout/items', checkoutReceptionistItemsRoute);
 app.use('/api', checkoutUser);
 app.use('/api/insurance', insuranceRoutes);
 app.use('/api/patientReport', patientReportRoutes);
@@ -153,7 +140,9 @@ app.use('/api/billing', billingRoutes);
 app.use('/api/contacts', contactRoutes);
 app.use('/api/referrals', referralAppointmentRoutes);
 app.use('/api/allPatients', updatePatientInfo);
-
+app.use('/api/finalize-checkout', finalizeCheckoutRoute);
+app.use('/api', updateFormRoutes);
+app.use('/api/locations', locationRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

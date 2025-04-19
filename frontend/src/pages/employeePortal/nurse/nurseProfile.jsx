@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ReceptionistHeader from "./receptionistHeader";
+import ReceptionistHeader from "../receptionist/receptionistHeader";
 import NurseTabs from "./nurseTabs";
 import NurseTabContent from "./nurseTabContent";
-import NavBar from "../../components/navBar";
+import NavBar from "../../../components/navBar";
 
 
  

@@ -4,7 +4,7 @@ import PatientFormViewer from "../patientPortal/patientFormViewer";
 import EmployeeDetails from "../employeePortal/employeeDetails";
 import CheckedInAppointments from "../employeePortal/checkedIn";
 import DocActiveAppointments from "./doctorActiveAppointments";
-import ReceptionistAppointments from "../employeePortal/receptionistAppointments";
+import ReceptionistAppointments from "../employeePortal/receptionist/receptionistAppointments";
 import ClinicAppointments from "../employeePortal/clinicAppointments";
 import { Box, Typography, Tabs, Tab, Paper } from '@mui/material';
 

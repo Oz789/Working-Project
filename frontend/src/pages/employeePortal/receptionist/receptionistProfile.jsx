@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import ReceptionistHeader from "./receptionistHeader";
 import ReceptionistTabs from "./receptionistTabs";
 import ReceptionistTabContent from "./receptionistTabContent";
-import NavBar from "../../components/receptionistNavBar";
+import NavBar from "../../../components/receptionistNavBar";
 
 
 const EmployeeProfilePage = () => {

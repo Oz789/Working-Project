@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     patientID
   } = req.body;
 
-  const connection = await db.promise().getConnection();
+  const connection = await db.getConnection();
 
   try {
     await connection.beginTransaction();

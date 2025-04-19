@@ -1,0 +1,74 @@
+
+.back-button {
+    background: none;
+    border: none;
+    color: #0059b2;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+    
+    
+  }
+  
+  .back-button:focus,
+  .back-button:active,
+  .back-button:hover {
+  
+    box-shadow: none;
+    background: none;
+    color: #003163;
+    text-decoration: underline;
+  }
+  
+
+.nurse-prep-container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 500;
+  }
+  
+  textarea, input[type="text"], input[type="number"] {
+    width: 100%;
+    margin-top: 0.3rem;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+  }
+  
+  .radio-group {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .exam-button {
+    background: linear-gradient(135deg, #005ec2, #0059b2);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .exam-button:hover {
+    background: rgb(0, 30, 91);
+  }
+  

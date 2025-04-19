@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../doctor/doctorAppointments.css';
 import PatientFormViewer from '../patientPortal/patientFormViewer';
-import { useNavigate } from "react-router-dom";
-
-const groupByDate = (appointments) => {
-  return appointments.reduce((acc, appt) => {
-    const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-    const dateStr = dt.toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-    acc[dateStr] = acc[dateStr] || [];
-    acc[dateStr].push(appt);
-    return acc;
-  }, {});
-};
+import { useNavigate } from 'react-router-dom';
 
 const CheckedInAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -23,31 +9,25 @@ const CheckedInAppointments = () => {
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const locationID = localStorage.getItem("userLocation");
-
+  const doctorID = localStorage.getItem("doctorID");
+  const role = localStorage.getItem("userRole");
   const navigate = useNavigate();
-  const [doctorID, setDoctorID] = useState(null);
-  const [role, setRole] = useState(null);
 
-  useEffect(() => {
-    setDoctorID(localStorage.getItem("doctorID"));
-    setRole(localStorage.getItem("userRole"));
-  }, []);
+  // Fetch appointments
   useEffect(() => {
     const fetchAppointments = async () => {
-      let url = "";
-  
-      if (role === "doctor" && doctorID) {
-        url = `http://localhost:5001/api/appointments/clinicAppointments/any?doctorID=${doctorID}`;
-      } else if (locationID) {
-        url = `http://localhost:5001/api/appointments/clinicAppointments/${locationID}`;
-      } else {
-        return;
-      }
-  
+      let url = role === "doctor" && doctorID
+        ? `http://localhost:5001/api/appointments/clinicAppointments/any?doctorID=${doctorID}`
+        : locationID
+        ? `http://localhost:5001/api/appointments/clinicAppointments/${locationID}`
+        : null;
+
+      if (!url) return;
+
       try {
         const res = await fetch(url);
         const data = await res.json();
-  
+
         const formatted = data.map(appt => {
           const dateObj = new Date(appt.appointmentDate);
           const yyyy = dateObj.getFullYear();
@@ -55,7 +35,7 @@ const CheckedInAppointments = () => {
           const dd = String(dateObj.getDate()).padStart(2, '0');
           const rawDate = `${yyyy}-${mm}-${dd}`;
           const cleanTime = appt.appointmentTime?.slice(0, 5);
-  
+
           return {
             appointmentID: appt.appointmentNumber,
             doctorID: appt.doctorID,
@@ -64,38 +44,23 @@ const CheckedInAppointments = () => {
             doctorName: `${appt.doctorFirstName} ${appt.doctorLastName}`,
             appointmentDate: rawDate,
             appointmentTime: cleanTime,
-            status: appt.status
+            status: appt.status,
           };
         });
-  
-        const checkedInOnly = formatted.filter(appt => appt.status === "Checked In");
-        const inProgressOnly = formatted.filter(appt => appt.status === "In Progress");
-  
-     
-  
-        setAppointments(checkedInOnly);
-        setActiveAppointments(inProgressOnly);
+
+        setAppointments(formatted.filter(a => a.status === "Checked In"));
+        setActiveAppointments(formatted.filter(a => a.status === "In Progress"));
       } catch (err) {
-        console.error("Failed to fetch appointments:", err);
+        console.error("❌ Failed to fetch appointments:", err);
       }
     };
-  
+
     fetchAppointments();
-  }, [locationID, role, doctorID]);
-  
-  
-  
-
-  const filtered = appointments.filter(appt =>
-    appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    appt.doctorName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const grouped = groupByDate(filtered);
-  const groupedActive = groupByDate(activeAppointments);
-  
+  }, [locationID, doctorID, role]);
 
   const handleBeginExam = async (appt) => {
+    if (!appt?.appointmentID || !appt?.patientID) return;
+
     try {
       const res = await fetch(`http://localhost:5001/api/appointments/update-status/${appt.appointmentID}`, {
         method: "PATCH",
@@ -104,32 +69,54 @@ const CheckedInAppointments = () => {
       });
 
       if (res.ok) {
-    
         setAppointments(prev => prev.filter(a => a.appointmentID !== appt.appointmentID));
         setActiveAppointments(prev => [...prev, { ...appt, status: "In Progress" }]);
-        navigate(`/nurseExamPage/${appt.patientID}`);
+
+        // Use timeout to ensure navigate is not skipped
+        setTimeout(() => {
+          navigate(`/nurseForm/${appt.patientID}`);
+        }, 150);
       } else {
+        const errMsg = await res.text();
+        console.warn("❌ Backend error:", errMsg);
         alert("Failed to begin exam");
       }
     } catch (err) {
-      console.error("Begin exam error:", err);
+      console.error("❌ Begin exam error:", err);
       alert("Something went wrong");
     }
   };
 
+  const filterAppointments = (arr) =>
+    arr.filter(appt =>
+      appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appt.doctorName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+  const groupByDate = (arr) => {
+    return arr.reduce((acc, appt) => {
+      const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
+      const dateStr = dt.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+      acc[dateStr] = acc[dateStr] || [];
+      acc[dateStr].push(appt);
+      return acc;
+    }, {});
+  };
+
+  const grouped = groupByDate(filterAppointments(appointments));
+  const groupedActive = groupByDate(activeAppointments);
+
   return (
     <div className="appointment-wrapper">
-      {/* LEFT PANEL: CHECKED IN */}
+      {/* LEFT PANEL */}
       <div className="appointment-left">
         <h2 className="appointments-title">Checked-In Appointments</h2>
-
         <input
           type="text"
           placeholder="Search by patient or doctor..."
           className="search-filter"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%", borderRadius: "6px", border: "1px solid #ccc" }}
         />
 
         {Object.entries(grouped).map(([date, appts]) => (
@@ -137,10 +124,7 @@ const CheckedInAppointments = () => {
             <h3 className="appointments-date">{date}</h3>
             {appts.map((appt) => {
               const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-              const timeStr = dt.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              });
+              const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
               const monthShort = dt.toLocaleString('default', { month: 'short' });
               const day = dt.getDate();
 
@@ -152,9 +136,7 @@ const CheckedInAppointments = () => {
                   </div>
 
                   <div className="appointment-info">
-                    <div className="appointment-name">
-                      {appt.patientName} - <span className="appointment-status">{appt.status}</span>
-                    </div>
+                    <div className="appointment-name">{appt.patientName} - <span className="appointment-status">{appt.status}</span></div>
                     <div className="appointment-time">{timeStr}</div>
                     <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
                   </div>
@@ -168,7 +150,7 @@ const CheckedInAppointments = () => {
 
                   <button
                     className="appointment-button"
-                    style={{ backgroundColor: "#00796B" }}
+                    
                     onClick={() => handleBeginExam(appt)}
                   >
                     Begin Exam
@@ -180,27 +162,18 @@ const CheckedInAppointments = () => {
         ))}
       </div>
 
-      {/* RIGHT PANEL: IN PROGRESS */}
+      {/* RIGHT PANEL */}
       <div className="appointment-right">
-        
         <h2 className="appointments-title">In Progress Appointments</h2>
         {Object.entries(groupedActive).length === 0 ? (
           <div className="mock-placeholder">No active appointments</div>
-          
         ) : (
-            
           Object.entries(groupedActive).map(([date, appts]) => (
-            
             <div key={date} className="appointments-section">
-                
-                
               <h3 className="appointments-date">{date}</h3>
               {appts.map(appt => {
                 const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-                const timeStr = dt.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                });
+                const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 const monthShort = dt.toLocaleString('default', { month: 'short' });
                 const day = dt.getDate();
 
@@ -212,9 +185,7 @@ const CheckedInAppointments = () => {
                     </div>
 
                     <div className="appointment-info">
-                      <div className="appointment-name">
-                        {appt.patientName} - <span className="appointment-status">{appt.status}</span>
-                      </div>
+                      <div className="appointment-name">{appt.patientName} - <span className="appointment-status">{appt.status}</span></div>
                       <div className="appointment-time">{timeStr}</div>
                       <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
                     </div>
@@ -244,3 +215,4 @@ const CheckedInAppointments = () => {
 };
 
 export default CheckedInAppointments;
+

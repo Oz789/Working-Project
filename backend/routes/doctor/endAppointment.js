@@ -11,7 +11,7 @@ router.patch('/end/:appointmentID', async (req, res) => {
   `;
 
   try {
-    const [result] = await db.promise().query(sql, [appointmentID]);
+    const [result] = await db.query(sql, [appointmentID]);
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ success: false, message: 'Appointment not found' });

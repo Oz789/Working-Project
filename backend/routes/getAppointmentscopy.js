@@ -27,12 +27,8 @@ router.get('/doctors/:doctorID/appointments', async (req, res) => {
     res.json(rows);
   } catch (err) {
     console.error('❌ Error fetching doctor appointments:', err);
-    res.status(500).json({ 
-      error: 'Failed to fetch doctor appointments',
-      details: err.message
-    });
+    res.status(500).json({ error: 'Failed to fetch doctor appointments' });
   }
 });
 
 module.exports = router;
-

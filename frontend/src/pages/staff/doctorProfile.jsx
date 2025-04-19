@@ -12,7 +12,6 @@ const DoctorProfile = () => {
   const [patients, setPatients] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
 
-
   const analytics = {
     patientsThisWeek: 14,
     upcomingAppointments: 5
@@ -25,16 +24,33 @@ const DoctorProfile = () => {
   ];
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/doctors/${doctorID}`)
-      .then((res) => res.json())
-      .then((data) => setDoctor(data))
-      .catch((err) => console.error("Error fetching doctor:", err));
+    const fetchDoctor = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/api/doctors/${doctorID}`);
+        if (!res.ok) throw new Error("Failed to fetch doctor");
+        const data = await res.json();
+        setDoctor(data);
+      } catch (err) {
+        console.error("Error fetching doctor:", err);
+      }
+    };
+
+    fetchDoctor();
   }, [doctorID]);
 
   useEffect(() => {
-    fetch(`http://localhost:5001/api/doctors/${doctorID}/appointments`)
-      .then(res => res.json())
-      .then(setAppointments);
+    const fetchAppointments = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/api/doctors/${doctorID}/appointments`);
+        if (!res.ok) throw new Error("Failed to fetch appointments");
+        const data = await res.json();
+        setAppointments(data);
+      } catch (err) {
+        console.error("Error fetching appointments:", err);
+      }
+    };
+
+    fetchAppointments();
   }, [doctorID]);
 
   if (!doctor) return <p>Loading profile...</p>;
@@ -45,50 +61,41 @@ const DoctorProfile = () => {
       <p><strong>Phone:</strong> {doctor.phone}</p>
       <p><strong>Email:</strong> {doctor.email}</p>
       <p><strong>Specialization:</strong> {doctor.specialization}</p>
-  
-  
       <div className="profile-pic-container">
-        <img 
-          src="" 
-          alt="Doctor Profile"
-          className="profile-pic"
-        />
-
-     
+        <img src="" alt="Doctor Profile" className="profile-pic" />
       </div>
     </div>
   );
-  
+
   const mainContent = (
-  <>
-    <h3>Upcoming Appointments</h3>
+    <>
+      <h3>Upcoming Appointments</h3>
+      {appointments.length === 0 ? (
+        <p>No appointments scheduled.</p>
+      ) : (
+        <ul>
+          {appointments.map((appt) => (
+            <li key={appt.appointmentID}>
+              {appt.appointmentDate} @ {appt.appointmentTime} — {appt.patientName} ({appt.appointmentType})
+            </li>
+          ))}
+        </ul>
+      )}
 
-    {appointments.length === 0 ? (
-      <p>No appointments scheduled.</p>
-    ) : (
-      <ul>
-        {appointments.map((appt) => (
-          <li key={appt.appointmentID}>
-            {appt.appointmentDate} @ {appt.appointmentTime} — {appt.patientName} ({appt.appointmentType})
-          </li>
-        ))}
-      </ul>
-    )}
+      <h3>Upcoming Patients</h3>
+      {patients.length === 0 ? (
+        <p>No upcoming patients found.</p>
+      ) : (
+        <ul>
+          {patients.map((p) => (
+            <li key={p.patientID}>{p.fullName} — {p.email}</li>
+          ))}
+        </ul>
+      )}
+    </>
+  );
 
-    <h3>Upcoming Patients</h3>
-    {patients.length === 0 ? (
-      <p>No upcoming patients found.</p>
-    ) : (
-      <ul>
-        {patients.map((p) => (
-          <li key={p.patientID}>{p.fullName} — {p.email}</li>
-        ))}
-      </ul>
-    )}
-  </>
-);
-
-const extraContent = (
+  const extraContent = (
     <div className="extra-dashboard">
       <div className="calendar-toggle" onClick={() => setShowSchedule(!showSchedule)}>
         <CalendarMonthIcon style={{ cursor: "pointer", fontSize: "2rem", color: "#0077cc" }} />
@@ -103,12 +110,11 @@ const extraContent = (
           {showNotifications ? "Hide Notifications" : "Show Notifications"}
         </span>
       </div>
+
       <h3>Analytics</h3>
       <p><strong>Patients This Week:</strong> {analytics.patientsThisWeek}</p>
       <p><strong>Upcoming Appointments:</strong> {analytics.upcomingAppointments}</p>
 
-  
-  
       {showNotifications && (
         <div className="notification-card">
           <ul>
@@ -120,7 +126,6 @@ const extraContent = (
       )}
     </div>
   );
-  
 
   return (
     <ProfileTemplate 

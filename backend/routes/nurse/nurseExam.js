@@ -6,7 +6,7 @@ router.get("/:id", async (req, res) => {
   try {
     const patientId = req.params.id;
 
-    const [result] = await db.promise().query(
+    const [result] = await db.query(
       `
       SELECT p.*, pf.* 
       FROM patient p

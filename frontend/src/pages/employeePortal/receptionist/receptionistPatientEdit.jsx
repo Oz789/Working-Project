@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 //import '../doctor/doctorAppointments.css'; // you're already using this
 import './receptionistPatientEdit.css'
-import PatientFormViewer from '../patientPortal/patientFormViewer';
+import PatientFormViewer from '../../patientPortal/patientFormViewer';
 
-import RecApp from '../appointments/receptionistApp';
+import RecApp from '../../appointments/receptionistApp';
 
 
 

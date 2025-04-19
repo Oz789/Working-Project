@@ -238,7 +238,12 @@ const DocActiveAppointments = () => {
                       <div className="appointment-time">{timeStr}</div>
                       <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
                     </div>
-                    <button onClick={() => handleEndAppointment(appt)}>
+                    <button
+  onClick={(e) => {
+    e.stopPropagation(); 
+    handleEndAppointment(appt);
+  }}
+>
   End Appointment
 </button>
                   </div>

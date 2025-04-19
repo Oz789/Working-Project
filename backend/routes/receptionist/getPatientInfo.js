@@ -5,7 +5,7 @@ const db = require('../../db');
 router.get('/' , async (req, res) => {
 
     try {
-        const [rows] = await db.promise().query(
+        const [rows] = await db.query(
           `SELECT * FROM patient
           ORDER BY firstName ASC`,
         );

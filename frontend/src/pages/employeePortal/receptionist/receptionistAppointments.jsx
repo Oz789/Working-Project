@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import '../doctor/doctorAppointments.css';
-import PatientFormViewer from '../patientPortal/patientFormViewer';
-import ReceptionistCheckout from '../checkout/receptionistCheckout';
-import useBillingSessionStore from '../billing/appointmentBilling';
-import useCartStore from '../../components/cartStorage';
+import '../../doctor/doctorAppointments.css';
+import PatientFormViewer from '../../patientPortal/patientFormViewer';
+import ReceptionistCheckout from '../../checkout/receptionistCheckout';
+import useBillingSessionStore from '../../billing/appointmentBilling';
+import useCartStore from '../../../components/cartStorage';
 import { useNavigate } from 'react-router-dom';
 import './receptionistCards.css';
 import ReferralBookingForm from './receptionistReferralForm';
-import RecAppEdit from '../appointments/recEditApp';
+import RecAppEdit from '../../appointments/recEditApp';
 
 const groupByDate = (appointments) => {
   return appointments.reduce((acc, appt) => {
