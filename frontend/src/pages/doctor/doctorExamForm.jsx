@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './doctorExamForm.css';
 
@@ -19,7 +19,9 @@ const DoctorExamForm = () => {
     lids: '', cornea: '', anteriorChamber: '', iris: '', lens: '',
     opticDisc: '', macula: '', vessels: '', retina: '',
     diagnosis: '', treatmentPlan: '',
-    referralNeeded: false
+    referralNeeded: false,
+    updatedLensesPrescription: '',
+    updatedContactsPrescription: ''
   });
 
   const [referralForm, setReferralForm] = useState({
@@ -29,6 +31,51 @@ const DoctorExamForm = () => {
     referredTo: '',
     additionalNotes: ''
   });
+
+  useEffect(() => {
+    const fetchSavedExam = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/api/examform/${appointmentID}`);
+        if (res.ok) {
+          const data = await res.json();
+          console.log("🧠 Loaded saved exam data:", data);
+  
+          // Separate referral fields if present
+          const {
+            specialty,
+            reason,
+            urgency,
+            referredTo,
+            additionalNotes,
+            referralNeeded,
+            ...rest
+          } = data;
+  
+          setExamForm(prev => ({
+            ...prev,
+            ...rest,
+            referralNeeded: referralNeeded === 1 || referralNeeded === true,
+          }));
+  
+          if (referralNeeded) {
+            setReferralForm({
+              specialty: specialty || '',
+              reason: reason || '',
+              urgency: urgency || 'Routine',
+              referredTo: referredTo || '',
+              additionalNotes: additionalNotes || '',
+            });
+          }
+        } else {
+          console.log("No previous exam found.");
+        }
+      } catch (err) {
+        console.error("Failed to load saved exam form:", err);
+      }
+    };
+  
+    fetchSavedExam();
+  }, [appointmentID]);
 
   const handleExamChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -118,10 +165,28 @@ const DoctorExamForm = () => {
       <input name="vessels" placeholder="Vessels" value={examForm.vessels} onChange={handleExamChange} disabled={!editing} />
       <input name="retina" placeholder="Retina" value={examForm.retina} onChange={handleExamChange} disabled={!editing} />
 
+      <h3>Prescription</h3>
+<input
+  name="updatedLensesPrescription"
+  placeholder="Updated Lenses Prescription"
+  value={examForm.updatedLensesPrescription || ''}
+  onChange={handleExamChange}
+  required
+/>
+
+<input
+  name="updatedContactsPrescription"
+  placeholder="Updated Contacts Prescription"
+  value={examForm.updatedContactsPrescription || ''}
+  onChange={handleExamChange}
+  required
+/>
+
+
       <h3>Diagnosis & Plan</h3>
       <textarea name="diagnosis" placeholder="Diagnosis" value={examForm.diagnosis} onChange={handleExamChange} disabled={!editing} />
       <textarea name="treatmentPlan" placeholder="Treatment Plan" value={examForm.treatmentPlan} onChange={handleExamChange} disabled={!editing} />
-
+        
 
      
 

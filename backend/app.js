@@ -41,7 +41,7 @@ const scheduledappointmentRoutes = require('./routes/appointmentRoutes');
 const getClinicAppointments = require('./routes/receptionist/getClinicAppointments');
 const updateStatus = require("./routes/receptionist/updateStatus");
 const getNursePatient = require("./routes/nurse/nurseExam");
-const updateMedicalForm = require('./routes/nurse/updateNurseForm');
+const updateNurseForm = require('./routes/nurse/updateNurseForm');
 const createExamReport = require('./routes/doctor/updateEyeExamForm');
 const createReferralRoute = require('./routes/doctor/referral');
 const endAppointmentRoute = require('./routes/doctor/endAppointment');
@@ -63,6 +63,38 @@ const referralAppointmentRoutes = require('./routes/receptionist/referralAppts')
 const finalizeCheckoutRoute = require('./routes/cart/receptionistCheckout');
 
 const updateFormRoutes = require('./routes/nurse/updateNurseForm');
+const getDoctorActiveAppointments = require('./routes/doctor/getDoctorActiveAppointments');
+const getStockCountRoutes = require('./routes/admin/getStock');
+const getInsuranceByPatient = require('./routes/cart/appointmentInsurance');
+const doctorScheduleRoute = require('./routes/admin/scheduler');
+const getPatientFromAppointment = require('./routes/nurse/getPatientFromappt');
+const nursepatientInfoRoutes = require('./routes/nurse/nursePatientInfo');
+const mostPurchasedRoute = require("./routes/reports/mostPurchased");
+const getStockAlertsRoute = require('./routes/receptionist/getNoti');
+const restockInventoryRoute = require('./routes/admin/restockInventory');
+const gatherEmployee = require('./routes/employee/gatherEmployee')
+
+const sentRoute = require('./routes/message/sendMessage')
+const checkUserTypeRoute = require('./routes/message/checkUserType');
+const msgPatients = require('./routes/patient/getPatient');
+
+
+const filterRoutes = require('./routes/message/messageFilter');
+const readRoutes = require('./routes/message/responded');
+const responseRoute = require('./routes/message/responseFilter');
+const sentFilterRoute = require('./routes/message/sentFilter')
+const getExamFormRoute = require('./routes/doctor/getEyeExamForm');
+const editEmployeeRoute = require('./routes/admin/editEmployee');
+const editPatientRoute = require('./routes/admin/adminEditPatients');
+const adminGetAllPatients = require('./routes/admin/adminGetPatients');
+const deletePatients = require('./routes/admin/deletePatient');
+const getDoctorSchedules = require('./routes/admin/getDoctorSchedules');
+
+
+
+
+
+
 
 
 
@@ -83,7 +115,6 @@ app.use("/api/login", loginRoutes);
 app.use("/api/doctor", createDoctorRoute);
 app.use("/api", getDoctorRoute);
 app.use("/api/patients", patientRoutes);
-app.use('/api/appointments', appointmentRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/", createContacts);
 app.use("/", checkoutRoutes)
@@ -93,8 +124,10 @@ app.use('/api/doctor', createDoctorRoute);
 app.use('/api', getDoctorRoute);
 app.use('/api/patients', patientRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/patients', updateMedicalForm);
+app.use('/api', editEmployeeRoute);
+
 //app.use('/api/submit-form', formRoutes);
+app.use('/api', getDoctorSchedules);
 app.use('/api/schedule', schRoute);
 app.use('/', createContacts);
 app.use('/api', createFramesRoute);
@@ -106,6 +139,7 @@ app.use('/api', getContactsRoute);
 app.use('/api', updateContactsRoute);
 app.use('/api', deleteContactsRoute);
 app.use('/api', createServiceRoute);
+app.use('/api/get-patient-from-appointment', getPatientFromAppointment);
 app.use('/api', referralAppointmentRoutes);
 app.use("/api/nursePatient", getNursePatient);
 app.use('/api', getServicesRoute);
@@ -116,13 +150,12 @@ app.use('/api/employees', updateEmployee);
 app.use('/api', updateServicesRoute);
 app.use('/api', getInventoryRoute);
 app.use('/api/appointments', appointmentRoutes);
-app.use('/api', getDoctorAppointments);
 app.use('/api', getAllAppointments);
 app.use('/api/register-patient', registerPatient);
 app.use('/api/locations', locationRoutes);
+app.use('/api/doctorschedule', doctorScheduleRoute);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/appointments', scheduledappointmentRoutes);
-app.use('/api/appointments', getClinicAppointments);
 app.use('/api/appointments', updateStatus);
 app.use('/api/examReports', createExamReport);
 app.use('/api/referrals', createReferralRoute);
@@ -143,7 +176,39 @@ app.use('/api/allPatients', updatePatientInfo);
 app.use('/api/finalize-checkout', finalizeCheckoutRoute);
 app.use('/api', updateFormRoutes);
 app.use('/api/locations', locationRoutes);
+app.use('/api/appointments/activeByDoctor', getDoctorActiveAppointments);
+app.use('/api/appointments', getClinicAppointments);
+app.use('/api/checkout/stock', getStockCountRoutes);
+app.use('/api/nurseprep', updateNurseForm);
+app.use('/api/insurance/patient', getInsuranceByPatient);
+app.use('/api/examform', getExamFormRoute);
+
+app.use('/api/doctorschedule', doctorScheduleRoute);
+app.use("/api/doctor", getDoctorRoute);
+app.use('/api', nursepatientInfoRoutes);
+app.use("/api/reports", mostPurchasedRoute);
+app.use('/api', restockInventoryRoute);
+app.use('/api', getStockAlertsRoute);
+app.use('/api/nonadmin', gatherEmployee);
+
+app.use('/api/sendmsg', sentRoute);
+app.use('/api/user-type', checkUserTypeRoute);
+
+app.use('/api/pati', msgPatients);
+
+app.use('/api/mess/user', filterRoutes);
+app.use('/api/responded', readRoutes);
+app.use('/api/mess/unresponded', responseRoute);
+app.use('/api', adminGetAllPatients);
+
+app.use('/api/mess/sent', sentFilterRoute);
+app.use('/api', editPatientRoute);
+app.use('/api', deletePatients);
+
+
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+
 

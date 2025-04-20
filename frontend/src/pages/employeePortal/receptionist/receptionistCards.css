@@ -1,104 +1,150 @@
 .appt-card {
-    background: #f9fcff;
-    border-left: 5px solid #1976d2;
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s ease;
-  }
-  
-  .appt-card:hover {
-    transform: translateY(-2px);
-  }
-  
-  .appt-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  
-  .appt-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 16px;
-    border: 2px solid #1976d2;
-    background-color: #e3f2fd;
-  }
-  
-  .appt-details {
-    flex: 1;
-  }
-  
-  .appt-name {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #0d47a1;
-  }
-  
-  .appt-meta {
-    font-size: 0.9rem;
-    color: #444;
-    margin-top: 4px;
-  }
-  
-  .appt-label {
-    font-weight: 600;
-    color: #1976d2;
-  }
-  
-  .appt-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
-  
-  .appt-btn {
-    padding: 0.45rem 1.2rem;
-    border-radius: 20px;
-    border: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  }
-  
-  .appt-btn.checkin {
-    background-color: #43a047;
-    color: white;
-  }
-  
-  .appt-btn.checkin:hover {
-    background-color: #388e3c;
-    transform: scale(1.03);
-  }
-  
-  .appt-btn.view {
-    background-color: #1976d2;
-    color: white;
-  }
-  
-  .appt-btn.view:hover {
-    background-color: #1257a0;
-    transform: scale(1.03);
-  }
-  
-  .appt-btn.bill {
-    background-color: #6d4c41;
-    color: white;
-  }
-  
-  .appt-btn.bill:hover {
-    background-color: #5d4037;
-    transform: scale(1.03);
-  }
-  
+  background: #fdfdfe;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+  border-left: 5px solid #ccc; /* default neutral border */
+}
+
+.appt-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* GLOW variants by status */
+.appt-card.checked-in {
+  box-shadow: inset 5px 0 0 white, 0 0 10px rgba(255, 255, 255, 0.2);
+  border-left: 5px solid white;
+}
+
+.appt-card.in-progress {
+  box-shadow: inset 5px 0 0 #1976d2, 0 0 10px rgba(25, 118, 210, 0.2);
+  border-left: 5px solid #1976d2;
+}
+
+.appt-card.ended {
+  box-shadow: inset 5px 0 0 #43a047, 0 0 10px rgba(67, 160, 71, 0.2);
+  border-left: 5px solid #43a047;
+}
+
+.appt-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.appt-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 16px;
+  border: 2px solid #1976d2;
+  background-color: #e3f2fd;
+}
+
+.appt-details {
+  flex: 1;
+}
+
+.appt-name {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0d47a1;
+}
+
+.appt-meta {
+  font-size: 0.95rem;
+  color: #444;
+  margin-top: 4px;
+}
+
+.appt-label {
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.appt-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.appt-btn {
+  padding: 0.5rem 1.3rem;
+  border-radius: 25px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.appt-btn.checkin {
+  background-color: #43a047;
+  color: white;
+}
+.appt-btn.checkin:hover {
+  background-color: #388e3c;
+  transform: scale(1.03);
+}
+
+.appt-btn.view {
+  background-color: #1976d2;
+  color: white;
+}
+.appt-btn.view:hover {
+  background-color: #1257a0;
+  transform: scale(1.03);
+}
+
+.appt-btn.bill {
+  background-color: #6d4c41;
+  color: white;
+}
+.appt-btn.bill:hover {
+  background-color: #5d4037;
+  transform: scale(1.03);
+}
+
+.appt-btn.refer {
+  background-color: #ccc;
+  color: #666;
+  font-weight: bold;
+}
+.appt-btn.refer:enabled {
+  background-color: #00796B;
+  color: white;
+}
+.appt-btn.refer:enabled:hover {
+  background-color: #00695c;
+  transform: scale(1.03);
+}
+
+/* Appointment Status Glow Variants */
+.appt-card.checked-in {
+  border-left: 5px solid #00d138;
+  box-shadow: 0 0 10px 1px rgba(0, 187, 19, 0.8);
+}
+
+.appt-card.in-progress {
+  border-left: 5px solid #1976d2;
+  box-shadow: 0 0 6px 1px rgba(38, 146, 255, 0.6);
+}
+
+.appt-card.ended {
+  border-left: 5px solid #ffbb00;
+  box-shadow: 0 0 10px 2px rgba(255, 247, 0, 0.6);
+}
+
+
   
   
   

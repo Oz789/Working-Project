@@ -150,7 +150,11 @@ image="/Images/1_DAY_ACUVUE_MOIST_90_Pack.avif"
   <AdminEditContacts
     data={selectedContact}
     onClose={() => setViewModal(false)}
-    onEdit={() => console.log("Edit", selectedContact.contactID)} 
+    onEdit={() => {
+      fetchContacts();    
+      setViewModal(false);   
+    }}
+    
     onDelete={handleDelete}
   />
 )}

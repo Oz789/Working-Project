@@ -1,45 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Typography, Grid, Button, MenuItem, Select, TextField, Card, CardContent, Divider
-} from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import useCartStore from '../../components/cartStorage'; 
-import { useNavigate } from 'react-router-dom';
+import useCartStore from '../../components/cartStorage';
+import './checkout.css'; // reuse user style
+import { useNavigate, useParams } from 'react-router-dom';
 
 
-const ReceptionistCheckout = (props) => {
-  const initialAppointmentNumber = props.appointmentNumber || localStorage.getItem("checkoutAppt");
-  const initialPatientID = props.patientID || localStorage.getItem("checkoutPatient");
-
-  const [appointmentNumber, setAppointmentNumber] = useState(initialAppointmentNumber);
-  const [patientID, setPatientID] = useState(initialPatientID);
-
-  console.log(" Initial props:", props);
-  console.log("Final appointmentNumber:", appointmentNumber);
-  console.log("Final patientID:", patientID);
-
+const ReceptionistCheckout = ({ appointmentNumber: propAppt, patientID: propPatient }) => {
   const [availableItems, setAvailableItems] = useState([]);
-  const [itemType, setItemType] = useState("service");
-  const [selectedItemID, setSelectedItemID] = useState("");
+  const [showPayment, setShowPayment] = useState(false);
+  const [cardDetails, setCardDetails] = useState({ name: '', number: '', expiry: '', cvv: '' });
+  const [errors, setErrors] = useState({});
 
-  const {
-    cart,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart
-  } = useCartStore();
+  const { cart, addToCart, removeFromCart, updateQuantity, clearCart } = useCartStore();
+  const navigate = useNavigate();
+
+  const receptionistID = localStorage.getItem("userID");
+  const appointmentNumber = propAppt || localStorage.getItem("checkoutAppt");
+  const patientID = propPatient || localStorage.getItem("checkoutPatient");
 
   useEffect(() => {
-    if (props.appointmentNumber) {
-      localStorage.setItem("checkoutAppt", props.appointmentNumber);
-    }
-    if (props.patientID) {
-      localStorage.setItem("checkoutPatient", props.patientID);
-    }
-  }, [props.appointmentNumber, props.patientID]);
+    if (propAppt) localStorage.setItem("checkoutAppt", propAppt);
+    if (propPatient) localStorage.setItem("checkoutPatient", propPatient);
+  }, [propAppt, propPatient]);
 
-  // Fetch items
   useEffect(() => {
     const fetchItems = async () => {
       try {
@@ -49,85 +32,57 @@ const ReceptionistCheckout = (props) => {
           axios.get('http://localhost:5001/api/checkout/items/contacts')
         ]);
 
-        const combinedItems = [
+        const combined = [
           ...services.data.map(item => ({ ...item, type: 'service' })),
           ...frames.data.map(item => ({ ...item, type: 'frame' })),
           ...contacts.data.map(item => ({ ...item, type: 'contact' }))
         ];
-
-        console.log("🛒 Combined items fetched:", combinedItems);
-        setAvailableItems(combinedItems);
+        setAvailableItems(combined);
       } catch (err) {
-        console.error("❌ Error fetching items:", err);
+        console.error("Item fetch error:", err);
       }
     };
 
     fetchItems();
   }, []);
 
-  // Auto-add base service
   useEffect(() => {
-    if (!appointmentNumber) {
-      console.warn("⚠️ No appointmentNumber — cannot fetch base service.");
-      return;
-    }
-
-    console.log("📡 Fetching checkout info for:", appointmentNumber);
+    if (!appointmentNumber) return; 
     axios.get(`http://localhost:5001/api/checkout/${appointmentNumber}`)
       .then(res => {
-        console.log("📬 Appointment data received:", res.data);
-        const data = res.data;
-
-        if (data.baseService) {
-          const exists = cart.find(
-            item => item.itemID === data.baseService.serviceID && item.type === 'service'
-          );
-          if (!exists) {
-            console.log("✅ Adding base service to cart:", data.baseService);
-            addToCart({
-              itemID: data.baseService.serviceID,
-              name: data.baseService.name,
-              price: parseFloat(data.baseService.price),
-              quantity: 1,
-              type: 'service'
-            });
-          } else {
-            console.log("⚠️ Base service already in cart.");
-          }
-        } else {
-          console.log("ℹ️ No base service returned.");
+        const base = res.data.baseService;
+        if (base && !cart.some(item => item.itemID === base.serviceID && item.type === 'service')) {
+          addToCart({ itemID: base.serviceID, name: base.name, price: +base.price, quantity: 1, type: 'service' });
         }
       })
-      .catch(err => {
-        console.error("❌ Failed to fetch appointment info:", err);
-      });
+      .catch(err => console.error("Failed to fetch base service:", err));
   }, [appointmentNumber]);
+  
 
-
-
-  const handleAddItem = () => {
-    const item = availableItems.find(i => i.itemID === selectedItemID);
-    if (!item) {
-      console.warn("⚠️ Tried to add item, but none selected.");
-      return;
-    }
-
+  const handleAdd = (item) => {
     const exists = cart.find(i => i.itemID === item.itemID && i.type === item.type);
     if (exists) {
       updateQuantity(item.itemID, item.type, exists.quantity + 1);
-      console.log(`🔁 Increased quantity for ${item.name}`);
     } else {
       addToCart({ ...item, quantity: 1 });
-      console.log(`🆕 Added to cart:`, item);
     }
   };
-  
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-  
-  const navigate = useNavigate();
-  const receptionistID = localStorage.getItem("userID");
 
-  const handleCheckout = async () => {
+  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+
+  const validateCard = () => {
+    const errs = {};
+    if (!cardDetails.name.trim()) errs.name = "Name required";
+    if (!/^\d{4} \d{4} \d{4} \d{4}$/.test(cardDetails.number)) errs.number = "Card number must be 16 digits";
+    if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) errs.expiry = "Use MM/YY format";
+    if (!/^\d{3,4}$/.test(cardDetails.cvv)) errs.cvv = "CVV must be 3 or 4 digits";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleFinalCheckout = async () => {
+    if (!validateCard()) return;
+
     try {
       const payload = {
         patientID,
@@ -140,122 +95,96 @@ const ReceptionistCheckout = (props) => {
         })),
         total: totalPrice
       };
-  
-      console.log("🧾 Sending checkout payload:", payload);
-  
-      const res = await axios.post('http://localhost:5001/api/finalize-checkout', payload);
 
-  
-      console.log("✅ SUCCESS:", res.data);
-  
-      // These should now execute only if the above line truly resolves
-      alert("✅ Sale complete and appointment marked as finished!");
-  
-      console.log("🧹 Clearing cart...");
+      await axios.post('http://localhost:5001/api/finalize-checkout', payload);
+      alert("Checkout successful!");
       clearCart();
-  
-      console.log("🗑 Removing from localStorage...");
       localStorage.removeItem("cart-storage");
-  
-      console.log("🎯 Resetting state...");
-      setSelectedItemID("");
-      setAvailableItems([]);
-  
-      console.log("🧭 Navigating to /employeeProfile...");
+      setShowPayment(false);
       navigate(`/employeeProfile/${receptionistID}`);
-  
     } catch (err) {
-      console.error("❌ Final checkout error:", err.message);
+      console.error("Checkout error:", err);
       alert("Checkout failed.");
     }
   };
-  
 
-  
-  
-  
-  
-  
-  
+  const handleCardInput = (e) => {
+    const { name, value } = e.target;
+    setCardDetails(prev => ({ ...prev, [name]: value }));
+  };
 
   return (
-    <Card sx={{ p: 3 }}>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Receptionist Checkout
-        </Typography>
+    <div className="checkout-wrapper">
+      <h2>Receptionist Checkout</h2>
 
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={3}>
-            <Select value={itemType} onChange={e => setItemType(e.target.value)} fullWidth>
-              <MenuItem value="service">Service</MenuItem>
-              <MenuItem value="frame">Frame</MenuItem>
-              <MenuItem value="contact">Contact</MenuItem>
-            </Select>
-          </Grid>
-          <Grid item xs={6}>
-            <Select
-              fullWidth
-              value={selectedItemID}
-              onChange={e => setSelectedItemID(e.target.value)}
-            >
-              {availableItems
-                .filter(i => i.type === itemType)
-                .map(i => (
-                  <MenuItem key={i.itemID} value={i.itemID}>
-                    {i.name} - ${i.price}
-                  </MenuItem>
-                ))}
-            </Select>
-          </Grid>
-          <Grid item xs={3}>
-            <Button onClick={handleAddItem} variant="contained">
-              Add to Cart
-            </Button>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography variant="h6" gutterBottom>Cart</Typography>
+   
+      <div className="cart-section">
+        <h3>Cart</h3>
         {cart.map((item, idx) => (
-          <Grid container spacing={2} key={idx} alignItems="center">
-            <Grid item xs={4}>{item.name}</Grid>
-            <Grid item xs={2}>${item.price}</Grid>
-            <Grid item xs={3}>
-              <TextField
-                type="number"
-                size="small"
-                value={item.quantity}
-                onChange={e => updateQuantity(item.itemID, item.type, parseInt(e.target.value))}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Button onClick={() => removeFromCart(item.itemID, item.type)} color="error">
-                Remove
-              </Button>
-            </Grid>
-          </Grid>
+          <div key={idx} className="cart-row">
+            <span>{item.name}</span>
+            <input
+              type="number"
+              min="1"
+              value={item.quantity}
+              onChange={(e) => updateQuantity(item.itemID, item.type, +e.target.value)}
+            />
+            <span>${item.price}</span>
+            <button onClick={() => removeFromCart(item.itemID, item.type)}>Remove</button>
+          </div>
         ))}
 
-        <Divider sx={{ my: 2 }} />
+        <div className="cart-total">Total: ${totalPrice}</div>
 
-        <Typography variant="h6">Total: ${totalPrice}</Typography>
+        {!showPayment ? (
+          <button className="checkout-btn" onClick={() => setShowPayment(true)}>Checkout</button>
+        ) : (
+          <div className="payment-form">
+            <h4>Enter Payment Info</h4>
 
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleCheckout}
-          sx={{ mt: 2 }}
-        >
-          Confirm & Save Bill
-        </Button>
-      </CardContent>
-    </Card>
+            <input name="name" placeholder="Cardholder Name" value={cardDetails.name} onChange={handleCardInput} />
+            {errors.name && <small style={{ color: "red" }}>{errors.name}</small>}
+
+            <input name="number" placeholder="1234 5678 9012 3456" maxLength={19}
+              value={cardDetails.number}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/[^\d]/g, '');
+                const formatted = raw.replace(/(.{4})/g, '$1 ').trim();
+                setCardDetails(prev => ({ ...prev, number: formatted }));
+              }}
+            />
+            {errors.number && <small style={{ color: "red" }}>{errors.number}</small>}
+
+            <input name="expiry" placeholder="MM/YY" maxLength={5}
+              value={cardDetails.expiry}
+              onChange={(e) => {
+                let raw = e.target.value.replace(/[^\d]/g, '');
+                if (raw.length > 2) raw = raw.slice(0, 2) + '/' + raw.slice(2);
+                setCardDetails(prev => ({ ...prev, expiry: raw }));
+              }}
+            />
+            {errors.expiry && <small style={{ color: "red" }}>{errors.expiry}</small>}
+
+            <input name="cvv" placeholder="CVV" maxLength={4}
+              value={cardDetails.cvv}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, '');
+                setCardDetails(prev => ({ ...prev, cvv: raw }));
+              }}
+            />
+            {errors.cvv && <small style={{ color: "red" }}>{errors.cvv}</small>}
+
+            <button className="confirm-btn" onClick={handleFinalCheckout}>
+              Confirm & Save Bill
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
 export default ReceptionistCheckout;
+
 
 

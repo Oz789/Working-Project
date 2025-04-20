@@ -29,7 +29,7 @@ const ReceptionistAppointments = () => {
   const [selectedAppointmentID, setSelectedAppointmentID] = useState(null);
   const [selectedPatientName, setPatientName] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [showTodayOnly, setShowTodayOnly] = useState(false);
+  const [showTodayOnly, setShowTodayOnly] = useState(true);
   const [statusFilter, setStatusFilter] = useState('All');
   const [selectedApptForBilling, setSelectedApptForBilling] = useState(null);
   const { setBillingSession } = useBillingSessionStore();
@@ -40,9 +40,10 @@ const ReceptionistAppointments = () => {
 
   const fetchClinicAppointments = async (locationID) => {
     try {
-      const res = await fetch(`http://localhost:5001/api/appointments/clinicAppointments/${locationID}`);
-      const data = await res.json();
+      const res = await fetch(`http://localhost:5001/api/appointments/clinicAppointmentsDebug/${locationID}`);
 
+      const data = await res.json();
+        
       return data.map(appt => {
         const dateObj = new Date(appt.appointmentDate);
         const yyyy = dateObj.getFullYear();
@@ -50,7 +51,13 @@ const ReceptionistAppointments = () => {
         const dd = String(dateObj.getDate()).padStart(2, '0');
         const rawDate = `${yyyy}-${mm}-${dd}`;
         const cleanTime = appt.appointmentTime?.slice(0, 5);
-
+        console.log("📌 Mapped appointment:", {
+          id: appt.appointmentNumber,
+          patient: `${appt.patientFirstName} ${appt.patientLastName}`,
+          isReferred: appt.isReferred,
+          converted: appt.isReferred === 1 || appt.isReferred === "1"
+        });
+        
         return {
           appointmentID: appt.appointmentNumber,
           patientID: appt.patientID,
@@ -94,7 +101,7 @@ const ReceptionistAppointments = () => {
         setAppointments(prev =>
           prev.map(appt =>
             appt.appointmentID === appointmentID
-              ? { ...appt, status: "On Hold", checkInTime: new Date().toISOString() }
+              ? { ...appt, status: "Checked In", checkInTime: new Date().toISOString() }
               : appt
           )
         );
@@ -207,70 +214,76 @@ const ReceptionistAppointments = () => {
                 </div>
 
                 <div className="appt-buttons">
-                  {appt.status === "Scheduled" && (
-                    <button
-                      onClick={() => handleCheckIn(appt.appointmentID)}
-                      className="appt-btn checkin"
-                    >
-                      Check In
-                    </button>
-                  )}
+  {appt.status === "Scheduled" && (
+    <button
+      onClick={() => handleCheckIn(appt.appointmentID)}
+      className="appt-btn checkin"
+    >
+      Check In
+    </button>
+  )}
 
-                  <button
-                    className="appointment-button"
-                    onClick={() => {
-                      setSelectedPatientID(appt.patientID);
-                      setSelectedAppointmentID(appt.appointmentID);
-                      setPatientName(appt.patientName);
-                      setViewMode("edit");
-                    }}
-                  >
-                    Edit Appt.
-                  </button>
+  {appt.status !== "Ended" && (
+    <>
+      <button
+        className="appointment-button"
+        onClick={() => {
+          setSelectedPatientID(appt.patientID);
+          setSelectedAppointmentID(appt.appointmentID);
+          setPatientName(appt.patientName);
+          setViewMode("edit");
+        }}
+      >
+        Reschedule
+      </button>
 
-                  <button
-                    className="appointment-button"
-                    onClick={() => {
-                      setSelectedPatientID(appt.patientID);
-                      setSelectedAppointmentID(appt.appointmentID);
-                      setPatientName(appt.patientName);
-                      setViewMode("view");
-                    }}
-                  >
-                    View Form
-                  </button>
+      <button
+        className="appointment-button"
+        onClick={() => {
+          setSelectedPatientID(appt.patientID);
+          setSelectedAppointmentID(appt.appointmentID);
+          setPatientName(appt.patientName);
+          setViewMode("view");
+        }}
+      >
+        View Form
+      </button>
+    </>
+  )}
 
-                  {(appt.status === "Completed" || appt.status === "Ended") && (
-                    <button
-                      className="appt-btn bill"
-                      onClick={() => {
-                        clearCart();
-                        setBillingSession(appt.appointmentID, appt.patientID);
-                        navigate("/checkout");
-                      }}
-                    >
-                      Bill Now
-                    </button>
-                  )}
+  {(appt.status === "Completed" || appt.status === "Ended") && (
+    <button
+      className="appt-btn bill"
+      onClick={() => {
+        clearCart();
+        setBillingSession(appt.appointmentID, appt.patientID);
+        navigate("/checkout");
+      }}
+    >
+      Bill Now
+    </button>
+  )}
 
-<button
-  className="appt-btn refer"
-  disabled={!appt.isReferred}
-  style={{
-    backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
-    color: appt.isReferred ? "white" : "#666",
-    marginLeft: "0.5rem",
-  }}
-  onClick={() => {
-    if (appt.isReferred) {
-      navigate(`/referral-booking`);
-    }
-  }}
->
-  Book Referral
-</button>
 
-                </div>
+
+  <button
+    className="appt-btn refer"
+    disabled={!appt.isReferred}
+    style={{
+      backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
+      color: appt.isReferred ? "white" : "#666",
+      marginLeft: "0.5rem",
+    }}
+    onClick={() => {
+      if (appt.isReferred) {
+        navigate(`/referral-booking`);
+      }
+    }}
+  >
+    Book Referral
+  </button>
+</div>
+
               </div>
             ))}
           </div>

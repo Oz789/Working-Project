@@ -3,6 +3,7 @@ import axios from "axios";
 import "./frames.css";
 import UsernavBar from "../../components/navBar";
 import UserFramesModal from "./userFramesModal";
+import UserContactsModal from "./contactsModal";
 
 const UserFrames = () => {
   const [frames, setFrames] = useState([]);
@@ -25,8 +26,8 @@ const UserFrames = () => {
     fetchAll();
   }, []);
 
-  const handleItemClick = (item) => {
-    setSelectedItem(item);
+  const handleItemClick = (item, type) => {
+    setSelectedItem({ ...item, type });
     setViewModal(true);
   };
 
@@ -42,11 +43,11 @@ const UserFrames = () => {
           {frames.map((frame) => (
             <div
               className="frame-card"
-              key={frame.id}
-              onClick={() => handleItemClick(frame)}
+              key={frame.frameID}
+              onClick={() => handleItemClick(frame, "frame")}
             >
               <img
-                src={frame.image || "/Images/brevik.webp"}
+                src={frame.img }
                 alt={frame.name}
                 className="frame-image"
               />
@@ -68,14 +69,13 @@ const UserFrames = () => {
           {contacts.map((contact) => (
             <div
               className="frame-card"
-              key={contact.id}
-              onClick={() => handleItemClick(contact)}
+              key={contact.contactID}
+              onClick={() => handleItemClick(contact, "contact")}
             >
               <img
-                src={contact.image || "/Images/contact-placeholder.webp"}
-                alt={contact.name}
-                className="frame-image"
-              />
+  src={contact.image}
+  alt={contact.name}
+/>
               <div className="frame-info">
                 <span className="brand">{contact.brand}</span>
                 <span className="model">{contact.name}</span>
@@ -85,15 +85,23 @@ const UserFrames = () => {
         </div>
       </div>
 
-      {/* Modal shared between both */}
+      {/* Modal rendering */}
       {viewModal && selectedItem && (
-        <UserFramesModal
-          data={selectedItem}
-          onClose={() => setViewModal(false)}
-        />
+        selectedItem.type === "frame" ? (
+          <UserFramesModal
+            data={selectedItem}
+            onClose={() => setViewModal(false)}
+          />
+        ) : (
+          <UserContactsModal
+            data={selectedItem}
+            onClose={() => setViewModal(false)}
+          />
+        )
       )}
     </>
   );
 };
 
 export default UserFrames;
+

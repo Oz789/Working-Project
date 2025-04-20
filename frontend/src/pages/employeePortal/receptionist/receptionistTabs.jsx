@@ -1,17 +1,32 @@
 import React from "react";
-import { Tabs, Tab, Box } from "@mui/material";
+import { Tabs, Tab, Box, Badge } from "@mui/material";
 
-const tabLabels = ["Profile", "Register", "Appointments","Inbox"]; // "Dashboard", "Inbox", "Services", "Frames", "Eye Contacts", "Staff", "Reports"
+const tabLabels = ["Profile", "Register", "Appointments", "Inbox", "Stock"];
 
-const EmpTabs = ({ activeTab, setActiveTab }) => {
+const EmpTabs = ({ activeTab, setActiveTab, lowStockAlert }) => {
   const handleChange = (e, newVal) => setActiveTab(newVal);
 
   return (
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
       <Tabs value={activeTab} onChange={handleChange}>
-        {tabLabels.map((label, idx) => (
-          <Tab key={idx} label={label} />
-        ))}
+        {tabLabels.map((label, idx) => {
+          const showBadge = label === "Stock" && lowStockAlert;
+
+          return (
+            <Tab
+              key={idx}
+              label={
+                showBadge ? (
+                  <Badge color="error" variant="dot">
+                    {label}
+                  </Badge>
+                ) : (
+                  label
+                )
+              }
+            />
+          );
+        })}
       </Tabs>
     </Box>
   );

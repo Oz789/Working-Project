@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import AdminHeader from "./adminHeader";
 import AdminTabs from "./adminTabs";
 import AdminTabContent from "./adminTabContent";
+import NavBar from "../../components/navBar";
 
 const AdminProfilePage = () => {
   const { employeeID } = useParams();
@@ -25,11 +26,14 @@ const AdminProfilePage = () => {
   };
 
   return (
+    <>
+    <NavBar/>
     <div>
       <AdminHeader name={user.name} role={user.role} avatar={user.avatar} />
       <AdminTabs activeTab={activeTab} setActiveTab={setActiveTab} />
       <AdminTabContent activeTab={activeTab} admin={admin} />
     </div>
+    </>
   );
 };
 

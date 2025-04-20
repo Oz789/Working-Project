@@ -3,10 +3,10 @@ const router = express.Router();
 const db = require('../db');
 
 router.post('/', async (req, res) => {
-  console.log("✅ Checkout route hit");
+  console.log("Checkout route hit");
 
   const { patientID, appointmentNumber, items, total } = req.body;
-  console.log("🧾 Payload received:", { patientID, appointmentNumber, items, total });
+  console.log("Payload received:", { patientID, appointmentNumber, items, total });
 
   const connection = await db.getConnection();
 
@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
       [patientID, appointmentNumber, total]
     );
     const saleID = saleResult.insertId;
-    console.log("🧾 Sale inserted with ID:", saleID);
+    console.log("Sale inserted with ID:", saleID);
 
     // Insert sale items and update stock
     for (const item of items) {
@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
          VALUES (?, ?, ?, ?, ?)`,
         [saleID, item.itemID, item.itemType, item.quantity, item.price]
       );
-      console.log("📦 Sale item inserted");
+      console.log("Sale item inserted");
 
       await connection.query(
         `UPDATE Inventory
@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
          WHERE itemID = ? AND itemType = ?`,
         [item.quantity, item.itemID, item.itemType]
       );
-      console.log("📉 Inventory updated");
+      console.log("Inventory updated");
     }
 
     await connection.query(
@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
        WHERE appointmentNumber = ?`,
       [appointmentNumber]
     );
-    console.log("✅ Appointment marked as completed");
+    console.log("Appointment marked as completed");
 
     await connection.commit();
     connection.release();
@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
   } catch (err) {
     await connection.rollback();
     connection.release();
-    console.error("❌ Checkout DB error:", err);
+    console.error("Checkout DB error:", err);
     res.status(500).json({ error: "Checkout failed. Please try again." });
   }
 });

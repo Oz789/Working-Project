@@ -48,6 +48,7 @@ router.get('/locations', async (req, res) => {
     const [locations] = await db.query(`
       SELECT locationID, name
       FROM location
+      WHERE locationID IN (1, 2)
     `);
     res.json(locations);
   } catch (err) {
@@ -55,6 +56,7 @@ router.get('/locations', async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 // Fetch sales records filtered by item
 router.get('/sales/item/:itemID/:itemType', async (req, res) => {

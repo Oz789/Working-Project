@@ -27,6 +27,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import NavBar from "../../../components/navBar";
 
 const InventoryReport = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -206,6 +207,7 @@ const InventoryReport = () => {
   );
 
   return (
+    <><NavBar/>
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
         Sales Report
@@ -430,6 +432,7 @@ const InventoryReport = () => {
         </Table>
       </TableContainer>
     </Box>
+    </>
   );
 };
 

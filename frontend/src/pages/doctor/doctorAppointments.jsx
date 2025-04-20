@@ -21,7 +21,7 @@ const DoctorAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const { doctorID } = useParams();
+  const doctorID = localStorage.getItem("doctorID");
   useEffect(() => {
     
 

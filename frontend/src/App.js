@@ -40,7 +40,10 @@ import ReceptionistCheckout from "./pages/checkout/receptionistCheckout";
 import ReferralBookingForm from './pages/referral/referralApptForm';
 import SchManager from "./components/employee/schManager";
 import NursePrepForm from "./pages/employeePortal/nurse/nursePrepForm";
-
+import AdminDoctorSchedule from './pages/admin/employee/scheduler';
+import StockMonitor from "./pages/admin/reports/stockMonitor";
+import PatientInbox from "./pages/patientPortal/patientInbox";
+import FullFormViewer from "./pages/patientPortal/patientFormsViewer";
 
 
 
@@ -48,7 +51,7 @@ import NursePrepForm from "./pages/employeePortal/nurse/nursePrepForm";
 
 function App() {
   return (
-    <CartProvider>  {/* Wrap your app in CartProvider */}
+    <CartProvider> 
       <Router>
         <Routes>
           <Route path="/home" element={<Home />} />
@@ -87,13 +90,13 @@ function App() {
           <Route path="/apptCheckout" element={<ReceptionistCheckout/>} />
           <Route path="/referral-booking" element={<ReferralBookingForm />} />
           <Route path="/appt2" element={<SchManager />} />
-          <Route path="/nurseForm/:patientID" element={<NursePrepForm />} />
+          <Route path="/nurseForm/:appointmentNumber" element={<NursePrepForm />} />
+          <Route path="/admin/doctor-schedule" element={<AdminDoctorSchedule />} />
+          <Route path="/stock-manager" element={<StockMonitor />} />
+          <Route path="/userInbox/:patientID" element={<PatientInbox />} />
+          <Route path="/allForms/:patientID" element={<FullFormViewer />} />
           
-
-
-
-
-
+          
 
         </Routes>
       </Router>

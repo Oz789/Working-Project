@@ -32,6 +32,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import "./patientReport.css";
+import NavBar from "../../../components/navBar";
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
@@ -359,6 +360,8 @@ const PatientDemographicsReport = () => {
   }
 
   return (
+<>
+    <NavBar/>
     <Box className="patient-report-container">
       <Typography variant="h4" gutterBottom fontFamily={"Serif"} fontWeight={"Bold"}>
         Patient Demographics Report
@@ -790,6 +793,7 @@ const PatientDemographicsReport = () => {
         </TableContainer>
       </Box>
     </Box>
+    </>
   );
 };
 

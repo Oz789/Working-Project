@@ -25,21 +25,21 @@ const DoctorTabContent = ({ activeTab, doctor }) => {
   switch (activeTab) {
   
     case 0:
-        return <EmployeeDetails/>
+        return (
+          <div className="w-full flex flex-row justify-center">
+            <DocActiveAppointments />
+          </div>
+        );
         
           case 1:
-            return (
-              <div className="w-full flex flex-row justify-center">
-                <DocActiveAppointments />
-              </div>
-            );
+            return <EmployeeDetails/>
+              
     case 2:
-      return <CheckedInAppointments/>;
+      return ;
 
     case 3:
-      return <ReceptionistAppointments/>;
-    case 4:
-   return <ClinicAppointments/>;
+      return 
+  
     default:
       return null;
   }

@@ -91,14 +91,13 @@ const AdminFrameModal = ({  onClose, onSubmit }) => {
             fullWidth
             sx={{ marginBottom: 2 }}
           />
-          <TextField
-            name="img"
-            label="Image Path (e.g. /Images/Brescia.webp)"
-            value={form.img}
-            onChange={handleChange}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          />
+         <TextField
+  name="img"
+  label="Image"
+  value={form.img}
+  onChange={handleChange}
+/>
+
 
           <Grid container spacing={2}>
             <Grid item xs={6}>

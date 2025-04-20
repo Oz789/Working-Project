@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../doctor/doctorAppointments.css';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import '../employeePortal/receptionist/receptionistCards.css';
 
 const groupByDate = (appointments) => {
   return appointments.reduce((acc, appt) => {
@@ -18,7 +19,6 @@ const groupByDate = (appointments) => {
 
 const DocActiveAppointments = () => {
   const [appointments, setAppointments] = useState([]);
-  const [activeAppointments, setActiveAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const DocActiveAppointments = () => {
       let url = "";
 
       if (role === "doctor" && doctorID) {
-        url = `http://localhost:5001/api/appointments/clinicAppointments/any?doctorID=${doctorID}`;
+        url = `http://localhost:5001/api/appointments/activeByDoctor/${doctorID}`;
       } else if (locationID) {
         url = `http://localhost:5001/api/appointments/clinicAppointments/${locationID}`;
       } else {
@@ -52,21 +52,22 @@ const DocActiveAppointments = () => {
 
           return {
             appointmentID: appt.appointmentNumber,
-            doctorID: appt.doctorID,
             patientID: appt.patientID,
+            doctorID: appt.doctorID,
             patientName: `${appt.patientFirstName} ${appt.patientLastName}`.trim(),
             doctorName: `${appt.doctorFirstName} ${appt.doctorLastName}`,
             appointmentDate: rawDate,
             appointmentTime: cleanTime,
-            status: appt.status
+            status: appt.status,
+            isReferred: appt.isReferred === 1 || appt.isReferred === "1"
           };
         });
 
-        const checkedInOnly = formatted.filter(appt => appt.status === "Checked In");
-        const inProgressOnly = formatted.filter(appt => appt.status === "In Progress");
+        const visible = formatted.filter(appt =>
+          appt.status === "Checked In" || appt.status === "In Progress"
+        );
 
-        setAppointments(checkedInOnly);
-        setActiveAppointments(inProgressOnly);
+        setAppointments(visible);
       } catch (err) {
         console.error("Failed to fetch appointments:", err);
       }
@@ -81,76 +82,11 @@ const DocActiveAppointments = () => {
   );
 
   const grouped = groupByDate(filtered);
-  const groupedActive = groupByDate(activeAppointments);
-  
-  
-  const handleEndAppointment = async (appt) => {
-    console.log("Full appointment object:", appt);
-  
-    // Safely extract the appointment number (adjust if your data uses a different field)
-    const id = appt.appointmentNumber || appt.appointmentID;
-  
-    if (!id) {
-      alert("No valid appointment ID found.");
-      return;
-    }
-  
-    console.log("Resolved appointment ID:", id);
-  
-    try {
-      const res = await fetch(`http://localhost:5001/api/appointments/end/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "Completed" })
-      });
-  
-      if (res.ok) {
-        alert("Appointment ended successfully.");
-        // Optionally remove the ended appointment from UI
-        setActiveAppointments(prev => prev.filter(a => a.appointmentNumber !== id));
-      } else {
-        alert("Failed to end appointment.");
-      }
-    } catch (err) {
-      console.error("End appointment error:", err);
-      alert("Server error ending appointment.");
-    }
-  };
-  
-  
-  
-  
-  
-  
-  
-
-  const handleBeginExam = async (appt) => {
-    try {
-      const res = await fetch(`http://localhost:5001/api/appointments/update-status/${appt.appointmentID}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: "In Progress" }),
-      });
-
-      if (res.ok) {
-        setAppointments(prev => prev.filter(a => a.appointmentID !== appt.appointmentID));
-        setActiveAppointments(prev => [...prev, { ...appt, status: "In Progress" }]);
-        navigate(`/nurseExamPage/${appt.patientID}`);
-      } else {
-        alert("Failed to begin exam");
-      }
-    } catch (err) {
-      console.error("Begin exam error:", err);
-      alert("Something went wrong");
-    }
-  };
 
   return (
     <div className="appointment-wrapper">
-      {/* LEFT PANEL: CHECKED IN */}
       <div className="appointment-left">
-        <h2 className="appointments-title">Checked-In Appointments</h2>
-
+        <h2 className="appointments-title">Doctor Appointments</h2>
         <input
           type="text"
           placeholder="Search by patient or doctor..."
@@ -162,99 +98,131 @@ const DocActiveAppointments = () => {
         {Object.entries(grouped).map(([date, appts]) => (
           <div key={date} className="appointments-section">
             <h3 className="appointments-date">{date}</h3>
-            {appts.map((appt) => {
-              const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-              const timeStr = dt.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              });
-              const monthShort = dt.toLocaleString('default', { month: 'short' });
-              const day = dt.getDate();
-
-              return (
-                <div className="appointment-card" key={appt.appointmentID}>
-                  <div className="appointment-date-box">
-                    <div className="appointment-month">{monthShort}</div>
-                    <div className="appointment-day">{day}</div>
+            {appts.map((appt) => (
+              <div
+                className="appt-card"
+                key={appt.appointmentID}
+                onClick={() => {
+                  if (appt.status === "In Progress") {
+                    navigate(`/doctorexamform/${appt.appointmentID}/${appt.patientID}`);
+                  }
+                }}
+                style={{
+                  cursor: appt.status === "In Progress" ? "pointer" : "default"
+                }}
+              >
+                <div className="appt-header">
+                  <img
+                    className="appt-avatar"
+                    src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                    alt="Avatar"
+                  />
+                  <div className="appt-details">
+                    <h3 className="appt-name">{appt.patientName}</h3>
+                    <div className="appt-meta"><span className="appt-label">Status:</span> {appt.status}</div>
+                    <div className="appt-meta"><span className="appt-label">Doctor:</span> {appt.doctorName}</div>
+                    <div className="appt-meta"><span className="appt-label">Time:</span> {appt.appointmentTime}</div>
                   </div>
+                </div>
 
-                  <div className="appointment-info">
-                    <div className="appointment-name">
-                      {appt.patientName} - <span className="appointment-status">{appt.status}</span>
-                    </div>
-                    <div className="appointment-time">{timeStr}</div>
-                    <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
-                  </div>
+                <div className="appt-buttons">
+                  {appt.status === "Checked In" && (
+                    <button
+                      className="appointment-button"
+                      onClick={(e) => {
+                        e.stopPropagation(); // prevent card click
+                        navigate(`/nurseExamPage/${appt.patientID}`);
+                      }}
+                    >
+                      Begin Exam
+                    </button>
+                  )}
+                  <button
+  className="appt-btn"
+  style={{
+    backgroundColor: "#0288d1",
+    color: "white",
+    marginLeft: "0.5rem"
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+    navigate(`/nurseForm/${appt.appointmentID}`);
+  }}
+>
+  Nurse Form
+</button>
+
 
                   <button
-                    className="appointment-button"
-                    onClick={() => handleBeginExam(appt)}
+                    className="appt-btn refer"
+                    disabled={!appt.isReferred}
+                    style={{
+                      backgroundColor: appt.isReferred ? "#00796B" : "#ccc",
+                      color: appt.isReferred ? "white" : "#666",
+                      marginLeft: "0.5rem"
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation(); 
+                      if (appt.isReferred) {
+                        navigate(`/referral-booking`);
+                      }
+                    }}
                   >
-                    Begin Exam
+                    Book Referral
                   </button>
+                  {appt.status === "In Progress" && (
+  <button
+    className="appt-btn end"
+    onClick={async (e) => {
+      e.stopPropagation();
+      try {
+        const res = await fetch(`http://localhost:5001/api/appointments/end/${appt.appointmentID}`, {
+          method: 'PATCH'
+        });
+
+        if (res.ok) {
+          alert(" Appointment marked as ended.");
+          setAppointments(prev =>
+            prev.map(a =>
+              a.appointmentID === appt.appointmentID
+                ? { ...a, status: "Ended" }
+                : a
+            )
+          );
+        } else {
+          alert("⚠️ Failed to end appointment.");
+        }
+      } catch (err) {
+        console.error("End error:", err);
+        alert("Server error while ending appointment.");
+      }
+    }}
+    style={{
+      backgroundColor: "#b71c1c",
+      color: "white",
+      marginLeft: "0.5rem"
+    }}
+  >
+    End Appointment
+  </button>
+)}
+
+
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         ))}
       </div>
 
-      {/* RIGHT PANEL: IN PROGRESS */}
+      {/* Right Panel Removed */}
       <div className="appointment-right">
-        <h2 className="appointments-title">In Progress Appointments</h2>
-
-        {Object.entries(groupedActive).length === 0 ? (
-          <div className="mock-placeholder">No active appointments</div>
-        ) : (
-          Object.entries(groupedActive).map(([date, appts]) => (
-            <div key={date} className="appointments-section">
-              <h3 className="appointments-date">{date}</h3>
-              {appts.map((appt) => {
-                const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-                const timeStr = dt.toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                });
-                const monthShort = dt.toLocaleString('default', { month: 'short' });
-                const day = dt.getDate();
-
-                return (
-                  <div
-                    className="appointment-card"
-                    key={appt.appointmentID}
-                    onClick={() => navigate(`/doctorexamform/${appt.appointmentID}/${appt.patientID}`)}
-
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="appointment-date-box">
-                      <div className="appointment-month">{monthShort}</div>
-                      <div className="appointment-day">{day}</div>
-                    </div>
-
-                    <div className="appointment-info">
-                      <div className="appointment-name">
-                        {appt.patientName} - <span className="appointment-status">{appt.status}</span>
-                      </div>
-                      <div className="appointment-time">{timeStr}</div>
-                      <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
-                    </div>
-                    <button
-  onClick={(e) => {
-    e.stopPropagation(); 
-    handleEndAppointment(appt);
-  }}
->
-  End Appointment
-</button>
-                  </div>
-                );
-              })}
-            </div>
-          ))
-        )}
+        <div className="mock-placeholder">Click an in-progress appointment to continue exam</div>
       </div>
     </div>
   );
 };
 
 export default DocActiveAppointments;
+
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Typography,
   Grid,
@@ -6,14 +6,17 @@ import {
   IconButton
 } from '@mui/material';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import useCartStore from '../../components/cartStorage'; // Zustand store
+import useCartStore from '../../components/cartStorage';
+import { useNavigate } from 'react-router-dom';
 import '../admin/frames/adminFrames.css';
 import './userFramesModal.css';
+import axios from 'axios';
 
 const UserFramesModal = ({ data, onClose }) => {
-  const {
-    addToCart
-  } = useCartStore();
+  const { addToCart } = useCartStore();
+  const modalRef = useRef(null);
+  const navigate = useNavigate();
+  const [stockQuantity, setStockQuantity] = useState(null);
 
   const {
     name,
@@ -27,77 +30,117 @@ const UserFramesModal = ({ data, onClose }) => {
     templeLength
   } = data;
 
+  
+  useEffect(() => {
+    const fetchStock = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5001/api/checkout/stock/frames/${data.frameID}`);
+        setStockQuantity(res.data.stockCount);
+
+      } catch (err) {
+        console.error("Stock fetch failed:", err);
+        setStockQuantity(-1); // Unknown/fallback
+      }
+    };
+    fetchStock();
+  }, [data.frameID]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (modalRef.current && !modalRef.current.contains(e.target)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [onClose]);
+
+
   const handlePurchase = () => {
+    const userID = localStorage.getItem("userID");
+    if (!userID) {
+      alert("You must be logged in to make a purchase.");
+      return navigate("/log-in");
+    }
+  
+    const existingItem = useCartStore.getState().cart.find(
+      (item) => item.itemID === data.frameID && item.type === "frame"
+    );
+    const currentQuantity = existingItem ? existingItem.quantity : 0;
+    const newQuantity = currentQuantity + 1;
+  
+    if (stockQuantity === 0) {
+      alert("This item is out of stock.");
+      return;
+    }
+  
+    if (newQuantity > stockQuantity) {
+      alert(`Only ${stockQuantity} item(s) in stock. You already have ${currentQuantity} in your cart.`);
+      return;
+    }
+  
     addToCart({
-      itemID: data.frameID, // make sure your backend uses frameID
+      itemID: data.frameID,
       name,
       price: parseFloat(price),
       quantity: 1,
       type: 'frame'
     });
-
+  
     onClose();
   };
+  
 
   return (
     <div className="modal">
-      <div className="overlay"></div>
-      <div className="modal-content">
-        <Grid container spacing={2} padding={2}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="h4" fontFamily="Bell MT" fontStyle="italic">{name}</Typography>
-            <Typography variant="h6" sx={{ color: "#2e7d32", mt: 1 }}>${parseFloat(price).toFixed(2)}</Typography>
+      <div className="overlay" onClick={onClose}></div>
+      <div className="modal-content-cartier">
+        <div className="modal-inner">
+          <div className="frame-image">
+            <img src={img || "/Images/default-frame.png"} alt={name} />
+          </div>
 
-            <Grid container spacing={2} paddingTop={4}>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "#388e3c" }}
-                  onClick={handlePurchase}
-                >
-                  Purchase
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
+          <div className="frame-info">
+            <h1>{name}</h1>
+            <p className="model">Model: {model}</p>
+            <p className="stock">
+              {stockQuantity > 0 ? (
+                <b>In stock: {stockQuantity}</b>
+              ) : stockQuantity === 0 ? (
+                <span style={{ color: 'red' }}><b>Out of stock</b></span>
+              ) : (
+                <span style={{ color: 'gray' }}>Loading stock...</span>
+              )}
+            </p>
 
-          <Grid item xs={12} md={6}>
-            <img
-              src={img || "/Images/default-frame.png"}
-              alt="Eyeglass"
-              style={{
-                width: "100%",
-                borderRadius: "10px",
-                boxShadow: "0 8px 18px rgba(0, 0, 0, 0.1)",
-              }}
-            />
-          </Grid>
+            <div className="dimensions">
+              <p><b>Lens Width:</b> {lensWidth}</p>
+              <p><b>Bridge Width:</b> {bridgeWidth}</p>
+              <p><b>Temple Length:</b> {templeLength}</p>
+            </div>
 
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="h6" fontFamily="Bell MT" fontStyle="italic">Dimensions</Typography>
-                <Typography><b>Lens Width:</b> {lensWidth}</Typography>
-                <Typography><b>Bridge Width:</b> {bridgeWidth}</Typography>
-                <Typography><b>Temple Length:</b> {templeLength}</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Typography variant="h6" fontFamily="Bell MT" fontStyle="italic">Specifications</Typography>
-                <Typography><b>Brand:</b> {brand}</Typography>
-                <Typography><b>Model:</b> {model}</Typography>
-                <Typography><b>Material:</b> {material}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+            <div className="specs">
+              <p><b>Brand:</b> {brand}</p>
+              <p><b>Material:</b> {material}</p>
+            </div>
 
-        <IconButton className="shifter" onClick={onClose}>
-          <CancelPresentationIcon sx={{ fontSize: 50 }} />
-        </IconButton>
+            <p className="price">${parseFloat(price).toFixed(2)}</p>
+            <button
+              className="purchase-button"
+              onClick={handlePurchase}
+              disabled={stockQuantity === 0}
+            >
+              PURCHASE
+            </button>
+          </div>
+        </div>
+
+        <button className="close-btn" onClick={onClose}>×</button>
       </div>
     </div>
   );
 };
 
 export default UserFramesModal;
+
 

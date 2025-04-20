@@ -1,51 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Typography, Grid, Button, MenuItem, Select, TextField, Card, CardContent, Divider
-} from '@mui/material';
 import axios from 'axios';
 import useCartStore from '../../components/cartStorage';
 import NavBar from '../../components/navBar';
+import './checkout.css';
 
 const UserCheckout = () => {
   const [availableItems, setAvailableItems] = useState([]);
-  const [itemType, setItemType] = useState("frame");
-  const [selectedItemID, setSelectedItemID] = useState("");
+  const [showPayment, setShowPayment] = useState(false);
+  const [cardDetails, setCardDetails] = useState({
+    name: '',
+    number: '',
+    expiry: '',
+    cvv: ''
+  });
+  const [errors, setErrors] = useState({});
   const patientID = localStorage.getItem("userID");
 
-  const {
-    cart,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart
-  } = useCartStore();
+  const { cart, addToCart, removeFromCart, updateQuantity, clearCart } = useCartStore();
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
         const [frames, contacts] = await Promise.all([
-          axios.get('http://localhost:5001/api/checkout/frames'),
-          axios.get('http://localhost:5001/api/checkout/contacts')
+          axios.get('http://localhost:5001/api/checkout/items/frames'),
+          axios.get('http://localhost:5001/api/checkout/items/contacts')
         ]);
 
-        const combinedItems = [
+        const combined = [
           ...frames.data.map(item => ({ ...item, type: 'frame' })),
           ...contacts.data.map(item => ({ ...item, type: 'contact' }))
         ];
-
-        setAvailableItems(combinedItems);
+        setAvailableItems(combined);
       } catch (err) {
-        console.error("Error fetching items:", err);
+        console.error("Item fetch error:", err);
       }
     };
 
     fetchItems();
   }, []);
 
-  const handleAddItem = () => {
-    const item = availableItems.find(i => i.itemID === selectedItemID);
-    if (!item) return;
-
+  const handlePurchase = (item) => {
     const exists = cart.find(i => i.itemID === item.itemID && i.type === item.type);
     if (exists) {
       updateQuantity(item.itemID, item.type, exists.quantity + 1);
@@ -56,104 +50,142 @@ const UserCheckout = () => {
 
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
 
-  const handleCheckout = async () => {
+  const validateCard = () => {
+    const errs = {};
+    if (!cardDetails.name.trim()) errs.name = "Name required";
+    if (!/^\d{4} \d{4} \d{4} \d{4}$/.test(cardDetails.number)) errs.number = "Card number must be 16 digits";
+    if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) errs.expiry = "Use MM/YY format";
+    if (!/^\d{3,4}$/.test(cardDetails.cvv)) errs.cvv = "CVV must be 3 or 4 digits";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const handleFinalCheckout = async () => {
+    if (!validateCard()) return;
+
     try {
-        const payload = {
-            patientID,
-            items: cart.map(item => ({
-              itemID: item.itemID,
-              itemType: item.type,
-              quantity: item.quantity,
-              price: item.price,
-            })),
-            total: totalPrice,
-          };
+      const payload = {
+        patientID,
+        items: cart.map(item => ({
+          itemID: item.itemID,
+          itemType: item.type,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        total: totalPrice
+      };
 
-      await axios.post("http://localhost:5001/api/checkout/user", payload);
-
-      alert("Purchase complete!");
+      await axios.post('http://localhost:5001/api/finalize-checkout', payload);
+      alert("Purchase successful!");
       clearCart();
+      localStorage.removeItem("cart-storage");
+      setShowPayment(false);
     } catch (err) {
       console.error("Checkout error:", err);
       alert("Checkout failed.");
     }
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCardDetails(prev => ({ ...prev, [name]: value }));
+  };
+
   return (
-
     <>
-    <NavBar/>
-    <Card sx={{ p: 3, mt: 4 }}>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>User Checkout</Typography>
+      <NavBar />
+      <div className="checkout-wrapper">
+     
 
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={3}>
-            <Select value={itemType} onChange={e => setItemType(e.target.value)} fullWidth>
-              <MenuItem value="frame">Frame</MenuItem>
-              <MenuItem value="contact">Contact</MenuItem>
-            </Select>
-          </Grid>
-          <Grid item xs={6}>
-            <Select
-              fullWidth
-              value={selectedItemID}
-              onChange={e => setSelectedItemID(e.target.value)}
-            >
-              {availableItems
-                .filter(i => i.type === itemType)
-                .map(i => (
-                  <MenuItem key={i.itemID} value={i.itemID}>
-                    {i.name} - ${i.price}
-                  </MenuItem>
-                ))}
-            </Select>
-          </Grid>
-          <Grid item xs={3}>
-            <Button onClick={handleAddItem} variant="contained">Add to Cart</Button>
-          </Grid>
-        </Grid>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography variant="h6" gutterBottom>Cart</Typography>
-        {cart.map((item, idx) => (
-          <Grid container spacing={2} key={idx} alignItems="center">
-            <Grid item xs={4}>{item.name}</Grid>
-            <Grid item xs={2}>${item.price}</Grid>
-            <Grid item xs={3}>
-              <TextField
+        <div className="cart-section">
+          <h3>Your Cart</h3>
+          {cart.map((item, idx) => (
+            <div key={idx} className="cart-row">
+              <span>{item.name}</span>
+              <input
                 type="number"
-                size="small"
+                min="1"
                 value={item.quantity}
-                onChange={e => updateQuantity(item.itemID, item.type, parseInt(e.target.value))}
+                onChange={(e) => updateQuantity(item.itemID, item.type, parseInt(e.target.value))}
               />
-            </Grid>
-            <Grid item xs={3}>
-              <Button onClick={() => removeFromCart(item.itemID, item.type)} color="error">
-                Remove
-              </Button>
-            </Grid>
-          </Grid>
-        ))}
+              <span>${item.price}</span>
+              <button onClick={() => removeFromCart(item.itemID, item.type)}>Remove</button>
+            </div>
+          ))}
 
-        <Divider sx={{ my: 2 }} />
+          <div className="cart-total">Total: ${totalPrice}</div>
 
-        <Typography variant="h6">Total: ${totalPrice}</Typography>
+          {!showPayment ? (
+            <button className="checkout-btn" onClick={() => setShowPayment(true)}>Checkout</button>
+          ) : (
+            <div className="payment-form">
+              <h4>Enter Payment Info</h4>
 
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleCheckout}
-          sx={{ mt: 2 }}
-        >
-          Confirm Purchase
-        </Button>
-      </CardContent>
-    </Card>
+              <input
+                type="text"
+                name="name"
+                placeholder="Cardholder Name"
+                maxLength={40}
+                value={cardDetails.name}
+                onChange={handleInputChange}
+              />
+              {errors.name && <small style={{ color: "red" }}>{errors.name}</small>}
+
+              <input
+                type="text"
+                name="number"
+                placeholder="1234 5678 9012 3456"
+                maxLength={19}
+                value={cardDetails.number}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/[^\d]/g, '');
+                  const formatted = raw.replace(/(.{4})/g, '$1 ').trim();
+                  setCardDetails(prev => ({ ...prev, number: formatted }));
+                }}
+              />
+              {errors.number && <small style={{ color: "red" }}>{errors.number}</small>}
+
+              <input
+                type="text"
+                name="expiry"
+                placeholder="MM/YY"
+                maxLength={5}
+                value={cardDetails.expiry}
+                onChange={(e) => {
+                  let input = e.target.value.replace(/[^\d]/g, '');
+                  if (input.length > 2) {
+                    input = input.slice(0, 2) + '/' + input.slice(2);
+                  }
+                  setCardDetails(prev => ({ ...prev, expiry: input }));
+                }}
+              />
+              {errors.expiry && <small style={{ color: "red" }}>{errors.expiry}</small>}
+
+              <input
+                type="text"
+                name="cvv"
+                placeholder="CVV"
+                maxLength={4}
+                value={cardDetails.cvv}
+                onChange={(e) => {
+                  const raw = e.target.value.replace(/\D/g, '');
+                  setCardDetails(prev => ({ ...prev, cvv: raw }));
+                }}
+              />
+              {errors.cvv && <small style={{ color: "red" }}>{errors.cvv}</small>}
+
+              <button className="confirm-btn" onClick={handleFinalCheckout}>
+                Confirm Purchase
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
     </>
   );
 };
 
 export default UserCheckout;
+
+
+

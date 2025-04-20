@@ -46,11 +46,13 @@ const UserFrames = () => {
               key={frame.id}
               onClick={() => handleItemClick(frame)}
             >
-              <img
-                src={frame.image || "/Images/brevik.webp"}
-                alt={frame.name}
-                className="frame-image"
-              />
+              {frame.img && (
+                <img
+                  src={frame.img}
+                  alt={frame.name}
+                  className="frame-image"
+                />
+              )}
               <div className="frame-info">
                 <span className="brand">{frame.brand}</span>
                 <span className="model">{frame.name}</span>
@@ -59,42 +61,40 @@ const UserFrames = () => {
           ))}
         </div>
 
-        {/* Divider */}
-       
-        <div className="contact-section">
-<h2 className="frames-title">Eye Contacts</h2>
-<p className="frames-count">Showing {contacts.length} Products</p>
-
         {/* CONTACTS */}
-        <div className="frames-grid">
-          {contacts.map((contact) => (
-            <div
-              className="frame-card"
-              key={contact.id}
-              onClick={() => handleItemClick(contact)}
-            >
-              <img
-                src={contact.image || "/Images/contact-placeholder.webp"}
-                alt={contact.name}
-                className="frame-image"
-              />
-              <div className="frame-info">
-                <span className="brand">{contact.brand}</span>
-                <span className="model">{contact.name}</span>
+        <div className="contact-section">
+          <h2 className="frames-title">Eye Contacts</h2>
+          <p className="frames-count">Showing {contacts.length} Products</p>
+
+          <div className="frames-grid">
+            {contacts.map((contact) => (
+              <div
+                className="frame-card"
+                key={contact.id}
+                onClick={() => handleItemClick(contact)}
+              >
+                <img
+                  src={contact.img || "/Images/default-contact.png"}
+                  alt={contact.name}
+                  className="frame-image"
+                />
+                <div className="frame-info">
+                  <span className="brand">{contact.brand}</span>
+                  <span className="model">{contact.name}</span>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {viewModal && selectedItem && (
-  selectedItem.lensWidth ? (
-    <UserFramesModal data={selectedItem} onClose={() => setViewModal(false)} />
-  ) : (
-    <UserContactsModal data={selectedItem} onClose={() => setViewModal(false)} />
-  )
-)}
+        selectedItem.lensWidth ? (
+          <UserFramesModal data={selectedItem} onClose={() => setViewModal(false)} />
+        ) : (
+          <UserContactsModal data={selectedItem} onClose={() => setViewModal(false)} />
+        )
+      )}
     </>
   );
 };

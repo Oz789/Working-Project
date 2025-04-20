@@ -10,7 +10,8 @@ import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 import './adminContactsModal.css'; 
 import axios from 'axios';
 
-const AdminEditContacts = ({ data, onClose, onDelete }) => {
+const AdminEditContacts = ({ data, onClose, onEdit, onDelete }) => {
+ 
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState({ ...data });
 
@@ -22,12 +23,13 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
   const handleEditSubmit = async () => {
     try {
       await axios.patch(`http://localhost:5001/api/contacts/${data.contactID}`, form);
-      setIsEditing(false);
-      alert("Contact updated!");
+      if (typeof onEdit === "function") await onEdit(); 
+      if (typeof onClose === "function") onClose();    
     } catch (error) {
       console.error("Update failed:", error);
     }
   };
+  
 
   return (
     <div className="modal">
@@ -68,7 +70,24 @@ const AdminEditContacts = ({ data, onClose, onDelete }) => {
                 </Button>
               </Grid>
               <Grid item>
-                <Button variant="outlined" color="error" onClick={() => onDelete(data.contactID)}>Delete</Button>
+              <Button
+  variant="outlined"
+  color="error"
+  onClick={async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this contact?");
+    if (confirmDelete) {
+      try {
+        await onDelete(data.contactID);    
+        if (typeof onClose === "function") onClose(); 
+      } catch (err) {
+        console.error("Delete failed:", err);
+      }
+    }
+  }}
+>
+  Delete
+</Button>
+
               </Grid>
             </Grid>
           </Grid>

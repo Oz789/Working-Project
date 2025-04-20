@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './nursePrepform.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
-
-
-const NursePrepForm = ({ appointmentNumber, nurseID }) => {
+const NursePrepForm = ({ nurseID }) => {
   const [editing, setEditing] = useState(true);
-
   const employeeID = localStorage.getItem("userID");
-  const { patientID } = useParams();
+  const { appointmentNumber } = useParams();
   const navigate = useNavigate();
-  
+
+  const [patientID, setPatientID] = useState(null);
   const [form, setForm] = useState({
     suddenVisionChanges: false,
     difficultyFocusing: false,
@@ -40,7 +38,7 @@ const NursePrepForm = ({ appointmentNumber, nurseID }) => {
     };
 
     try {
-      const res = await fetch(`http://localhost:5001/api/nurseprep/${patientID}`, {
+      const res = await fetch(`http://localhost:5001/api/nurseprep/appointment/${appointmentNumber}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -59,46 +57,70 @@ const NursePrepForm = ({ appointmentNumber, nurseID }) => {
   };
 
   useEffect(() => {
-    const fetchForm = async () => {
+    const fetchPatientID = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/nurseprep/${patientID}`)
+        const res = await fetch(`http://localhost:5001/api/get-patient-from-appointment/${appointmentNumber}`);
         if (res.ok) {
           const data = await res.json();
-         
+          setPatientID(data.patientID);
+        } else {
+          console.warn("Could not find patient for appointment:", appointmentNumber);
+        }
+      } catch (err) {
+        console.error("Error fetching patient ID from appointment:", err);
+      }
+    };
+
+    const fetchForm = async () => {
+      try {
+        const res = await fetch(`http://localhost:5001/api/nurseprep/appointment/${appointmentNumber}`);
+        if (res.ok) {
+          const data = await res.json();
           setForm({
             ...data,
             needsGlasses: data.needsGlasses ? 'yes' : 'no',
             contactLensWearer: data.contactLensWearer ? 'yes' : 'no',
             lightSensitivity: data.lightSensitivity ? 'yes' : 'no'
           });
-          setEditing(false); 
+          setEditing(false);
+        } else if (res.status === 404) {
+          console.log("No existing nurse form. Starting fresh.");
+          setEditing(true);
+        } else {
+          console.warn("Unexpected fetch error");
         }
       } catch (err) {
-        console.error('Failed to load nurse form:', err);
+        console.error("Failed to fetch nurse form:", err);
       }
     };
 
+    fetchPatientID();
     fetchForm();
   }, [appointmentNumber]);
 
-
   return (
     <div className="nurse-prep-container">
-     
-<button className="back-button" onClick={() => navigate(`/nurseProfile/${employeeID}`)}>
-  ← Back to Appointments
-</button>
-<button
-  className="next-button"
-  onClick={async () => {
-    await handleSave(); 
-    navigate(`/nurseExampage/${patientID}`);
+     <button
+  className="back-button"
+  onClick={() => {
+    const role = localStorage.getItem("userRole");
+    const userID = localStorage.getItem("userID");
+    const doctorID = localStorage.getItem("doctorID");
+
+    if (role === "nurse") {
+      navigate(`/nurseProfile/${userID}`);
+    } else if (role === "doctor") {
+      navigate(`/doctorProfile/${doctorID}`);
+    } else {
+      navigate("/"); // fallback
+    }
   }}
 >
-  Next →
+  ← Back to Appointments
 </button>
 
 
+     
       <h2>Nurse Prep Form</h2>
 
       <label>New or existing patient</label>
@@ -151,4 +173,6 @@ const NursePrepForm = ({ appointmentNumber, nurseID }) => {
 };
 
 export default NursePrepForm;
+
+
 

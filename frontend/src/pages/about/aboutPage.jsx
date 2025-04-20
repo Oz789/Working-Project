@@ -17,32 +17,32 @@ const AboutP = () => {
           <div className="about-left">
             <div className="section-row">
               <div className="location-block">
-                <h2>Adult Ophthalmology</h2>
-                <p>6400 Fannin Street<br />18th Floor<br />Houston, Texas 77030</p>
-                <p>Office: (713) 486-9400<br />Fax: (713) 486-9592</p>
+                <h2>Eye Clinic 1</h2>       
+                <p>101 Vision Blvd<br />18th Floor<br />Houston, Texas 77002</p>
+                <p>Office: (713) 555-0101<br /></p>
               </div>
 
               <div className="location-block">
-                <h2>Pediatric Ophthalmology</h2>
-                <p>6400 Fannin Street, Suite 1980<br />19th Floor<br />Houston, Texas 77030</p>
-                <p>Office: (713) 486-9400<br />Fax: (713) 486-9593</p>
+                <h2>Eye Clinic 2</h2>
+                <p>880 Clearview Dr<br />19th Floor<br />Houston, Texas 77077</p>
+                <p>Office: (713) 555-0202<br /></p>
               </div>
             </div>
 
             <div className="bottom-row">
               <div className="hours-block">
                 <h2>Clinic Hours</h2>
-                <p>8 a.m.–5 p.m., Monday–Friday</p>
+                <p>8 a.m.–5 p.m., Monday–Sunday</p>
                 <p>Physician on call 24 hours a day, 7 days a week</p>
               </div>
 
               <div className="specialists-block">
                 <h2>Meet Our Specialists</h2>
                 <ul>
-                  <li><strong>Dr. Oz</strong> - Specialist</li>
-                  <li><strong>Dr. Mason</strong> - Optometrist</li>
-                  <li><strong>Dr. David</strong> - Retinal Surgeon</li>
-                  <li><strong>Dr. Matthew</strong> - Ophthalmologist</li>
+                  <li><strong>Dr. Leila Haddad</strong></li>
+                  <li><strong>Dr. Eli Samar</strong></li>
+                  <li><strong>Dr. Andres Allanueva</strong></li>
+                  <li><strong>Dr. Reena Ramil</strong></li>
                 </ul>
               </div>
             </div>

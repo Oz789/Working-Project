@@ -6,7 +6,6 @@ router.post('/', async (req, res) => {
   const { patientID, appointmentNumber, items, total } = req.body;
 
   const connection = await db.getConnection();
-
   try {
     await connection.beginTransaction();
 
@@ -25,12 +24,20 @@ router.post('/', async (req, res) => {
         [saleID, item.itemID, item.itemType, item.quantity, item.price]
       );
 
-      if (item.itemType !== 'service') {
+      // 👇 Handle stock count in either 'frames' or 'eyecontacts'
+      if (item.itemType === 'frame') {
         await connection.query(
-          `UPDATE Inventory
-           SET stockQuantity = stockQuantity - ?
-           WHERE itemID = ? AND itemType = ?`,
-          [item.quantity, item.itemID, item.itemType]
+          `UPDATE frames
+           SET stockCount = stockCount - ?
+           WHERE frameID = ?`,
+          [item.quantity, item.itemID]
+        );
+      } else if (item.itemType === 'contact') {
+        await connection.query(
+          `UPDATE eyecontacts
+           SET stockCount = stockCount - ?
+           WHERE contactID = ?`,
+          [item.quantity, item.itemID]
         );
       }
     }
@@ -49,7 +56,7 @@ router.post('/', async (req, res) => {
   } catch (err) {
     await connection.rollback();
     connection.release();
-    console.error("❌ Finalize checkout error:", err);
+    console.error("Finalize checkout error:", err);
     res.status(500).json({ error: "Could not finalize checkout." });
   }
 });
