@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, Tab, Box } from "@mui/material";
 
-const tabLabels = ["Profile", "Upcomming Appointments","Active Appointments", "Inbox"]; // "Dashboard", "Inbox", "Services", "Frames", "Eye Contacts", "Staff", "Reports"
+const tabLabels = ["Appointments", "Profile", "Inbox"]; // "Dashboard", "Inbox", "Services", "Frames", "Eye Contacts", "Staff", "Reports"
 
 const EmpTabs = ({ activeTab, setActiveTab }) => {
   const handleChange = (e, newVal) => setActiveTab(newVal);

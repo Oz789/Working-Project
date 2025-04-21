@@ -27,13 +27,13 @@ const EmpTabContent = ({ activeTab }) => {
   switch (activeTab) {
   
     case 0:
-      return <EmployeeDetails/>
-      case 1:
-        return <ReceptionistAppointments/>
-    case 2:
       return <CheckedInAppointments/>
+      case 1:
+        return <EmployeeDetails/>
+    case 2:
+      return ;
     case 3:
-      return <TestManager/>
+      return ;
       case 4:
       return <MsgManager
       bool={toggleMessager}

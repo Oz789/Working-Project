@@ -7,7 +7,6 @@ const ReferralBookingForm = () => {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    email: '',
     referralLocation: '',
     appointmentDate: '',
     appointmentTime: '',
@@ -54,7 +53,7 @@ const ReferralBookingForm = () => {
     <div style={{ maxWidth: "500px", margin: "2rem auto", padding: "1rem", border: "1px solid #ccc", borderRadius: "8px" }}>
       <h2>New Referral Appointment</h2>
       <form onSubmit={handleSubmit}>
-        {['firstName', 'lastName', 'phoneNumber', 'email', 'referralLocation'].map((field) => (
+        {['firstName', 'lastName', 'phoneNumber',  'referralLocation'].map((field) => (
           <div key={field} style={{ marginBottom: "1rem" }}>
             <label>{field.replace(/([A-Z])/g, ' $1')}:</label>
             <input

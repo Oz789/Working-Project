@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../../db');
-
 router.get('/frames', async (req, res) => {
   try {
     const [results] = await db.query('SELECT * FROM frames');

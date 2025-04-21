@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../../db"); // Make sure this uses mysql2/promise
+const db = require("../../db"); 
 
 // Get all doctors
 router.get("/doctors", async (req, res) => {

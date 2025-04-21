@@ -7,6 +7,9 @@ import AdminServicesTab from "./services/adminServicesTab";
 import MsgManager from "../../components/msgManager";
 import AdminReportsPage from "./reports/adminReportsPage";
 import EmployeeDetails from "../employeePortal/employeeDetails";
+import ManagePatients from "./patients/adminPatientsTab";
+import AdminDoctorScheduleForm from "./employee/scheduler";
+import ScheduleViewer from "./employee/scheduleViewer";
 
 const AdminTabContent = ({ activeTab }) => {
 
@@ -25,18 +28,17 @@ const AdminTabContent = ({ activeTab }) => {
     case 0:
       return <EmployeeDetails/>
     case 1:
-      return <MsgManager
-        bool={toggleMessager}
-        pass={msgPasser}/>
-    case 2:
-      return <AdminServicesTab/>
-    case 3:
       return <AdminFramesTab/>
-    case 4:
+    case 2:
       return <AdminContactsTab/>
-    case 5:
+      case 3:
+        return <AdminDoctorScheduleForm/>
+    case 4:
       return <ManageStaffTab/>
+    case 5:
+      return <ManagePatients/>
     case 6:
+      return <AdminReportsPage/>;
       
       return (
        /* <div

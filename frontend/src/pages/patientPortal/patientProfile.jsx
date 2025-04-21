@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import "./patientProfile.css";
 import NavBar from "../../components/navBar";
+
 
 const PatientProfile = () => {
   const { patientID } = useParams();
@@ -17,6 +18,10 @@ const PatientProfile = () => {
   const [expandedBilling, setExpandedBilling] = useState({});
   const [contactMessage, setContactMessage] = useState('');
   const [contactStatus, setContactStatus] = useState('');
+  const [expandedForms, setExpandedForms] = useState({});
+  const [formsData, setFormsData] = useState({});
+
+  const navigate = useNavigate();
 
   const toggleBillingDetails = (saleID) => {
     setExpandedBilling(prev => ({
@@ -134,6 +139,36 @@ const PatientProfile = () => {
     );
   }
 
+  const fetchAllFormsForAppointment = async (appointmentNumber, patientID) => {
+    try {
+      const [nurseRes, examRes, referralRes, medicalRes] = await Promise.all([
+        fetch(`http://localhost:5001/api/nurseprep/appointment/${appointmentNumber}`),
+        fetch(`http://localhost:5001/api/examform/${appointmentNumber}`),
+        fetch(`http://localhost:5001/api/referrals/byAppointment/${appointmentNumber}`),
+        fetch(`http://localhost:5001/api/patients/${patientID}`),
+      ]);
+  
+      const nurse = nurseRes.ok ? await nurseRes.json() : null;
+      const exam = examRes.ok ? await examRes.json() : null;
+      const referral = referralRes.ok ? await referralRes.json() : null;
+      const medicalRaw = medicalRes.ok ? await medicalRes.json() : {};
+      const medical = medicalRaw.medicalForm || null;
+  
+      setFormsData(prev => ({
+        ...prev,
+        [appointmentNumber]: { nurse, exam, referral, medical },
+      }));
+  
+      setExpandedForms(prev => ({
+        ...prev,
+        [appointmentNumber]: !prev[appointmentNumber],
+      }));
+    } catch (err) {
+      console.error("Error fetching forms:", err);
+    }
+  };
+  
+
   return (
     <>
       <NavBar />
@@ -234,6 +269,7 @@ const PatientProfile = () => {
                       <h3>Appointment #{appointment.appointmentNumber}</h3>
                     </div>
                     <div className="appointment-details">
+                      
                       <div className="detail-row">
                         <span className="detail-label">Date:</span>
                         <span className="detail-value">{appointment.appointmentDate}</span>
@@ -254,24 +290,39 @@ const PatientProfile = () => {
                         <span className="detail-label">Location:</span>
                         <span className="detail-value">{appointment.locationName}</span>
                       </div>
+           
                       <div className="detail-row">
                         <span className="detail-label">Status:</span>
                         <span className={`status-badge ${appointment.status.toLowerCase()}`}>
                           {appointment.status}
                         </span>
+                        
                       </div>
                     </div>
+                    
                   </div>
                 ))
               ) : (
                 <p>No appointments found</p>
+                
               )}
+              
             </div>
+            
           </div>
+          
 
           {/* Contact Us Section */}
           <div className="contact-section">
             <h2 className="section-title">Contact Us</h2>
+            <div className="msg-button" style={{ textAlign: 'right', marginTop: '1rem' }}>
+  <button 
+    onClick={() => navigate(`/userInbox/${patientID}`)}
+    className="filter-button"
+  >
+    Inbox
+  </button>
+</div>
             <form onSubmit={handleContactSubmit} className="contact-form">
               <div className="form-group">
                 <label>Name</label>
@@ -306,6 +357,7 @@ const PatientProfile = () => {
                   required
                 />
               </div>
+             
               <button type="submit" className="submit-button">Send Message</button>
               {contactStatus && (
                 <div className={`status-message ${contactStatus.includes('Error') ? 'error' : 'success'}`}>

@@ -10,7 +10,7 @@ const CartPage = () => {
 
   const handleCheckout = () => {
     if (cart.length > 0) {
-      navigate('/checkout', { state: { frames: cart } }); // Pass the cart data as state
+      navigate('/checkout', { state: { frames: cart } }); 
     }
   };
 

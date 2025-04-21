@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../db');
 
-router.get("/clinicAppointments/:locationID", async (req, res) => {
+router.get("/clinicAppointmentsDEBUG/:locationID", async (req, res) => {
   const { locationID } = req.params;
   const doctorID = req.query.doctorID;
 
-  console.log("Fetching appointments for location:", locationID, "doctorID:", doctorID);
+  console.log("🔥 CONFIRMING: /clinicAppointments/:locationID route is LIVE");
 
   let sql = `
     SELECT 
@@ -14,7 +14,7 @@ router.get("/clinicAppointments/:locationID", async (req, res) => {
       a.appointmentDate,
       a.appointmentTime,
       a.status,
-      a.isReferred,  
+      CAST(a.isReferred AS UNSIGNED) AS isReferred,  -- ✅ confirm this is present
       a.patientID,
       a.doctorID,
       a.locationID,
@@ -27,6 +27,8 @@ router.get("/clinicAppointments/:locationID", async (req, res) => {
     JOIN doctors d ON a.doctorID = d.doctorID
     JOIN employee e ON d.employeeID = e.employeeID
   `;
+
+  console.log("🔥 Final SQL:", sql);
 
   const params = [];
 
@@ -53,6 +55,7 @@ router.get("/clinicAppointments/:locationID", async (req, res) => {
         console.error("Invalid response from database:", rows);
         throw new Error('Invalid response from database');
       }
+      console.log("First row preview:", rows[0]);
 
       res.json(rows);
     } finally {

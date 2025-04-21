@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../db');
 
-router.post('/createContact', (req, res) => {
+router.post('/createContact', async (req, res) => {
   const {
     name,
     price,
@@ -11,16 +11,18 @@ router.post('/createContact', (req, res) => {
     visionType,
     use,
     daysSupply,
-    img,
-    stockCount // new field expected from frontend
+    stockCount,
+    img
   } = req.body;
 
-  const insertContactQuery = `
-    INSERT INTO eyeContacts (name, price, brand, model, visionType, useType, daysSupply, img)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  const insertQuery = `
+    INSERT INTO eyecontacts (
+      name, price, brand, model, visionType,
+      useType, daysSupply, stockCount, img
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
-  const contactValues = [
+  const values = [
     name,
     price,
     brand,
@@ -28,32 +30,31 @@ router.post('/createContact', (req, res) => {
     visionType,
     use,
     daysSupply,
+    stockCount,
     img
   ];
 
-  db.query(insertContactQuery, contactValues, (err, result) => {
-    if (err) {
-      console.error("Error inserting contact lens:", err);
-      return res.status(500).json({ error: "Failed to create contact lens" });
-    }
+  let connection;
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
 
-    const contactID = result.insertId;
+    const [result] = await connection.query(insertQuery, values);
 
-    const inventoryQuery = `
-      INSERT INTO inventory (contactID, stockCount)
-      VALUES (?, ?)
-    `;
-
-    db.query(inventoryQuery, [contactID, stockCount], (invErr) => {
-      if (invErr) {
-        console.error("Error inserting into inventory:", invErr);
-        return res.status(500).json({ error: "Contact lens created, but failed to add to inventory" });
-      }
-
-      res.status(201).json({ message: "Contact and inventory added", contactID });
+    await connection.commit();
+    res.status(201).json({
+      message: 'Contact lens created successfully',
+      contactID: result.insertId
     });
-  });
+  } catch (err) {
+    if (connection) await connection.rollback();
+    console.error('Error creating contact lens:', err);
+    res.status(500).json({ error: 'Failed to create contact lens' });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
 module.exports = router;
+
 

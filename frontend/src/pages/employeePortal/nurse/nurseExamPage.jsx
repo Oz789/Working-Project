@@ -28,7 +28,7 @@ const NurseExamPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:5001/api/patients/${patientID}`);
+        const res = await fetch(`http://localhost:5001/api/patient-info/${patientID}`);
         const data = await res.json();
         setFormData(data);
       } catch (err) {
@@ -37,6 +37,7 @@ const NurseExamPage = () => {
     };
     fetchData();
   }, [patientID]);
+  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;

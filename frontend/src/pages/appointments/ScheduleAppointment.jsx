@@ -167,16 +167,17 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
 
     const time24 = convertTo24Hour(time);
     
-    // Format date to YYYY-MM-DD
+ 
     const selectedDate = new Date(date);
     const formattedDate = selectedDate.toISOString().split('T')[0];
     
-    // Get day of week
-    const selectedDayOfWeek = selectedDate.toLocaleDateString('en-US', { 
-      weekday: 'long'
+ 
+    const selectedDayOfWeek = new Date(date + 'T00:00:00Z').toLocaleDateString('en-US', {
+      weekday: 'long',
+      timeZone: 'UTC'
     });
 
-    // Find the doctor's schedule for this day
+
     const doctorSchedule = doctorSchedules.find(schedule => 
       schedule.doctorID === doctorId && 
       schedule.dayOfWeek.toLowerCase() === selectedDayOfWeek.toLowerCase()
@@ -189,7 +190,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
       return;
     }
 
-    // Validate time is within schedule
+  
     const [selectedHour, selectedMinute] = time24.split(':').map(Number);
     const [startHour, startMinute] = doctorSchedule.startTime.split(':').map(Number);
     const [endHour, endMinute] = doctorSchedule.endTime.split(':').map(Number);
@@ -227,7 +228,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
       const data = await response.json();
       console.log('Appointment scheduled successfully:', data);
       alert('Appointment scheduled successfully!');
-      navigate('/appointments');
+      navigate(`/home`);
     } catch (error) {
       console.error('Error scheduling appointment:', error);
       alert(error.message || 'Failed to schedule appointment. Please try again.');
@@ -293,6 +294,10 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
             const dateObj = getNextWeekday(baseDate, idx);
             const dateStr = dateObj.toISOString().split('T')[0];
             const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+            if (dayName === 'Sunday') return null;
+
+            const currentSchedules = scheduleMap[dayName] || [];
+            if (currentSchedules.length === 0) return null;
             const readableDate = dateObj.toDateString();
 
             const schedules = scheduleMap[dayName] || [];
@@ -305,7 +310,7 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
                   {readableDate}
                 </h3>
 
-                {schedules.map((sched) => {
+                {currentSchedules.map((sched) => {
                   console.log(`Generating slots for doctor ${sched.doctorID} on ${dayName}`);
                   const slots = generateTimeSlots(sched.startTime, sched.endTime);
 
@@ -361,5 +366,6 @@ export default function ScheduleAppointment({ prevStep, patientId }) {
     </div>
   );
 }
+
 
 

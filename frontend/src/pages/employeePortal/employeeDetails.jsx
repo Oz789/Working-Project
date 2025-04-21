@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Paper,
-  Grid
-} from "@mui/material";
 import axios from "axios";
-import "./employeeDetails.css"
+import "./employeeDetails.css";
 
 const EmployeeDetails = () => {
   const [employee, setEmployee] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const [updatedData, setUpdatedData] = useState({});
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     const userID = localStorage.getItem("userID");
@@ -20,11 +13,11 @@ const EmployeeDetails = () => {
     const fetchEmployee = async () => {
       try {
         const res = await axios.get(`http://localhost:5001/api/employees`);
-        const userData = res.data.find((emp) => emp.employeeID == userID);
+        const userData = res.data.find(emp => emp.employeeID == userID);
         setEmployee(userData);
-        setUpdatedData(userData);
+        setFormData(userData);
       } catch (err) {
-        console.error("Failed to fetch employee", err);
+        console.error("Error fetching employee:", err);
       }
     };
 
@@ -32,57 +25,100 @@ const EmployeeDetails = () => {
   }, []);
 
   const handleChange = (e) => {
-    setUpdatedData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     }));
   };
 
-  const handleUpdate = async () => {
+  const handleSave = async () => {
     try {
-      await axios.put(`http://localhost:5001/api/employees/${employee.employeeID}`, updatedData);
-      setEmployee(updatedData);
-      setEditMode(false);
+      await axios.put(`http://localhost:5001/api/employees/${employee.employeeID}`, formData);
+      setEmployee({ ...formData });  
+      setEditMode(false);            
     } catch (err) {
-      console.error("Update failed", err);
+      console.error("Error updating employee:", err);
     }
   };
+  
 
   if (!employee) return <p>Loading...</p>;
 
   return (
-<Paper className="employee-details-container">
-  <Typography variant="h5" gutterBottom className="employee-details-title">
-    Employee Details
-  </Typography>
+    <div className="employee-container">
+      <h2 className="employee-header">Employee Details</h2>
 
-  <Grid container spacing={2}>
-    {["firstName", "lastName", "email", "phone", "role", "gender", "address"].map((field) => (
-      <Grid item xs={12} sm={6} key={field}>
-        <TextField
-          label={field.charAt(0).toUpperCase() + field.slice(1)}
-          name={field}
-          fullWidth
-          value={updatedData[field] || ""}
-          onChange={handleChange}
-          disabled={!editMode}
-          className="employee-text-field"
-        />
-      </Grid>
-    ))}
-        <Grid item xs={12}>
-          {editMode ? (
-            <Button variant="contained" color="success" onClick={handleUpdate}>
-              Save Changes
-            </Button>
-          ) : (
-            <Button variant="outlined" onClick={() => setEditMode(true)}>
-              Edit
-            </Button>
-          )}
-        </Grid>
-      </Grid>
-    </Paper>
+      <div className="employee-grid">
+        <div className="form-group">
+          <label>First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName || ""}
+            onChange={handleChange}
+            disabled={!editMode}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName || ""}
+            onChange={handleChange}
+            disabled={!editMode}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Email</label>
+          <input type="email" value={formData.email || ""} disabled />
+        </div>
+
+        <div className="form-group">
+          <label>Phone</label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone || ""}
+            onChange={handleChange}
+            disabled={!editMode}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Role</label>
+          <input type="text" value={formData.role || ""} disabled />
+        </div>
+
+        <div className="form-group">
+          <label>Gender</label>
+          <input
+            type="text"
+            name="gender"
+            value={formData.gender || ""}
+            onChange={handleChange}
+            disabled={!editMode}
+          />
+        </div>
+
+      </div>
+
+      <div className="button-row">
+        {editMode ? (
+          <>
+            <button className="save-button" onClick={handleSave}>Save</button>
+            <button className="cancel-button" onClick={() => {
+              setFormData(employee);
+              setEditMode(false);
+            }}>Cancel</button>
+          </>
+        ) : (
+          <button className="edit-button" onClick={() => setEditMode(true)}>Edit</button>
+        )}
+      </div>
+    </div>
   );
 };
 

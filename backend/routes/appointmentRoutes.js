@@ -115,14 +115,14 @@ router.post('/', async (req, res) => {
       }
 
       // Check if the time slot is within the doctor's schedule
-      const [schedule] = await connection.query(
+      const [schedules] = await connection.query(
         `SELECT s.startTime, s.endTime, s.dayOfWeek 
          FROM doctorschedule s 
          WHERE s.doctorID = ?`,
         [parsedDoctorId]
       );
 
-      if (schedule.length === 0) {
+      if (schedules.length === 0) {
         return res.status(400).json({ error: 'Doctor schedule not found' });
       }
 
@@ -131,27 +131,15 @@ router.post('/', async (req, res) => {
         weekday: 'long',
         timeZone: 'UTC'
       });
-      const scheduleDay = schedule[0].dayOfWeek;
-      
-      console.log("Day comparison:", {
-        appointmentDay,
-        scheduleDay,
-        normalizedAppointmentDay: appointmentDay.toLowerCase().trim(),
-        normalizedScheduleDay: scheduleDay.toLowerCase().trim(),
-        inputDate: date,
-        schedule: schedule[0]
-      });
-      
-      // Normalize both day names to ensure consistent comparison
       const normalizedAppointmentDay = appointmentDay.toLowerCase().trim();
-      const normalizedScheduleDay = scheduleDay.toLowerCase().trim();
-      
-      if (normalizedAppointmentDay !== normalizedScheduleDay) {
+      const matchingSchedule = schedules.find(s => s.dayOfWeek.toLowerCase().trim() === normalizedAppointmentDay);
+
+      if (!matchingSchedule) {
         return res.status(400).json({ 
           error: 'Appointment date does not match doctor\'s schedule',
           details: {
             selectedDay: normalizedAppointmentDay,
-            availableDay: normalizedScheduleDay,
+            availableDays: schedules.map(s => s.dayOfWeek),
             doctorId: parsedDoctorId,
             locationId: parsedLocationID
           }
@@ -159,8 +147,8 @@ router.post('/', async (req, res) => {
       }
 
       const appointmentTime = new Date(`2000-01-01T${time}`);
-      const startTime = new Date(`2000-01-01T${schedule[0].startTime}`);
-      const endTime = new Date(`2000-01-01T${schedule[0].endTime}`);
+      const startTime = new Date(`2000-01-01T${matchingSchedule.startTime}`);
+      const endTime = new Date(`2000-01-01T${matchingSchedule.endTime}`);
 
       if (appointmentTime < startTime || appointmentTime > endTime) {
         return res.status(400).json({ error: 'Appointment time is outside doctor\'s working hours' });

@@ -2,44 +2,49 @@ const express = require('express');
 const router = express.Router();
 const db = require('../../db');
 
-router.patch('/frames/:id', (req, res) => {
+router.patch('/frames/:id', async (req, res) => {
   const frameID = req.params.id;
   const {
-    name, price, brand, model, material, lensWidth, bridgeWidth,
-    templeLength, img, stockCount
+    name, price, brand, model, material,
+    lensWidth, bridgeWidth, templeLength,
+    img, stockCount
   } = req.body;
 
   const updateFrameQuery = `
-    UPDATE frames SET name = ?, price = ?, brand = ?, model = ?, material = ?,
-      lensWidth = ?, bridgeWidth = ?, templeLength = ?, img = ?
+    UPDATE frames SET
+      name = ?, price = ?, brand = ?, model = ?, material = ?,
+      lensWidth = ?, bridgeWidth = ?, templeLength = ?, img = ?, stockCount = ?
     WHERE frameID = ?
   `;
 
   const frameValues = [
     name, price, brand, model, material,
-    lensWidth, bridgeWidth, templeLength, img, frameID
+    lensWidth, bridgeWidth, templeLength, img, stockCount, frameID
   ];
 
-  db.query(updateFrameQuery, frameValues, (err) => {
-    if (err) {
-      console.error('Error updating frame:', err);
-      return res.status(500).json({ error: 'Failed to update frame' });
+  let connection;
+
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
+
+    const [updateResult] = await connection.query(updateFrameQuery, frameValues);
+
+    if (updateResult.affectedRows === 0) {
+      await connection.rollback();
+      return res.status(404).json({ error: 'Frame not found or nothing updated' });
     }
 
-    // Update inventory stockCount
-    const updateInventoryQuery = `
-      UPDATE inventory SET stockCount = ? WHERE frameID = ?
-    `;
+    await connection.commit();
+    res.status(200).json({ message: 'Frame updated successfully' });
 
-    db.query(updateInventoryQuery, [stockCount, frameID], (invErr) => {
-      if (invErr) {
-        console.error('Error updating inventory:', invErr);
-        return res.status(500).json({ error: 'Frame updated, but failed to update inventory' });
-      }
-
-      res.status(200).json({ message: 'Frame and inventory updated successfully' });
-    });
-  });
+  } catch (err) {
+    if (connection) await connection.rollback();
+    console.error('Error updating frame:', err);
+    res.status(500).json({ error: 'Failed to update frame' });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
 module.exports = router;

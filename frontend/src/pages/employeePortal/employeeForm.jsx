@@ -10,6 +10,7 @@ import {
   Paper
 } from "@mui/material";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const roles = ["Receptionist", "Nurse", "Doctor", "Administrator"]
 
@@ -29,6 +30,7 @@ const EmployeeForm = () => {
   });
 
   const [status, setStatus] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,6 +52,7 @@ const EmployeeForm = () => {
     try {
       const res = await axios.post("http://localhost:5001/api/employees/add-employee", formData);
       setStatus(res.data.message);
+
       setFormData({
         isAdmin: false,
         firstName: "",
@@ -60,8 +63,16 @@ const EmployeeForm = () => {
         password: "",
         address: "",
         gender: "",
-        licenseNumber: ""
+        licenseNumber: "",
+        locationID: ""
       });
+
+    
+      setTimeout(() => {
+        const adminID = localStorage.getItem("userID");
+        if (adminID) navigate(`/adminProfile/${adminID}`);
+      }, 1500);
+
     } catch (err) {
       setStatus(err.response?.data?.error || "Submission failed.");
     }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../doctor/doctorAppointments.css';
+import './receptionist/receptionistCards.css';
 import PatientFormViewer from '../patientPortal/patientFormViewer';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,12 +9,15 @@ const CheckedInAppointments = () => {
   const [activeAppointments, setActiveAppointments] = useState([]);
   const [selectedPatientID, setSelectedPatientID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showTodayOnly, setShowTodayOnly] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('All');
   const locationID = localStorage.getItem("userLocation");
   const doctorID = localStorage.getItem("doctorID");
   const role = localStorage.getItem("userRole");
   const navigate = useNavigate();
 
-  // Fetch appointments
+  const todayStr = new Date().toISOString().slice(0, 10);
+
   useEffect(() => {
     const fetchAppointments = async () => {
       let url = role === "doctor" && doctorID
@@ -71,27 +75,28 @@ const CheckedInAppointments = () => {
       if (res.ok) {
         setAppointments(prev => prev.filter(a => a.appointmentID !== appt.appointmentID));
         setActiveAppointments(prev => [...prev, { ...appt, status: "In Progress" }]);
-
-        // Use timeout to ensure navigate is not skipped
-        setTimeout(() => {
-          navigate(`/nurseForm/${appt.patientID}`);
-        }, 150);
+        setTimeout(() => navigate(`/nurseForm/${appt.appointmentID}`), 150);
       } else {
-        const errMsg = await res.text();
-        console.warn("❌ Backend error:", errMsg);
         alert("Failed to begin exam");
       }
     } catch (err) {
-      console.error("❌ Begin exam error:", err);
       alert("Something went wrong");
     }
   };
 
   const filterAppointments = (arr) =>
-    arr.filter(appt =>
+  arr
+    .filter(appt =>
       appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       appt.doctorName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter(appt =>
+      statusFilter === 'All' || appt.status === statusFilter
+    )
+    .filter(appt =>
+      !showTodayOnly || appt.appointmentDate === todayStr
     );
+
 
   const groupByDate = (arr) => {
     return arr.reduce((acc, appt) => {
@@ -103,14 +108,65 @@ const CheckedInAppointments = () => {
     }, {});
   };
 
-  const grouped = groupByDate(filterAppointments(appointments));
-  const groupedActive = groupByDate(activeAppointments);
+  const grouped = groupByDate([
+    ...filterAppointments(appointments),
+    ...filterAppointments(activeAppointments),
+  ]);
 
   return (
     <div className="appointment-wrapper">
-      {/* LEFT PANEL */}
       <div className="appointment-left">
-        <h2 className="appointments-title">Checked-In Appointments</h2>
+      <div
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '1rem',
+    marginBottom: '1rem',
+  }}
+>
+  <h2 className="appointments-title" style={{ margin: 0 }}>
+    Clinic Appointments
+  </h2>
+
+  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+    <button
+      style={{
+        padding: '0.5rem 1rem',
+        backgroundColor: showTodayOnly ? '#004c9b' : '#1976d2',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        fontWeight: '500',
+      }}
+      onClick={() => setShowTodayOnly(prev => !prev)}
+    >
+      {showTodayOnly ? 'Show All' : 'Show Today Only'}
+    </button>
+
+    <select
+      value={statusFilter}
+      onChange={(e) => setStatusFilter(e.target.value)}
+      style={{
+        padding: '0.5rem',
+        borderRadius: '6px',
+        border: '1px solid #ccc',
+        fontWeight: '500',
+        minWidth: '150px',
+      }}
+    >
+      <option value="All">All Statuses</option>
+      <option value="Scheduled">Scheduled</option>
+      <option value="Checked In">Checked In</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Ended">Ended</option>
+    </select>
+  </div>
+</div>
+
+
         <input
           type="text"
           placeholder="Search by patient or doctor..."
@@ -123,85 +179,60 @@ const CheckedInAppointments = () => {
           <div key={date} className="appointments-section">
             <h3 className="appointments-date">{date}</h3>
             {appts.map((appt) => {
-              const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-              const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-              const monthShort = dt.toLocaleString('default', { month: 'short' });
-              const day = dt.getDate();
+              const cardClass = appt.status === "In Progress"
+                ? "appt-card in-progress"
+                : "appt-card checked-in";
 
               return (
-                <div className="appointment-card" key={appt.appointmentID}>
-                  <div className="appointment-date-box">
-                    <div className="appointment-month">{monthShort}</div>
-                    <div className="appointment-day">{day}</div>
+                <div
+                  className={cardClass}
+                  key={appt.appointmentID}
+                  onClick={() => appt.status === "In Progress" && navigate(`/nurseForm/${appt.appointmentID}`)}
+
+                  style={{ cursor: appt.status === "In Progress" ? "pointer" : "default" }}
+                >
+                  <div className="appt-header">
+                    <img
+                      className="appt-avatar"
+                      src="https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                      alt="Avatar"
+                    />
+                    <div className="appt-details">
+                      <h3 className="appt-name">{appt.patientName}</h3>
+                      <div className="appt-meta"><span className="appt-label">Status:</span> {appt.status}</div>
+                      <div className="appt-meta"><span className="appt-label">Doctor:</span> {appt.doctorName}</div>
+                      <div className="appt-meta"><span className="appt-label">Time:</span> {appt.appointmentTime}</div>
+                    </div>
                   </div>
 
-                  <div className="appointment-info">
-                    <div className="appointment-name">{appt.patientName} - <span className="appointment-status">{appt.status}</span></div>
-                    <div className="appointment-time">{timeStr}</div>
-                    <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
+                  <div className="appt-buttons">
+                    <button
+                      className="appt-btn view"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedPatientID(appt.patientID);
+                      }}
+                    >
+                      View Form
+                    </button>
+
+                    {appt.status === "Checked In" && (
+                      <button
+                        className="appt-btn checkin"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleBeginExam(appt);
+                        }}
+                      >
+                        Begin Exam
+                      </button>
+                    )}
                   </div>
-
-                  <button
-                    className="appointment-button"
-                    onClick={() => setSelectedPatientID(appt.patientID)}
-                  >
-                    View Form
-                  </button>
-
-                  <button
-                    className="appointment-button"
-                    
-                    onClick={() => handleBeginExam(appt)}
-                  >
-                    Begin Exam
-                  </button>
                 </div>
               );
             })}
           </div>
         ))}
-      </div>
-
-      {/* RIGHT PANEL */}
-      <div className="appointment-right">
-        <h2 className="appointments-title">In Progress Appointments</h2>
-        {Object.entries(groupedActive).length === 0 ? (
-          <div className="mock-placeholder">No active appointments</div>
-        ) : (
-          Object.entries(groupedActive).map(([date, appts]) => (
-            <div key={date} className="appointments-section">
-              <h3 className="appointments-date">{date}</h3>
-              {appts.map(appt => {
-                const dt = new Date(`${appt.appointmentDate}T${appt.appointmentTime}`);
-                const timeStr = dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                const monthShort = dt.toLocaleString('default', { month: 'short' });
-                const day = dt.getDate();
-
-                return (
-                  <div className="appointment-card" key={appt.appointmentID}>
-                    <div className="appointment-date-box">
-                      <div className="appointment-month">{monthShort}</div>
-                      <div className="appointment-day">{day}</div>
-                    </div>
-
-                    <div className="appointment-info">
-                      <div className="appointment-name">{appt.patientName} - <span className="appointment-status">{appt.status}</span></div>
-                      <div className="appointment-time">{timeStr}</div>
-                      <div className="appointment-doctor">Doctor: {appt.doctorName}</div>
-                    </div>
-
-                    <button
-                      className="appointment-button"
-                      onClick={() => setSelectedPatientID(appt.patientID)}
-                    >
-                      View Form
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          ))
-        )}
 
         {selectedPatientID && (
           <div style={{ marginTop: "2rem" }}>
@@ -215,4 +246,7 @@ const CheckedInAppointments = () => {
 };
 
 export default CheckedInAppointments;
+
+
+
 

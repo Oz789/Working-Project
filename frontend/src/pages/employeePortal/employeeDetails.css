@@ -1,23 +1,72 @@
-/* employeeDetails.css */
+.employee-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 12px;
+  background-color: #f9fdfb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-.employee-details-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border-radius: 16px;
-    background-color: #ffffffcc;
-    box-shadow: 0 8px 24px rgba(0, 121, 107, 0.2);
-  }
-  
-  .employee-details-title {
-    font-family: "Bell MT", serif;
-    font-weight: bold;
-    color: #00796B;
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-  
-  .employee-text-field {
-    background-color: white;
-    border-radius: 8px;
-  }
+.employee-header {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 26px;
+  color: #1e5d53;
+}
+
+.employee-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+input:disabled,
+textarea:disabled {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.address {
+  grid-column: span 2;
+}
+
+.edit-button {
+  margin-top: 30px;
+  display: block;
+  width: 120px;
+  padding: 10px;
+  background-color: #1e5d53;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.edit-button:hover {
+  background-color: #14453d;
+}

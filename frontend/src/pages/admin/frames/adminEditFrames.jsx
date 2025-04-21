@@ -29,12 +29,13 @@ const [editedFrame, setEditedFrame] = useState({ ...data, stockCount: data.stock
   const handleEditSubmit = async () => {
     try {
       await axios.patch(`http://localhost:5001/api/frames/${editedFrame.frameID}`, editedFrame);
-      onEdit(); 
-      onClose(); 
+      if (typeof onEdit === "function") onEdit();
+      if (typeof onClose === "function") onClose();
     } catch (err) {
       console.error("Failed to update frame:", err);
     }
   };
+  
   const {
     name, price, img,
     brand, model, material, shape, size,
@@ -53,7 +54,7 @@ const [editedFrame, setEditedFrame] = useState({ ...data, stockCount: data.stock
   
        
           <Grid item xs={12} sm={6}>
-            <img src="/images/brevik.webp" alt="Eyeglass" className="item-image" />
+            <img src={img} alt="Eyeglass" className="item-image" />
           </Grid>
   
        
@@ -96,13 +97,25 @@ const [editedFrame, setEditedFrame] = useState({ ...data, stockCount: data.stock
                 )}
               </Grid>
               <Grid item>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => onDelete(data.frameID)}
-                >
-                  Delete
-                </Button>
+              <Button
+  variant="outlined"
+  color="error"
+  onClick={async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this frame?");
+    if (confirmDelete) {
+      try {
+        await onDelete(data.frameID);           
+        if (typeof onClose === "function") onClose(); 
+      } catch (err) {
+        console.error("Delete failed:", err);
+      }
+    }
+  }}
+>
+  Delete
+</Button>
+
+
               </Grid>
             </Grid>
           </Grid>

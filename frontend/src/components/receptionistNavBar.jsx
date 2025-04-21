@@ -48,7 +48,7 @@ const NavBar = () => {
           </Button>
           <Typography>|</Typography>
           <Button component={Link} to="/log-in" sx={{ color: "#3E2723" }}>
-            Patient's Center
+            Log-In Portal
           </Button>
           <Typography>|</Typography>
           <Button component={Link} to="/services" sx={{ color: "#3E2723" }}>

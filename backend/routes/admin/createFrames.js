@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../db');
+const db = require('../../db'); // your mysql2/promise connection pool
 
-router.post('/createFrame', (req, res) => {
+router.post('/createFrame', async (req, res) => {
   const {
     name, price, brand, color, model,
     material, lensWidth, bridgeWidth,
@@ -12,48 +12,38 @@ router.post('/createFrame', (req, res) => {
   const frameQuery = `
     INSERT INTO frames (
       name, price, brand, color, model,
-      material, lensWidth, bridgeWidth, templeLength, img
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      material, lensWidth, bridgeWidth, templeLength, img, stockCount
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   const frameValues = [
     name, price, brand, color, model,
-    material, lensWidth, bridgeWidth, templeLength, img
+    material, lensWidth, bridgeWidth, templeLength, img, stockCount
   ];
 
-  db.query(frameQuery, frameValues, (err, result) => {
-    if (err) {
-      console.error('Error inserting frame:', err);
-      return res.status(500).json({ error: 'Failed to create frame' });
-    }
+  let connection;
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
 
-    const frameID = result.insertId;
+    const [frameResult] = await connection.query(frameQuery, frameValues);
+    const frameID = frameResult.insertId;
 
-  
-    const inventoryQuery = `
-      INSERT INTO inventory (frameID, stockCount)
-      VALUES (?, ?)
-    `;
+    await connection.commit();
 
-    const inventoryValues = [
-      frameID,
-      stockCount,
-      parseInt(stockCount, 10)
-    ];
-
-    db.query(inventoryQuery, inventoryValues, (invErr) => {
-      if (invErr) {
-        console.error('Error inserting into inventory:', invErr);
-        return res.status(500).json({ error: 'Frame created, but failed to add to inventory' });
-      }
-
-      res.status(201).json({
-        message: 'Frame and inventory record created successfully',
-        frameID
-      });
+    res.status(201).json({
+      message: 'Frame created successfully',
+      frameID
     });
-  });
+  } catch (err) {
+    if (connection) await connection.rollback();
+    console.error('❌ Error creating frame:', err);
+    res.status(500).json({ error: 'Failed to create frame' });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
 module.exports = router;
+
 

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../../db'); 
+const db = require('../../db');
 
-router.patch('/contacts/:id', (req, res) => {
+router.patch('/contacts/:id', async (req, res) => {
   const contactID = req.params.id;
   const {
     name,
@@ -13,39 +13,41 @@ router.patch('/contacts/:id', (req, res) => {
     use,
     daysSupply,
     img,
-    stockCount // added stockCount
+    stockCount
   } = req.body;
 
-  const contactQuery = `
+  const updateQuery = `
     UPDATE eyecontacts SET
-      name = ?, price = ?, brand = ?, model = ?, visionType = ?, useType = ?, daysSupply = ?, img = ?
+      name = ?, price = ?, brand = ?, model = ?, visionType = ?, useType = ?, daysSupply = ?, img = ?, stockCount = ?
     WHERE contactID = ?
   `;
 
-  db.query(
-    contactQuery,
-    [name, price, brand, model, visionType, use, daysSupply, img, contactID],
-    (err, result) => {
-      if (err) {
-        console.error("Error updating contact lens:", err);
-        return res.status(500).json({ error: "Failed to update contact lens" });
-      }
+  const values = [
+    name, price, brand, model, visionType,
+    use, daysSupply, img, stockCount, contactID
+  ];
 
-      const inventoryQuery = `
-        UPDATE inventory SET stockCount = ?
-        WHERE contactID = ?
-      `;
+  let connection;
+  try {
+    connection = await db.getConnection();
+    await connection.beginTransaction();
 
-      db.query(inventoryQuery, [stockCount, contactID], (invErr) => {
-        if (invErr) {
-          console.error("Error updating inventory:", invErr);
-          return res.status(500).json({ error: "Contact updated, but failed to update inventory" });
-        }
+    const [result] = await connection.query(updateQuery, values);
 
-        res.status(200).json({ message: "Contact and inventory updated successfully" });
-      });
+    if (result.affectedRows === 0) {
+      await connection.rollback();
+      return res.status(404).json({ error: 'Contact not found or not updated' });
     }
-  );
+
+    await connection.commit();
+    res.status(200).json({ message: 'Contact updated successfully' });
+  } catch (err) {
+    if (connection) await connection.rollback();
+    console.error('Error updating contact lens:', err);
+    res.status(500).json({ error: 'Failed to update contact lens' });
+  } finally {
+    if (connection) connection.release();
+  }
 });
 
 module.exports = router;
